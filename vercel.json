@@ -1,0 +1,8 @@
+{
+  "buildCommand": "npm run prisma:generate && npm run build:administration",
+  "outputDirectory": "dist/web/apps",
+  "installCommand": "npm install",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
