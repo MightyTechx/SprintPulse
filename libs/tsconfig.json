@@ -1,0 +1,41 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "ignoreDeprecations": "5.0",
+    "types": ["node", "jest"],
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "jsx": "react-jsx",
+    "outDir": "../../dist/out-tsc/shared",
+    "moduleResolution": "node",
+    "baseUrl": ".",
+    "paths": {
+      "@infygen/prisma": ["../gateways/src/generated/prisma/client"],
+      "@infygen/theme": ["./theme/index.ts"],
+      "@infygen/interfaces": ["./entities/index.ts"],
+      "@infygen/hooks": ["./ui/hooks/index.ts"],
+      "@infygen/utils": ["./utils/index.ts"],
+      "@infygen/services": ["./services/index.ts"],
+      "@infygen/config": ["./core/config/index.ts"],
+      "@infygen/core": ["./core/index.ts"],
+      "@infygen/component": ["./ui/components/index.ts"],
+      "@infygen/component/*": ["./ui/components/*"]
+    }
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "../libs/vite-env.d.ts",
+    "../typings/vite-env.d.ts",
+    "../gateways/src/generated/prisma/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.spec.ts",
+    "**/*.test.ts",
+    "**/*.stories.ts",
+    "**/*.stories.tsx"
+  ]
+}

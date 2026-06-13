@@ -1,0 +1,22 @@
+{
+  "name": "wind-tree",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "web/tenants/wind-tree/src",
+  "projectType": "application",
+  "tags": ["app", "partner:wind-tree"],
+  "targets": {
+    "build": {
+      "executor": "@nx/vite:build",
+      "options": {
+        "outputPath": "dist/web/tenants/wind-tree",
+        "configFile": "web/tenants/wind-tree/vite.config.ts"
+      }
+    },
+    "serve": {
+      "executor": "@nx/vite:dev-server",
+      "options": {
+        "buildTarget": "wind-tree:build"
+      }
+    }
+  }
+}

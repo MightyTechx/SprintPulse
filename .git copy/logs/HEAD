@@ -1,0 +1,57 @@
+0000000000000000000000000000000000000000 92da5a46fde865b50ab7cd76c8df74b2fa8772eb picksystem <picks.project.one@gmail.com> 1777194788 +0530	clone: from https://github.com/picksystem/PICKS.git
+92da5a46fde865b50ab7cd76c8df74b2fa8772eb e1c6a161203179f3257d50241656d48074b64f97 picksystem <picks.project.one@gmail.com> 1777220273 +0530	commit: SerivceOps-05 migrate to vite
+e1c6a161203179f3257d50241656d48074b64f97 91a3d1abea5d068037e5c1453d94a27e9a50bf78 picksystem <picks.project.one@gmail.com> 1777222625 +0530	commit: ServiceOps-06 fixed the render and vercel issues
+91a3d1abea5d068037e5c1453d94a27e9a50bf78 fdc988859a8c98f2d3a96a9543d11b7e61971f79 picksystem <picks.project.one@gmail.com> 1777225130 +0530	commit: ServiceOps-07 Updated the env
+fdc988859a8c98f2d3a96a9543d11b7e61971f79 9f62d6ca7a10a38eff6990eff5ce6d04413cbf01 picksystem <picks.project.one@gmail.com> 1777226855 +0530	commit: ServiceOps-08 Updated the Prisma
+9f62d6ca7a10a38eff6990eff5ce6d04413cbf01 9a6035682b109681e0045a138d5dc99c0b31a6ce picksystem <picks.project.one@gmail.com> 1777439626 +0530	commit: ServiceOps-09 Implement Configuration sections: General, Statuses, SLAs, Categorization
+9a6035682b109681e0045a138d5dc99c0b31a6ce 3676fc3ce325c29628d36b0f4dbb30a376344ea5 picksystem <picks.project.one@gmail.com> 1777473026 +0530	commit: ServiceOps-10 Implemented the Categorization Pages
+3676fc3ce325c29628d36b0f4dbb30a376344ea5 92ffd7bc1503bc0d8a70949d231b6a4c4a925858 picksystem <picks.project.one@gmail.com> 1777529011 +0530	commit: ServiceOps-11 Updated the Consultant profiles page in configuration
+92ffd7bc1503bc0d8a70949d231b6a4c4a925858 3bb2cbd1a32f0bcac958d9a3d74b0bc5e078adb3 picksystem <picks.project.one@gmail.com> 1777699421 +0530	commit: ServiceOps-12 Updated the pages upto templete page
+3bb2cbd1a32f0bcac958d9a3d74b0bc5e078adb3 bbf8eea839dce9180c4186955123c9ac46ba452d picksystem <picks.project.one@gmail.com> 1777840744 +0530	commit: ServiceOps-13 Updated the Config pages
+bbf8eea839dce9180c4186955123c9ac46ba452d 7abfed38eb48f2f7b32d605a237ae9acff4124ea picksystem <picks.project.one@gmail.com> 1777919452 +0530	commit: ServiceOps-14 Added the comfiguations pages individually
+0000000000000000000000000000000000000000 7abfed38eb48f2f7b32d605a237ae9acff4124ea picksystem <picks.project.one@gmail.com> 1778093068 +0530
+7abfed38eb48f2f7b32d605a237ae9acff4124ea 17266b17b6d10380fe636d837f2ea03cb9df94c4 picksystem <picks.project.one@gmail.com> 1778093926 +0530	commit: InfyEnergy-01 Inital changes for the repo
+17266b17b6d10380fe636d837f2ea03cb9df94c4 c5ab005cb196e677bfea505e0e1760c7c20e3c11 MightyTechx <mightyproitsolutions@gmail.com> 1778095839 +0530	commit: InfyEnergy-02 Updated the components as per the usage
+c5ab005cb196e677bfea505e0e1760c7c20e3c11 91618c45cf357888ed0d1ff18283f1a76d933b38 MightyTechx <mightyproitsolutions@gmail.com> 1778211658 +0530	commit: InfyEnergy-03 Updated the components for the right direction
+91618c45cf357888ed0d1ff18283f1a76d933b38 af50d23dcdcc51bcdca763d84c771e19509dc800 MightyTechx <mightyproitsolutions@gmail.com> 1778213647 +0530	commit: InfyEnergy-04 Updated the files
+af50d23dcdcc51bcdca763d84c771e19509dc800 e2d293e8331ddf1c26a014725e2ec43e7b44121c MightyTechx <mightyproitsolutions@gmail.com> 1778214696 +0530	commit: InfyEnergy-05 Simplify Vercel build configuration
+e2d293e8331ddf1c26a014725e2ec43e7b44121c c9912a313654e3eb35d095626133c036a36376d0 MightyTechx <mightyproitsolutions@gmail.com> 1778214909 +0530	commit: InfyEnergy-05 Fix backend build and add Render config
+c9912a313654e3eb35d095626133c036a36376d0 4b20429f93e18849b65bb490b55f530cb2088444 MightyTechx <mightyproitsolutions@gmail.com> 1778215119 +0530	commit: Use direct node command for Render start
+4b20429f93e18849b65bb490b55f530cb2088444 3b7abb247538f2407c83ef048352315f175fb279 MightyTechx <mightyproitsolutions@gmail.com> 1778215269 +0530	commit: InfyEnergy-06 Simplify render build configuration
+3b7abb247538f2407c83ef048352315f175fb279 766e089f729a52eee3ef5c2e51aabd76576ccac4 MightyTechx <mightyproitsolutions@gmail.com> 1778258320 +0530	commit: InfyEnergy-07 fix the render issue
+766e089f729a52eee3ef5c2e51aabd76576ccac4 b70f2a39618d055c06f36cd1317cb5d24348ae06 MightyTechx <mightyproitsolutions@gmail.com> 1778258927 +0530	commit: InfyEnergy-08 fix the render issue
+b70f2a39618d055c06f36cd1317cb5d24348ae06 5d76cdb513042068ad48642a754661c97ebe9ba4 MightyTechx <mightyproitsolutions@gmail.com> 1778262015 +0530	commit: InfyEnergy-09 Upaded the render code"
+5d76cdb513042068ad48642a754661c97ebe9ba4 d47419dede711edee7c866a62f0713d8331b6091 MightyTechx <mightyproitsolutions@gmail.com> 1778262794 +0530	commit: InfyEnergy-10 Updated the files for render
+d47419dede711edee7c866a62f0713d8331b6091 9ecdb9e1eaea7e788e485185f4b8fec6dadbc1fe MightyTechx <mightyproitsolutions@gmail.com> 1778263890 +0530	commit: InfyEnergy-11 Updated the files for render
+9ecdb9e1eaea7e788e485185f4b8fec6dadbc1fe 5835d5168506ea7cd301f27b59bbca260a441f32 MightyTechx <mightyproitsolutions@gmail.com> 1778313728 +0530	commit: InfyEnergy-12 Updated the better UI
+5835d5168506ea7cd301f27b59bbca260a441f32 1fd90ea8d5f0bc852742a88ff7aeefbd7e0999c3 MightyTechx <mightyproitsolutions@gmail.com> 1778389829 +0530	commit: InfyEnergy-13 Updated the code for better UI
+1fd90ea8d5f0bc852742a88ff7aeefbd7e0999c3 ae7f238a0244150ddc133fd714eafd7906f53ea3 MightyTechx <mightyproitsolutions@gmail.com> 1778405887 +0530	commit: EnfyGen-14 Updated the new side nav pages
+ae7f238a0244150ddc133fd714eafd7906f53ea3 b8f10ce2e83aa38e4905c0cce9fa910978002ac0 MightyTechx <mightyproitsolutions@gmail.com> 1778425526 +0530	commit: InfyGen-15 Added the new features and pages
+b8f10ce2e83aa38e4905c0cce9fa910978002ac0 765bddce3898b3fb77e1df11d2466f72db726ff5 MightyTechx <mightyproitsolutions@gmail.com> 1778428286 +0530	commit: InfyGen-16 Added the new features flags
+765bddce3898b3fb77e1df11d2466f72db726ff5 765bddce3898b3fb77e1df11d2466f72db726ff5 MightyTechx <mightyproitsolutions@gmail.com> 1778434039 +0530	reset: moving to HEAD
+765bddce3898b3fb77e1df11d2466f72db726ff5 0fece74eb235bfc65d72604dbc131e2d1a597417 MightyTechx <mightyproitsolutions@gmail.com> 1778506019 +0530	commit: InfyGen-17 Updated All components to shaerd component and better UI
+0fece74eb235bfc65d72604dbc131e2d1a597417 0e6961b2822272da957eba9856308d15d7b7346b MightyTechx <mightyproitsolutions@gmail.com> 1778523820 +0530	commit: InfyGen-18 Updated the styles for dashbord page
+0e6961b2822272da957eba9856308d15d7b7346b 3eefc723a01190faeeed908bb1d18c5f7dacf000 MightyTechx <mightyproitsolutions@gmail.com> 1778551683 +0530	commit: InfyGen-19 Updated the bugs
+3eefc723a01190faeeed908bb1d18c5f7dacf000 d50d547a7e2ff6d9db9febdd3a6bc004937d32e3 MightyTechx <mightyproitsolutions@gmail.com> 1778553166 +0530	commit: InfyGen-20 Updated the header icons gap
+d50d547a7e2ff6d9db9febdd3a6bc004937d32e3 b484aeb44b73c5be00c326548f626f9173d84b01 MightyTechx <mightyproitsolutions@gmail.com> 1778555375 +0530	commit: InfyGen-21 Updated the Reports page
+b484aeb44b73c5be00c326548f626f9173d84b01 6a086761b10af220fd1a42e80071fff45836f149 MightyTechx <mightyproitsolutions@gmail.com> 1778556057 +0530	commit: InfyGen-22 updated the reports page table header
+6a086761b10af220fd1a42e80071fff45836f149 b9e1e631aa7937d2ef1148f5b8cb26c8607ad428 MightyTechx <mightyproitsolutions@gmail.com> 1778556772 +0530	commit: InfyGen-23 Updated the styles for reports page button
+b9e1e631aa7937d2ef1148f5b8cb26c8607ad428 fe1c6df164f2cc73108df65243c5279ad1bb46a3 MightyTechx <mightyproitsolutions@gmail.com> 1778557278 +0530	commit: InfyGen-24 Updated the styles for dashbord
+fe1c6df164f2cc73108df65243c5279ad1bb46a3 4ff5e9a28541bb1e0333384bc7eb18a02433c869 MightyTechx <mightyproitsolutions@gmail.com> 1778575905 +0530	commit: InfyGen-25 Updated the page header tables and added the cofig page
+4ff5e9a28541bb1e0333384bc7eb18a02433c869 a4ba231f5f0a98d2afef4dfc9af85bf0752b265f MightyTechx <mightyproitsolutions@gmail.com> 1778583684 +0530	commit: InfyGen-26 Updated the vercel json file
+a4ba231f5f0a98d2afef4dfc9af85bf0752b265f 6f128af794a94bf1f131ffc6ca717717d91ee615 MightyTechx <mightyproitsolutions@gmail.com> 1778584223 +0530	commit: InfyGen-27 Updated the vercel json file
+6f128af794a94bf1f131ffc6ca717717d91ee615 2db96f03f6450185d1a417efc03907598fc6d9ca MightyTechx <mightyproitsolutions@gmail.com> 1778584643 +0530	commit: InfyGen-28 Updated the vercel json file for router error
+2db96f03f6450185d1a417efc03907598fc6d9ca 1fbbb7646778241ded077ff9b019adf49408e94b MightyTechx <mightyproitsolutions@gmail.com> 1778585107 +0530	commit: InfyGen-29 Reverted the changes
+1fbbb7646778241ded077ff9b019adf49408e94b be76320899e77c12f7e0e00ed20c8fe74fd1e432 MightyTechx <mightyproitsolutions@gmail.com> 1778590222 +0530	commit: InfyGen-30 add SPA rewrites to vercel.json for client-side routing
+be76320899e77c12f7e0e00ed20c8fe74fd1e432 9fcde470cdbdacd01e2c2d698d5f72942311bc53 MightyTechx <mightyproitsolutions@gmail.com> 1778602099 +0530	commit: InfyGen-31 Updated the styles for reports, flags, turbine details pages
+9fcde470cdbdacd01e2c2d698d5f72942311bc53 8eb188178627de6cddc74d22699e3a014b3e9319 MightyTechx <mightyproitsolutions@gmail.com> 1778647547 +0530	commit: InfyGen-32 Udpdated the details page and config pages
+8eb188178627de6cddc74d22699e3a014b3e9319 23a843a0aaa04b85640c2d40114c6fb47978647d MightyTechx <mightyproitsolutions@gmail.com> 1778694348 +0530	commit: InfyGen-33 Updated the config, reports, setting and chat bot
+23a843a0aaa04b85640c2d40114c6fb47978647d 4e2455ee8265dcbaaa0fa9f86b88f1e4db050594 MightyTechx <mightyproitsolutions@gmail.com> 1778744180 +0530	commit: InfyGen-34 Updated the all component styles, removed the redundent code, files and added the 3d view
+4e2455ee8265dcbaaa0fa9f86b88f1e4db050594 f06fc917b78271807786807e83a12d628f80ddfc MightyTechx <mightyproitsolutions@gmail.com> 1778746004 +0530	commit: InfyGen-35 Resolved the issues for package
+f06fc917b78271807786807e83a12d628f80ddfc c4b0e17180b8a33d203190d1d6389471256f7e71 MightyTechx <mightyproitsolutions@gmail.com> 1778746293 +0530	commit: InfyGen-36 Added the npmrc file
+c4b0e17180b8a33d203190d1d6389471256f7e71 be924dcb2046a9315264181e0faf46cd73c0895b MightyTechx <mightyproitsolutions@gmail.com> 1778843756 +0530	commit: InfyGen-37 Reverted the 3d changes
+be924dcb2046a9315264181e0faf46cd73c0895b 9d92bc09dd45c5a91845cdd42676c635552f2bdc MightyTechx <mightyproitsolutions@gmail.com> 1778910250 +0530	commit: InfyGen-38 Updated the pages and add the new pages like create operation
+9d92bc09dd45c5a91845cdd42676c635552f2bdc d6a843104af109c9be0e69c8d9ff54bd08f9d0d9 MightyTechx <mightyproitsolutions@gmail.com> 1778920442 +0530	commit: InfyGen-39 Updated the credentials
+d6a843104af109c9be0e69c8d9ff54bd08f9d0d9 d6a843104af109c9be0e69c8d9ff54bd08f9d0d9 MightyTechx <mightyproitsolutions@gmail.com> 1781278157 +0530	reset: moving to HEAD
+d6a843104af109c9be0e69c8d9ff54bd08f9d0d9 d6a843104af109c9be0e69c8d9ff54bd08f9d0d9 MightyTechx <mightyproitsolutions@gmail.com> 1781286310 +0530	reset: moving to HEAD
+d6a843104af109c9be0e69c8d9ff54bd08f9d0d9 27458a680eaa618cbf96ec716e6698a226662a3d MightyTechx <mightyproitsolutions@gmail.com> 1781287993 +0530	commit: SprintPulse-01 Initail Commit

@@ -1,0 +1,28 @@
+{
+  "expo": {
+    "name": "InfyEnergy",
+    "slug": "infyenergy",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "infyenergy",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#0A1628"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.infygen.energy"
+    },
+    "android": {
+      "package": "com.infygen.energy"
+    },
+    "plugins": [
+      "expo-router"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}

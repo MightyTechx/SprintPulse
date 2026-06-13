@@ -1,0 +1,22 @@
+{
+  "name": "administration",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "web/apps/src",
+  "projectType": "application",
+  "tags": ["app"],
+  "targets": {
+    "build": {
+      "executor": "@nx/vite:build",
+      "options": {
+        "outputPath": "dist/web/apps",
+        "configFile": "web/apps/vite.config.ts"
+      }
+    },
+    "serve": {
+      "executor": "@nx/vite:dev-server",
+      "options": {
+        "buildTarget": "administration:build"
+      }
+    }
+  }
+}

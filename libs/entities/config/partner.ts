@@ -1,0 +1,39 @@
+// Partner configuration utilities
+export interface PartnerConfig {
+  name: string;
+  theme: string;
+  features: string[];
+  apiUrl?: string;
+  logoUrl?: string;
+}
+
+export const PARTNER_CONFIGS: Record<string, PartnerConfig> = {
+  administration: {
+    name: 'Administration',
+    theme: 'administration',
+    features: ['admin', 'user', 'reports', 'system', 'dashboard'],
+    apiUrl: '/api',
+  },
+  'wind-tree': {
+    name: 'Wind Tree',
+    theme: 'wind-tree',
+    features: ['admin', 'user', 'reports'],
+    apiUrl: '/api',
+  },
+};
+
+export const getPartnerConfig = (partner: string): PartnerConfig | undefined => {
+  return PARTNER_CONFIGS[partner];
+};
+
+export const isPartner = (partner: string): boolean => {
+  return partner in PARTNER_CONFIGS;
+};
+
+export const isAdministration = (partner: string): boolean => {
+  return partner === 'administration';
+};
+
+export const isGeneralePartner = (partner: string): boolean => {
+  return partner === 'wind-tree';
+};

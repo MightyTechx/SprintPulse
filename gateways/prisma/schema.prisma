@@ -1,0 +1,132 @@
+// Auth Models
+
+// UserStatus: pending_approval | invited | active | inactive | deactivated | rejected | expired
+// UserSource:  signup | admin | ticket | ad
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id              Int       @id @default(autoincrement())
+  firstName       String
+  lastName        String
+  email           String    @unique
+  password        String
+  phone           String?
+  workLocation    String?
+  department      String?
+  reasonForAccess String?
+  employeeId      String?
+  businessUnit    String?
+  managerName     String?
+  cityZone        String?
+  zipcode         String?
+  dateOfBirth     String?
+  gender          String?
+  profilePicture  String?
+  name            String
+  role            String    @default("user")
+  requestedRole   String?
+  // lifecycle status
+  status          String    @default("pending_approval")
+  source          String    @default("signup")        // signup | admin | ticket | ad
+  // approval
+  reviewedBy      Int?
+  reviewedAt      DateTime?
+  adminNotes      String?
+  // invitation
+  invitationToken  String?
+  invitationExpiry DateTime?
+  // password management
+  mustResetPassword       Boolean   @default(false)
+  otp                     String?
+  otpExpiresAt            DateTime?
+  otpIsUsed               Boolean   @default(false)
+  failedLoginAttempts     Int       @default(0)
+  lockedUntil             DateTime?
+  lastLoginAt             DateTime?
+  passwordChangedAt       DateTime?
+  // access control
+  isActive                Boolean   @default(false)
+  accessFromDate          DateTime?
+  accessToDate            DateTime?
+  firstActivationDate     DateTime?
+  lastDeactivationDate    DateTime?
+  // tracking
+  lastActivityAt          DateTime?
+  // locale & preferences
+  theme                 String?   @default("Cobalt")
+  timezone              String?
+  dateFormat            String?
+  timeFormat            String?
+  language              String?
+  // consultant fields
+  consultantProfileUpdated Boolean  @default(false)
+  slaWorkingCalendar       String?
+  slaExceptionGroup        String?
+  application              String?
+  applicationLead          String?
+  // timestamps
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+}
+
+model UserChangeLog {
+  id            Int      @id @default(autoincrement())
+  userId        Int
+  changeType    String   // field_update | role_change | access_approved | access_created | password_reset | activation | deactivation | rejection
+  fieldName     String?
+  previousValue String?
+  newValue      String?
+  changedBy     Int
+  changedByName String
+  reasonCode    String?
+  reasonNotes   String?
+  createdAt     DateTime @default(now())
+}
+
+model LoginLog {
+  id         Int       @id @default(autoincrement())
+  userId     Int
+  loginTime  DateTime  @default(now())
+  logoutTime DateTime?
+  ipAddress  String?
+  device     String?
+  userAgent  String?
+}
+
+model FeatureFlag {
+  id          Int      @id @default(autoincrement())
+  name        String
+  key         String   @unique
+  description String   @default("")
+  environment String   @default("Development")
+  status      String   @default("Disabled")
+  roles       String   @default("[\"Admin\"]")
+  createdBy   Int?
+  updatedBy   Int?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// ─── User Preferences ──────────────────────────────────────────────────────────
+
+model UserPreference {
+  id          String   @id @default(cuid())
+  userId      Int      @unique
+  themeName   String   @default("System")
+  compactView Boolean  @default(false)
+  darkMode    Boolean  @default(false)
+  autoSave    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId])
+}
+
