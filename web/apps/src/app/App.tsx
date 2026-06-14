@@ -15,7 +15,7 @@ const {
   AdminDashboardPage,
   AdminTurbineDetailPage,
   AdminTicketDetailPage,
-  AdminFleetStatusMatrixPage,
+  AdminSprintStatusMatrixPage,
   AdminPeopleManagementPage,
   AdminUserDetailPage,
   AdminProfilePage,
@@ -84,7 +84,7 @@ const AppRoutes = () => {
             <Route path={AdminPath.DASHBOARD} element={<AdminDashboardPage />} />
             <Route path={AdminPath.TURBINE_DETAIL} element={<AdminTurbineDetailPage />} />
             <Route path={AdminPath.TICKET_DETAIL} element={<AdminTicketDetailPage />} />
-            <Route path={AdminPath.FLEET_STATUS_MATRIX} element={<AdminFleetStatusMatrixPage />} />
+            <Route path={AdminPath.SPRINT_STATUS_MATRIX} element={<AdminSprintStatusMatrixPage />} />
             <Route path={AdminPath.ACCESS_MANAGEMENT} element={<AdminPeopleManagementPage />} />
             <Route path={AdminPath.USER_DETAIL} element={<AdminUserDetailPage />} />
             <Route path={AdminPath.PROFILE} element={<AdminProfilePage />} />

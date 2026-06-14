@@ -210,13 +210,7 @@ export interface TurbineData {
 export type TurbineStatus = TurbineData['status'];
 
 // ─── Ticket (sprint ticket table) ─────────────────────────────────────────────
-export type TicketStatus =
-  | 'To Do'
-  | 'In Progress'
-  | 'In Review'
-  | 'Blocked'
-  | 'Testing'
-  | 'Done';
+export type TicketStatus = 'To Do' | 'In Progress' | 'In Review' | 'Blocked' | 'In Test' | 'Done';
 
 export interface Ticket {
   id: number;
@@ -228,12 +222,12 @@ export interface Ticket {
   timeLoggingId: string;
   status: TicketStatus;
   storyPoints: number;
-  actualEffort: string;
   fixVersion: string;
   carryForward: string; // Source sprint name when carried forward, e.g. 'Sprint 23' (empty = not carried forward)
   carryForwardReason: string;
   workStartDate: string; // YYYY-MM-DD
-  workEndDate: string;   // YYYY-MM-DD
+  workEndDate: string; // YYYY-MM-DD
+  ticketLink: string; // URL to the ticket in the issue tracker
 }
 
 export const TICKET_STATUS_CONFIG: Record<
@@ -264,8 +258,8 @@ export const TICKET_STATUS_CONFIG: Record<
     bgColor: 'rgba(239,68,68,0.15)',
     borderColor: 'rgba(239,68,68,0.4)',
   },
-  Testing: {
-    label: 'Testing',
+  'In Test': {
+    label: 'In Test',
     color: '#f59e0b',
     bgColor: 'rgba(245,158,11,0.15)',
     borderColor: 'rgba(245,158,11,0.4)',

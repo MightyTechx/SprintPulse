@@ -9,8 +9,8 @@ export const LazyMenuItems = {
   AdminTicketDetailPage: lazy(() =>
     import('@infygen/pages/admin/Dashboard').then((m) => ({ default: m.TicketDetailPage })),
   ),
-  AdminFleetStatusMatrixPage: lazy(() =>
-    import('@infygen/pages/admin/Dashboard').then((m) => ({ default: m.FleetStatusMatrixPage })),
+  AdminSprintStatusMatrixPage: lazy(() =>
+    import('@infygen/pages/admin/Dashboard').then((m) => ({ default: m.SprintStatusMatrixPage })),
   ),
   AdminPeopleManagementPage: lazy(() => import('@infygen/pages/admin/People/PeopleManagement')),
   AdminUserDetailPage: lazy(() => import('@infygen/pages/admin/People/UserDetail')),

@@ -47,6 +47,7 @@ import { useAdminKeyframes, useAuth, useLiveDateTime } from '../../../hooks';
 import { useStyles } from './styles';
 import { TurbineData, TICKET_STATUS_CONFIG, Ticket } from './types/turbineData.types';
 import { MOCK_TURBINE_DATA, MOCK_TICKETS } from './utils/dashboard.utils';
+import { getActualEffort } from './utils/effortCalculations';
 import { constants } from '@infygen/utils';
 import { Column, DataTable, Card } from '@infygen/component';
 import ComponentDetailDialog from './components/ComponentDetailDialog';
@@ -55,64 +56,42 @@ import ComponentDetailDialog from './components/ComponentDetailDialog';
 
 type ChartType = 'bar' | 'line';
 
-const ALL_TURBINES = MOCK_TURBINE_DATA.map((t) => t.turbineNo);
+const ALL_TEAMS = [
+  'Wookies',
+  'Spaceroovers',
+  'Weagles',
+  'Baby Groot',
+  'Gladiators',
+  'Transformers',
+];
 const SELECT_ALL = '__select_all__';
 
-const TURBINE_COLORS = [
-  '#6366f1',
-  '#06b6d4',
-  '#10b981',
-  '#f59e0b',
-  '#ef4444',
-  '#8b5cf6',
-  '#f97316',
-  '#0d9488',
-  '#3b82f6',
-  '#ec4899',
-];
+const TEAM_COLORS = ['#6366f1', '#06b6d4', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
 
 const MIN_DATE = dayjs('2026-01-01');
 const MAX_DATE = dayjs().startOf('day');
 
-// Custom status sort order: fault (1), stopped (2), maintenance (3), running (4)
-const STATUS_SORT_ORDER: Record<string, number> = {
-  fault: 1,
-  stopped: 2,
-  maintenance: 3,
-  running: 4,
-};
-
-// ─── Data helpers ─────────────────────────────────────────────────────────────
-
-const generateDayData = (dateStr: string): number[] => {
-  const [y, m, d] = dateStr.split('-').map(Number);
-  const seed = (y % 100) * 10000 + m * 100 + d;
-  const base: Record<string, number> = {
-    running: 4200,
-    standby: 900,
-    maintenance: 1600,
-    fault: 300,
-    stopped: 0,
-  };
-  return MOCK_TURBINE_DATA.map((t, i) => {
-    if (t.status === 'stopped') return 0;
-    const variation = ((seed + i * 97 + i * i * 13) % 1600) - 800;
-    return Math.max(0, Math.round((base[t.status] ?? 3000) + variation));
-  });
-};
-
 const toDateStr = (d: Date) =>
   `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 
-const getChartData = (from: Dayjs, to: Dayjs, turbineNos: string[]) => {
+const getTeamData = (team: string, dateStr: string): number => {
+  const teamIndex = ALL_TEAMS.indexOf(team);
+  const baseValues = [15, 12, 18, 10, 14, 16]; // Story points baseline for each team
+  const [y, m, d] = dateStr.split('-').map(Number);
+  const seed = (y % 100) * 10000 + m * 100 + d + teamIndex * 100;
+  const variation = ((seed + teamIndex * 97 + teamIndex * teamIndex * 13) % 40) - 20; // Less variation for story points
+  return Math.max(0, Math.round((baseValues[teamIndex] ?? 10) + variation));
+};
+
+const getChartData = (from: Dayjs, to: Dayjs, teams: string[]) => {
   const fromDate = from.toDate();
   const toDate = to.toDate();
   const totalDays = Math.round((toDate.getTime() - fromDate.getTime()) / 86_400_000) + 1;
 
-  const turbineIndices = turbineNos.map((no) => ALL_TURBINES.indexOf(no));
+  const teamIndices = teams.map((no) => ALL_TEAMS.indexOf(no));
 
   const categories: string[] = [];
-  const buckets: number[][] = turbineIndices.map(() => []);
+  const buckets: number[][] = teamIndices.map(() => []);
   let aggregate: 'daily' | 'weekly' | 'monthly' = 'daily';
 
   if (totalDays <= 31) {
@@ -122,8 +101,10 @@ const getChartData = (from: Dayjs, to: Dayjs, turbineNos: string[]) => {
       const date = new Date(fromDate);
       date.setDate(fromDate.getDate() + d);
       categories.push(date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }));
-      const vals = generateDayData(toDateStr(date));
-      turbineIndices.forEach((ti, i) => buckets[i].push(vals[ti] ?? 0));
+      const dateStr = toDateStr(date);
+      teams.forEach((team, i) => {
+        buckets[i].push(getTeamData(team, dateStr));
+      });
     }
   } else if (totalDays <= 180) {
     // ── Weekly ──
@@ -134,12 +115,12 @@ const getChartData = (from: Dayjs, to: Dayjs, turbineNos: string[]) => {
       wEnd.setDate(wStart.getDate() + 6);
       if (wEnd > toDate) wEnd.setTime(toDate.getTime());
       categories.push(wStart.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }));
-      const sums = turbineIndices.map(() => 0);
+      const sums = teamIndices.map(() => 0);
       const cur = new Date(wStart);
       while (cur <= wEnd) {
-        const vals = generateDayData(toDateStr(cur));
-        turbineIndices.forEach((ti, i) => {
-          sums[i] += vals[ti] ?? 0;
+        const dateStr = toDateStr(cur);
+        teams.forEach((team, i) => {
+          sums[i] += getTeamData(team, dateStr);
         });
         cur.setDate(cur.getDate() + 1);
       }
@@ -156,13 +137,13 @@ const getChartData = (from: Dayjs, to: Dayjs, turbineNos: string[]) => {
       const mo = cur.getMonth();
       const dim = new Date(yr, mo + 1, 0).getDate();
       categories.push(cur.toLocaleDateString('en-GB', { month: 'short', year: '2-digit' }));
-      const sums = turbineIndices.map(() => 0);
+      const sums = teamIndices.map(() => 0);
       for (let d = 1; d <= dim; d++) {
         const day = new Date(yr, mo, d);
         if (day < fromDate || day > toDate) continue;
-        const vals = generateDayData(toDateStr(day));
-        turbineIndices.forEach((ti, i) => {
-          sums[i] += vals[ti] ?? 0;
+        const dateStr = toDateStr(day);
+        teams.forEach((team, i) => {
+          sums[i] += getTeamData(team, dateStr);
         });
       }
       sums.forEach((s, i) => buckets[i].push(Math.round(s)));
@@ -170,25 +151,13 @@ const getChartData = (from: Dayjs, to: Dayjs, turbineNos: string[]) => {
     }
   }
 
-  const series = turbineNos.map((name, i) => ({ name, data: buckets[i] }));
+  const series = teams.map((name, i) => ({ name, data: buckets[i] }));
   const allVals = buckets.flat();
   const totalEnergy = allVals.reduce((a, b) => a + b, 0);
   const peakValue = allVals.length ? Math.max(...allVals) : 0;
   const avgPerDay = totalDays > 0 ? Math.round(totalEnergy / totalDays) : 0;
 
   return { categories, series, aggregate, totalDays, totalEnergy, peakValue, avgPerDay };
-};
-
-const fmtEnergy = (kwh: number) => {
-  if (kwh >= 1_000_000) return `${(kwh / 1_000_000).toFixed(2)} GWh`;
-  if (kwh >= 1_000) return `${(kwh / 1_000).toFixed(1)} MWh`;
-  return `${kwh.toLocaleString()} kWh`;
-};
-
-const fmtYAxis = (val: number) => {
-  if (val >= 1_000_000) return `${(val / 1_000_000).toFixed(1)}G`;
-  if (val >= 1_000) return `${(val / 1_000).toFixed(0)}k`;
-  return `${Math.round(val)}`;
 };
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -214,7 +183,7 @@ const Dashboard = () => {
   const [chartType, setChartType] = useState<ChartType>('bar');
   const [fromDate, setFromDate] = useState<Dayjs>(MIN_DATE);
   const [toDate, setToDate] = useState<Dayjs>(MAX_DATE);
-  const [selectedTurbines, setSelectedTurbines] = useState<string[]>(ALL_TURBINES);
+  const [selectedTurbines, setSelectedTurbines] = useState<string[]>(ALL_TEAMS);
 
   // Ticket search (used by the ticket table on the Dashboard)
   const [ticketSearch, setTicketSearch] = useState('');
@@ -365,12 +334,12 @@ const Dashboard = () => {
 
   // ── Chart data ────────────────────────────────────────────────────────────────
   const chartData = useMemo(
-    () => getChartData(fromDate, toDate, selectedTurbines.length ? selectedTurbines : ALL_TURBINES),
+    () => getChartData(fromDate, toDate, selectedTurbines.length ? selectedTurbines : ALL_TEAMS),
     [fromDate, toDate, selectedTurbines],
   );
 
-  const seriesColors = (selectedTurbines.length ? selectedTurbines : ALL_TURBINES).map(
-    (t) => TURBINE_COLORS[ALL_TURBINES.indexOf(t)] ?? '#6366f1',
+  const seriesColors = (selectedTurbines.length ? selectedTurbines : ALL_TEAMS).map(
+    (t) => TEAM_COLORS[ALL_TEAMS.indexOf(t)] ?? '#6366f1',
   );
 
   const axisLabelCount = Math.min(chartData.categories.length, 20);
@@ -378,37 +347,29 @@ const Dashboard = () => {
 
   const commonAxisX: ApexOptions['xaxis'] = {
     categories: chartData.categories,
-    tickAmount: axisLabelCount,
     title: {
-      text: `${chartData.aggregate === 'daily' ? 'Day' : chartData.aggregate === 'weekly' ? 'Week starting' : 'Month'} · ${fromDate.format('DD MMM YYYY')} – ${toDate.format('DD MMM YYYY')}`,
+      text: `Sprint · ${chartData.aggregate}`,
       style: { color: '#94a3b8', fontSize: '11px', fontWeight: '500' },
-      offsetY: 4,
     },
     labels: {
-      rotate: rotateLabels ? -45 : 0,
-      rotateAlways: rotateLabels,
       style: {
         colors: Array(chartData.categories.length).fill('#64748b'),
         fontSize: '10px',
         fontWeight: '500',
       },
-      trim: false,
+      rotate: rotateLabels ? 45 : 0,
+      trim: true,
     },
-    axisBorder: { show: false },
-    axisTicks: { color: '#e2e8f0' },
-    crosshairs: { show: true, stroke: { color: '#e2e8f0', width: 1, dashArray: 4 } },
   };
 
   const commonAxisY: ApexOptions['yaxis'] = {
     title: {
-      text: 'Energy (kWh)',
+      text: 'Story Points',
       style: { color: '#94a3b8', fontSize: '11px', fontWeight: '500' },
     },
-    labels: {
-      formatter: fmtYAxis,
-      style: { colors: ['#64748b'], fontSize: '11px' },
-    },
     min: 0,
+    max: 600,
+    tickAmount: 6,
   };
 
   const commonGrid: ApexOptions['grid'] = {
@@ -438,7 +399,7 @@ const Dashboard = () => {
     shared: true,
     intersect: false,
     style: { fontSize: '12px', fontFamily: 'inherit' },
-    y: { formatter: (val: number) => `${val.toLocaleString()} kWh` },
+    y: { formatter: (val: number) => `${Math.round(val)} pts` },
   };
 
   const barOptions: ApexOptions = {
@@ -505,35 +466,39 @@ const Dashboard = () => {
   const kpiCards = useMemo(
     () => [
       {
-        label: 'Total Energy',
-        value: fmtEnergy(chartData.totalEnergy),
-        sub: `${fromDate.format('DD MMM')} – ${toDate.format('DD MMM YYYY')}`,
-        color: '#6366f1',
-        Icon: BoltIcon,
+        icon: <BoltIcon sx={{ color: '#4f46e5', fontSize: 20 }} />,
+        bg: 'rgba(79,70,229,0.12)',
+        border: 'rgba(79,70,229,0.3)',
+        value: chartData.totalEnergy.toLocaleString(),
+        label: 'Total Story Points',
+        valueColor: '#4f46e5',
       },
       {
-        label: 'Peak Output',
-        value: fmtEnergy(chartData.peakValue),
-        sub: `Highest single ${aggLabel}`,
-        color: '#10b981',
-        Icon: TrendingUpIcon,
+        icon: <TrendingUpIcon sx={{ color: '#10b981', fontSize: 20 }} />,
+        bg: 'rgba(16,185,129,0.12)',
+        border: 'rgba(16,185,129,0.3)',
+        value: chartData.totalEnergy.toLocaleString(),
+        label: 'Total Points Completed',
+        valueColor: '#10b981',
       },
       {
-        label: `Avg / Day`,
-        value: fmtEnergy(chartData.avgPerDay),
-        sub: `Across ${chartData.totalDays} days`,
-        color: '#0891b2',
-        Icon: CalendarMonthIcon,
+        icon: <CalendarMonthIcon sx={{ color: '#0891b2', fontSize: 20 }} />,
+        bg: 'rgba(8,145,178,0.12)',
+        border: 'rgba(8,145,178,0.3)',
+        value: `${chartData.avgPerDay}`,
+        label: 'Avg Points / Day',
+        valueColor: '#0891b2',
       },
       {
-        label: 'Turbines',
-        value: `${selectedTurbines.length || ALL_TURBINES.length}`,
-        sub: selectedTurbines.length === ALL_TURBINES.length ? 'All turbines' : 'Selected',
-        color: '#f59e0b',
-        Icon: RouterIcon,
+        icon: <RouterIcon sx={{ color: '#f59e0b', fontSize: 20 }} />,
+        bg: 'rgba(245,158,11,0.12)',
+        border: 'rgba(245,158,11,0.3)',
+        value: `${selectedTurbines.length || ALL_TEAMS.length}`,
+        label: 'Teams',
+        valueColor: '#f59e0b',
       },
     ],
-    [chartData, fromDate, toDate, selectedTurbines, aggLabel],
+    [chartData, fromDate, toDate, selectedTurbines],
   );
 
   // ── Ticket table columns (15 columns in the requested order) ────────────────
@@ -656,7 +621,17 @@ const Dashboard = () => {
           <Typography sx={{ fontSize: '0.78rem', fontWeight: 700 }}>{String(v)}</Typography>
         ),
       },
-      { id: 'actualEffort', label: 'Actual Effort', minWidth: 100, align: 'center' },
+      {
+        id: 'actualEffort',
+        label: 'Actual Effort',
+        minWidth: 100,
+        align: 'center',
+        format: (_v, row: Ticket) => (
+          <Typography sx={{ fontSize: '0.78rem', fontWeight: 700 }}>
+            {getActualEffort(row.storyPoints)}
+          </Typography>
+        ),
+      },
       { id: 'fixVersion', label: 'Fix Version', minWidth: 100, align: 'center' },
       {
         id: 'carryForward',
@@ -673,34 +648,16 @@ const Dashboard = () => {
             );
           }
           return (
-            <Box
+            <Typography
               sx={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: 0.5,
-                px: 1,
-                py: 0.35,
-                borderRadius: 1.5,
-                background: 'rgba(99,102,241,0.1)',
-                border: '1px solid rgba(99,102,241,0.25)',
+                fontSize: '0.75rem',
+                fontWeight: 600,
+                fontFamily: 'monospace',
+                color: '#4f46e5',
               }}
             >
-              <Box
-                sx={{
-                  width: 6,
-                  height: 6,
-                  borderRadius: '50%',
-                  background: '#4f46e5',
-                  boxShadow: '0 0 4px rgba(79,70,229,0.5)',
-                  flexShrink: 0,
-                }}
-              />
-              <Typography
-                sx={{ fontSize: '0.68rem', fontWeight: 700, color: '#4f46e5', lineHeight: 1 }}
-              >
-                {sprint}
-              </Typography>
-            </Box>
+              {String(sprint)}
+            </Typography>
           );
         },
       },
@@ -726,14 +683,14 @@ const Dashboard = () => {
             </Box>
           </Box>
           <Box className={classes.heroCenterMobile}>
-            <Typography className={classes.heroCenterMobileTitle}>SALES TEAM</Typography>
+            <Typography className={classes.heroCenterMobileTitle}>AMFAM MATRIX</Typography>
             <Box className={classes.heroCenterMobileBadge}>
               <Box className={classes.heroCenterMobileDot} />
               <Typography className={classes.heroCenterMobileLive}>LIVE</Typography>
             </Box>
           </Box>
           <Box className={classes.heroCenter}>
-            <Typography className={classes.heroCenterTitle}>SALES TEAM</Typography>
+            <Typography className={classes.heroCenterTitle}>AMFAM MATRIX</Typography>
             <Box className={classes.heroCenterBadge}>
               <Box className={classes.heroCenterDot} />
               <Typography className={classes.heroCenterLive}>Live Tracking Activity</Typography>
@@ -821,7 +778,9 @@ const Dashboard = () => {
             },
             {
               icon: (
-                <CheckCircleIcon sx={{ color: doneCount > 0 ? '#10b981' : '#6b7280', fontSize: 20 }} />
+                <CheckCircleIcon
+                  sx={{ color: doneCount > 0 ? '#10b981' : '#6b7280', fontSize: 20 }}
+                />
               ),
               bg: doneCount > 0 ? 'rgba(16,185,129,0.12)' : 'rgba(107,114,128,0.12)',
               border: doneCount > 0 ? 'rgba(16,185,129,0.3)' : 'rgba(107,114,128,0.3)',
@@ -876,7 +835,7 @@ const Dashboard = () => {
                 view === 'chart' ? classes.toggleBtnActiveChart : classes.toggleBtnInactive
               }
             >
-              Power Analytics
+              Team Analytics
             </Button>
 
             <Button
@@ -893,10 +852,10 @@ const Dashboard = () => {
             <Button
               variant='outlined'
               startIcon={<GridViewIcon sx={{ fontSize: 18 }} />}
-              onClick={() => navigate(AdminPath.FLEET_STATUS_MATRIX)}
+              onClick={() => navigate(AdminPath.SPRINT_STATUS_MATRIX)}
               className={classes.toggleBtnInactive}
             >
-              Fleet Status Matrix
+              Sprint Status Matrix
             </Button>
           </Box>
 
@@ -920,7 +879,7 @@ const Dashboard = () => {
           )}
         </Box>
 
-        {/* ── Analytics Filter Panel - Power Analytics ── */}
+        {/* ── Analytics Filter Panel - Team Analytics ── */}
         {view === 'chart' && (
           <Box
             sx={{
@@ -984,12 +943,12 @@ const Dashboard = () => {
               multiple
               disableCloseOnSelect
               size='small'
-              options={[SELECT_ALL, ...ALL_TURBINES]}
+              options={[SELECT_ALL, ...ALL_TEAMS]}
               value={selectedTurbines}
               onChange={(_, v) => {
                 if (v.includes(SELECT_ALL)) {
                   setSelectedTurbines(
-                    selectedTurbines.length === ALL_TURBINES.length ? [] : [...ALL_TURBINES],
+                    selectedTurbines.length === ALL_TEAMS.length ? [] : [...ALL_TEAMS],
                   );
                 } else {
                   setSelectedTurbines(v as string[]);
@@ -999,7 +958,7 @@ const Dashboard = () => {
               isOptionEqualToValue={(opt, val) => opt === val}
               renderOption={(props, option, { selected }) => {
                 if (option === SELECT_ALL) {
-                  const allSelected = selectedTurbines.length === ALL_TURBINES.length;
+                  const allSelected = selectedTurbines.length === ALL_TEAMS.length;
                   const indeterminate = selectedTurbines.length > 0 && !allSelected;
                   return (
                     <li
@@ -1026,7 +985,7 @@ const Dashboard = () => {
                     </li>
                   );
                 }
-                const colorIdx = ALL_TURBINES.indexOf(option);
+                const colorIdx = ALL_TEAMS.indexOf(option);
                 return (
                   <li
                     {...props}
@@ -1044,7 +1003,7 @@ const Dashboard = () => {
                         width: 8,
                         height: 8,
                         borderRadius: '50%',
-                        background: TURBINE_COLORS[colorIdx],
+                        background: TEAM_COLORS[colorIdx],
                         flexShrink: 0,
                       }}
                     />
@@ -1055,7 +1014,7 @@ const Dashboard = () => {
               renderTags={(value) => (
                 <Chip
                   label={
-                    value.length === ALL_TURBINES.length
+                    value.length === ALL_TEAMS.length
                       ? `All (${value.length})`
                       : `${value.length} selected`
                   }
@@ -1070,7 +1029,7 @@ const Dashboard = () => {
                 />
               )}
               renderInput={(params) => (
-                <TextField {...params} label='Turbines' placeholder='Select…' size='small' />
+                <TextField {...params} label='Teams' placeholder='Select…' size='small' />
               )}
               ListboxProps={{ sx: { maxHeight: 200 } }}
             />
@@ -1145,7 +1104,7 @@ const Dashboard = () => {
             }}
           />
         ) : view === 'chart' ? (
-          /* ── Power Analytics Card ── */
+          /* ── Team Analytics Card ── */
           <Card cardVariant='default'>
             {/* Card Header */}
             <Box
@@ -1187,7 +1146,7 @@ const Dashboard = () => {
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.25 }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap' }}>
                     <Typography sx={{ fontSize: '1rem', fontWeight: 700, color: 'text.primary' }}>
-                      Power Analytics
+                      Team Analytics
                     </Typography>
                     <Box
                       sx={{
@@ -1231,7 +1190,7 @@ const Dashboard = () => {
                         lineHeight: 1.4,
                       }}
                     >
-                      {chartType === 'bar' ? 'Stacked Energy Generation' : 'Generation Trend'}
+                      {chartType === 'bar' ? 'Story Points by Team' : 'Story Points Trend'}
                     </Typography>
                     <Typography
                       sx={{
@@ -1283,65 +1242,29 @@ const Dashboard = () => {
               <Box
                 sx={{
                   display: 'grid',
-                  gridTemplateColumns: { xs: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' },
+                  gridTemplateColumns: { xs: 'repeat(2, 1fr)', md: 'repeat(4, 220px)' },
                   gap: 1.5,
                   mb: 2,
                   justifyContent: 'center',
-                  maxWidth: { md: 700 },
                   mx: 'auto',
                 }}
               >
-                {kpiCards.map(({ label, value, color, Icon }) => (
-                  <Paper
-                    key={label}
-                    sx={{
-                      p: { xs: '8px 10px', md: '10px 12px' },
-                      borderRadius: 1.2,
-                      border: '1px solid',
-                      borderColor: 'divider',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 1,
-                    }}
-                  >
+                {kpiCards.map(({ icon, bg, border, value, label, valueColor }) => (
+                  <Paper key={label} className={classes.statCard} elevation={0}>
                     <Box
-                      sx={{
-                        width: { xs: 30, md: 38 },
-                        height: { xs: 30, md: 38 },
-                        borderRadius: 1.2,
-                        background: `${color}15`,
-                        border: '1px solid',
-                        borderColor: `${color}30`,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        flexShrink: 0,
-                      }}
+                      className={classes.statCardIconWrap}
+                      sx={{ background: bg, border: `1px solid ${border}` }}
                     >
-                      <Icon sx={{ fontSize: { xs: 12, md: 14 }, color }} />
+                      {icon}
                     </Box>
-                    <Box sx={{ minWidth: 0 }}>
+                    <Box>
                       <Typography
-                        sx={{
-                          fontSize: { xs: '0.6rem', md: '0.65rem' },
-                          fontWeight: 600,
-                          color: 'text.secondary',
-                          lineHeight: 1.6,
-                        }}
-                      >
-                        {label}
-                      </Typography>
-                      <Typography
-                        sx={{
-                          fontSize: { xs: '13px', md: '1rem' },
-                          fontWeight: 700,
-                          color,
-                          lineHeight: 1.2,
-                          fontVariantNumeric: 'tabular-nums',
-                        }}
+                        className={classes.statCardValue}
+                        sx={valueColor ? { color: valueColor } : {}}
                       >
                         {value}
                       </Typography>
+                      <Typography className={classes.statCardLabel}>{label}</Typography>
                     </Box>
                   </Paper>
                 ))}

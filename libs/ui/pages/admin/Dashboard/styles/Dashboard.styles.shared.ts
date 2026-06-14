@@ -1010,7 +1010,7 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     [theme.breakpoints.down('sm')]: { display: 'none' },
   },
 
-  // ─── Fleet Status Matrix ────────────────────────────────────────────────────
+  // ─── Sprint Status Matrix ────────────────────────────────────────────────────
   toggleBtnActiveMatrix: {
     background: 'linear-gradient(135deg,#6366f1 0%,#8b5cf6 100%)',
     boxShadow: '0 4px 18px rgba(99,102,241,0.4)',

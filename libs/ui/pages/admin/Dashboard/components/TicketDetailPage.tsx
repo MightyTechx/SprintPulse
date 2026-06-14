@@ -1,13 +1,27 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Box, Typography, IconButton, Tooltip, Paper, Chip, Column, DataTable, Card } from '@infygen/component';
+import {
+  Box,
+  Typography,
+  IconButton,
+  Tooltip,
+  Paper,
+  Chip,
+  Column,
+  DataTable,
+  Link,
+} from '@infygen/component';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CloseIcon from '@mui/icons-material/Close';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import EventNoteIcon from '@mui/icons-material/EventNote';
+import LinkIcon from '@mui/icons-material/Link';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { constants } from '@infygen/utils';
 import { useTicketDetailStyles } from '../styles/TicketDetailPage.styles';
 import { TICKET_STATUS_CONFIG, Ticket, TicketStatus } from '../types/turbineData.types';
 import { MOCK_TICKETS } from '../utils/dashboard.utils';
+import { getActualEffort } from '../utils/effortCalculations';
 import { useAdminKeyframes } from '@infygen/hooks';
 
 // ─── Helper functions ──────────────────────────────────────────────────────────
@@ -46,8 +60,8 @@ const DAILY_STATUS_PROGRESSION: TicketStatus[] = [
   'In Progress',
   'In Review',
   'In Review',
-  'Testing',
-  'Testing',
+  'In Test',
+  'In Test',
   'Done',
 ];
 
@@ -65,7 +79,7 @@ const DAILY_COMMENTS: Record<TicketStatus, string[]> = {
     'Awaiting reviewer approval',
   ],
   Blocked: ['Waiting on dependency from another team', 'Unblocked and resumed work'],
-  Testing: [
+  'In Test': [
     'Wrote unit tests, coverage at 85%',
     'QA validating in staging environment',
     'Fixed edge-case bugs found in testing',
@@ -92,8 +106,7 @@ function buildDailyStatus(ticket: Ticket): DailyStatusRow[] {
       idx < DAILY_STATUS_PROGRESSION.length ? DAILY_STATUS_PROGRESSION[idx] : ticket.status;
     const comments = DAILY_COMMENTS[status] ?? ['Continued progress on ticket'];
     const comment = comments[idx % comments.length];
-    const hours =
-      status === 'Done' ? 1 : status === 'Testing' ? 3 : status === 'In Review' ? 4 : 6;
+    const hours = status === 'Done' ? 1 : status === 'In Test' ? 3 : status === 'In Review' ? 4 : 6;
 
     rows.push({
       id: `${ticket.issueNo}-${d.toISOString().slice(0, 10)}`,
@@ -154,11 +167,20 @@ const FieldCard: React.FC<FieldCardProps> = ({ title, icon, subtitle, children }
         {icon ?? <AssignmentIcon sx={{ fontSize: 22, color: '#fff' }} />}
       </Box>
       <Box sx={{ flex: 1, minWidth: 0 }}>
-        <Typography sx={{ fontWeight: 800, fontSize: '1rem', color: 'text.primary', letterSpacing: '-0.01em' }}>
+        <Typography
+          sx={{
+            fontWeight: 800,
+            fontSize: '1rem',
+            color: 'text.primary',
+            letterSpacing: '-0.01em',
+          }}
+        >
           {title}
         </Typography>
         {subtitle && (
-          <Typography sx={{ fontSize: '0.72rem', color: 'text.secondary', fontWeight: 500, mt: 0.25 }}>
+          <Typography
+            sx={{ fontSize: '0.72rem', color: 'text.secondary', fontWeight: 500, mt: 0.25 }}
+          >
             {subtitle}
           </Typography>
         )}
@@ -187,10 +209,7 @@ const TicketDetailPage: React.FC = () => {
     setLoading(false);
   }, [id]);
 
-  const dailyStatus = useMemo(
-    () => (ticket ? buildDailyStatus(ticket) : []),
-    [ticket],
-  );
+  const dailyStatus = useMemo(() => (ticket ? buildDailyStatus(ticket) : []), [ticket]);
 
   if (loading) {
     return (
@@ -294,7 +313,7 @@ const TicketDetailPage: React.FC = () => {
     },
     {
       icon: <AssignmentIcon sx={{ color: '#10b981', fontSize: 20 }} />,
-      value: ticket.actualEffort,
+      value: getActualEffort(ticket.storyPoints),
       label: 'Actual Effort',
       bgColor: 'rgba(16,185,129,0.12)',
       borderColor: 'rgba(16,185,129,0.3)',
@@ -342,9 +361,7 @@ const TicketDetailPage: React.FC = () => {
         const status = v as TicketStatus;
         const cfg = TICKET_STATUS_CONFIG[status];
         if (!cfg) {
-          return (
-            <Typography sx={{ fontSize: '0.78rem' }}>{String(v)}</Typography>
-          );
+          return <Typography sx={{ fontSize: '0.78rem' }}>{String(v)}</Typography>;
         }
         return (
           <Chip
@@ -409,7 +426,6 @@ const TicketDetailPage: React.FC = () => {
     },
   ];
 
-
   return (
     <>
       {keyframes}
@@ -419,7 +435,9 @@ const TicketDetailPage: React.FC = () => {
           <Box className={classes.heroLeft}>
             <Box
               className={classes.heroIconWrap}
-              sx={{ background: `linear-gradient(135deg, ${statusCfg.color}, ${statusCfg.color}cc)` }}
+              sx={{
+                background: `linear-gradient(135deg, ${statusCfg.color}, ${statusCfg.color}cc)`,
+              }}
             >
               <AssignmentIcon sx={{ fontSize: 24, color: '#fff' }} />
             </Box>
@@ -427,9 +445,7 @@ const TicketDetailPage: React.FC = () => {
               <Typography className={classes.heroTitleText}>
                 {ticket.issueNo} · {ticket.issueType}
               </Typography>
-              <Typography className={classes.heroSubtitle}>
-                {ticket.summary}
-              </Typography>
+              <Typography className={classes.heroSubtitle}>{ticket.summary}</Typography>
               {/* Status Chip - Mobile Only */}
               <Box
                 sx={{
@@ -461,9 +477,7 @@ const TicketDetailPage: React.FC = () => {
             <Typography className={classes.heroCenterTitle}>TICKET DETAIL</Typography>
             <Box className={classes.heroCenterBadge}>
               <Box className={classes.heroCenterDot} />
-              <Typography className={classes.heroCenterLive}>
-                {ticket.status}
-              </Typography>
+              <Typography className={classes.heroCenterLive}>{ticket.status}</Typography>
             </Box>
           </Box>
 
@@ -514,7 +528,9 @@ const TicketDetailPage: React.FC = () => {
             </Box>
 
             {/* Mobile Only Close Button - Top Right Corner */}
-            <Box sx={{ display: { xs: 'flex', sm: 'none' }, position: 'absolute', top: 8, right: 8 }}>
+            <Box
+              sx={{ display: { xs: 'flex', sm: 'none' }, position: 'absolute', top: 8, right: 8 }}
+            >
               <Tooltip title='Back to Dashboard' arrow placement='bottom'>
                 <IconButton
                   onClick={() => navigate(AdminPath.DASHBOARD)}
@@ -571,26 +587,28 @@ const TicketDetailPage: React.FC = () => {
         </Box>
 
         {/* ─── Basic Information ── */}
-        <FieldCard title="Basic Information">
+        <FieldCard title='Basic Information'>
           <Box sx={gridFields}>
             <Box>
-              <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary', fontWeight: 500, mb: 0.5 }}>
+              <Typography
+                sx={{ fontSize: '0.75rem', color: 'text.secondary', fontWeight: 500, mb: 0.5 }}
+              >
                 S. No
               </Typography>
-              <Typography sx={{ fontSize: '0.95rem', fontWeight: 600 }}>
-                {ticket.id}
-              </Typography>
+              <Typography sx={{ fontSize: '0.95rem', fontWeight: 600 }}>{ticket.id}</Typography>
             </Box>
             <Box>
-              <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary', fontWeight: 500, mb: 0.5 }}>
+              <Typography
+                sx={{ fontSize: '0.75rem', color: 'text.secondary', fontWeight: 500, mb: 0.5 }}
+              >
                 Team
               </Typography>
-              <Typography sx={{ fontSize: '0.95rem', fontWeight: 600 }}>
-                {ticket.team}
-              </Typography>
+              <Typography sx={{ fontSize: '0.95rem', fontWeight: 600 }}>{ticket.team}</Typography>
             </Box>
             <Box>
-              <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary', fontWeight: 500, mb: 0.5 }}>
+              <Typography
+                sx={{ fontSize: '0.75rem', color: 'text.secondary', fontWeight: 500, mb: 0.5 }}
+              >
                 Assignee
               </Typography>
               <Typography sx={{ fontSize: '0.95rem', fontWeight: 600 }}>
@@ -598,7 +616,9 @@ const TicketDetailPage: React.FC = () => {
               </Typography>
             </Box>
             <Box>
-              <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary', fontWeight: 500, mb: 0.5 }}>
+              <Typography
+                sx={{ fontSize: '0.75rem', color: 'text.secondary', fontWeight: 500, mb: 0.5 }}
+              >
                 Time Logging ID
               </Typography>
               <Typography sx={{ fontSize: '0.95rem', fontWeight: 600 }}>
@@ -606,7 +626,9 @@ const TicketDetailPage: React.FC = () => {
               </Typography>
             </Box>
             <Box>
-              <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary', fontWeight: 500, mb: 0.5 }}>
+              <Typography
+                sx={{ fontSize: '0.75rem', color: 'text.secondary', fontWeight: 500, mb: 0.5 }}
+              >
                 Fix Version
               </Typography>
               <Typography sx={{ fontSize: '0.95rem', fontWeight: 600 }}>
@@ -614,7 +636,9 @@ const TicketDetailPage: React.FC = () => {
               </Typography>
             </Box>
             <Box>
-              <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary', fontWeight: 500, mb: 0.5 }}>
+              <Typography
+                sx={{ fontSize: '0.75rem', color: 'text.secondary', fontWeight: 500, mb: 0.5 }}
+              >
                 Carry Forward
               </Typography>
               {ticket.carryForward ? (
@@ -648,63 +672,123 @@ const TicketDetailPage: React.FC = () => {
                 </Box>
               ) : (
                 <Typography
-                  sx={{ fontSize: '0.95rem', fontWeight: 500, color: '#94a3b8', fontStyle: 'italic' }}
+                  sx={{
+                    fontSize: '0.95rem',
+                    fontWeight: 500,
+                    color: '#94a3b8',
+                    fontStyle: 'italic',
+                  }}
                 >
                   Not carried forward
                 </Typography>
               )}
             </Box>
             <Box>
-              <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary', fontWeight: 500, mb: 0.5 }}>
+              <Typography
+                sx={{ fontSize: '0.75rem', color: 'text.secondary', fontWeight: 500, mb: 0.5 }}
+              >
                 Carry Forward Reason
               </Typography>
-              <Typography sx={{
-                fontSize: '0.95rem',
-                fontWeight: 500,
-                color: ticket.carryForward && ticket.carryForwardReason ? '#475569' : '#94a3b8',
-                fontStyle: ticket.carryForward && ticket.carryForwardReason ? 'normal' : 'italic',
-              }}>
-                {ticket.carryForward && ticket.carryForwardReason
-                  ? ticket.carryForwardReason
-                  : '—'}
+              <Typography
+                sx={{
+                  fontSize: '0.95rem',
+                  fontWeight: 500,
+                  color: ticket.carryForward && ticket.carryForwardReason ? '#475569' : '#94a3b8',
+                  fontStyle: ticket.carryForward && ticket.carryForwardReason ? 'normal' : 'italic',
+                }}
+              >
+                {ticket.carryForward && ticket.carryForwardReason ? ticket.carryForwardReason : '—'}
               </Typography>
+            </Box>
+            <Box>
+              <Typography
+                sx={{ fontSize: '0.75rem', color: 'text.secondary', fontWeight: 500, mb: 0.5 }}
+              >
+                Summary
+              </Typography>
+              <Typography
+                sx={{
+                  fontSize: '0.95rem',
+                  fontWeight: 500,
+                  color: 'text.primary',
+                  lineHeight: 1.5,
+                }}
+              >
+                {ticket.summary}
+              </Typography>
+            </Box>
+            <Box>
+              <Typography
+                sx={{ fontSize: '0.75rem', color: 'text.secondary', fontWeight: 500, mb: 0.5 }}
+              >
+                Ticket Link
+              </Typography>
+              <Box
+                sx={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 0.75,
+                  px: 1.25,
+                  py: 0.5,
+                  borderRadius: 1.5,
+                  background: 'rgba(79,70,229,0.08)',
+                  border: '1px solid rgba(79,70,229,0.25)',
+                  transition: 'all 0.2s ease',
+                  '&:hover': {
+                    background: 'rgba(79,70,229,0.14)',
+                    borderColor: 'rgba(79,70,229,0.45)',
+                  },
+                }}
+              >
+                <LinkIcon sx={{ fontSize: 14, color: '#4f46e5' }} />
+                <Link href={ticket.ticketLink} target='_blank' underline='none' color='primary'>
+                  <Typography
+                    sx={{
+                      fontSize: '0.8rem',
+                      fontWeight: 600,
+                      color: '#4f46e5',
+                      letterSpacing: '0.01em',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    Open Ticket
+                  </Typography>
+                </Link>
+                <OpenInNewIcon sx={{ fontSize: 12, color: '#6366f1' }} />
+              </Box>
             </Box>
           </Box>
         </FieldCard>
 
         {/* ─── Timeline Information ── */}
-        <FieldCard title="Timeline Information">
+        <FieldCard title='Timeline Information'>
           <Box sx={gridFields}>
             <Box>
-              <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary', fontWeight: 500, mb: 0.5 }}>
+              <Typography
+                sx={{ fontSize: '0.75rem', color: 'text.secondary', fontWeight: 500, mb: 0.5 }}
+              >
                 Work Start Date
               </Typography>
               <Typography sx={{ fontSize: '0.95rem', fontWeight: 600 }}>
                 {new Date(ticket.workStartDate).toLocaleDateString('en-US', {
                   year: 'numeric',
                   month: 'short',
-                  day: 'numeric'
+                  day: 'numeric',
                 })}
               </Typography>
             </Box>
             <Box>
-              <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary', fontWeight: 500, mb: 0.5 }}>
+              <Typography
+                sx={{ fontSize: '0.75rem', color: 'text.secondary', fontWeight: 500, mb: 0.5 }}
+              >
                 Work End Date
               </Typography>
               <Typography sx={{ fontSize: '0.95rem', fontWeight: 600 }}>
                 {new Date(ticket.workEndDate).toLocaleDateString('en-US', {
                   year: 'numeric',
                   month: 'short',
-                  day: 'numeric'
+                  day: 'numeric',
                 })}
-              </Typography>
-            </Box>
-            <Box sx={{ gridColumn: 'span 2' }}>
-              <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary', fontWeight: 500, mb: 0.5 }}>
-                Summary
-              </Typography>
-              <Typography sx={{ fontSize: '0.95rem', fontWeight: 600, lineHeight: 1.4 }}>
-                {ticket.summary}
               </Typography>
             </Box>
           </Box>
@@ -712,7 +796,7 @@ const TicketDetailPage: React.FC = () => {
 
         {/* ─── Daily Status ── */}
         <FieldCard
-          title="Daily Status"
+          title='Daily Status'
           icon={<EventNoteIcon sx={{ fontSize: 22, color: '#fff' }} />}
           subtitle={
             <>
