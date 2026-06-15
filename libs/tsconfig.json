@@ -11,16 +11,16 @@
     "moduleResolution": "node",
     "baseUrl": ".",
     "paths": {
-      "@infygen/prisma": ["../gateways/src/generated/prisma/client"],
-      "@infygen/theme": ["./theme/index.ts"],
-      "@infygen/interfaces": ["./entities/index.ts"],
-      "@infygen/hooks": ["./ui/hooks/index.ts"],
-      "@infygen/utils": ["./utils/index.ts"],
-      "@infygen/services": ["./services/index.ts"],
-      "@infygen/config": ["./core/config/index.ts"],
-      "@infygen/core": ["./core/index.ts"],
-      "@infygen/component": ["./ui/components/index.ts"],
-      "@infygen/component/*": ["./ui/components/*"]
+      "@sprintpulse/prisma": ["../gateways/src/generated/prisma/client"],
+      "@sprintpulse/theme": ["./theme/index.ts"],
+      "@sprintpulse/interfaces": ["./entities/index.ts"],
+      "@sprintpulse/hooks": ["./ui/hooks/index.ts"],
+      "@sprintpulse/utils": ["./utils/index.ts"],
+      "@sprintpulse/services": ["./services/index.ts"],
+      "@sprintpulse/config": ["./core/config/index.ts"],
+      "@sprintpulse/core": ["./core/index.ts"],
+      "@sprintpulse/component": ["./ui/components/index.ts"],
+      "@sprintpulse/component/*": ["./ui/components/*"]
     }
   },
   "include": [

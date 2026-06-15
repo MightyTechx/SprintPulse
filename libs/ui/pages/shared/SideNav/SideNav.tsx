@@ -7,15 +7,15 @@ import {
   IconButton,
   Box,
   Typography,
-} from '@infygen/component';
+} from '@sprintpulse/component';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { Link, useLocation } from 'react-router-dom';
 import { useAdminMenuItems, useConsultantMenuItems } from './components/MenuItems';
 import { Tooltip } from '../../../components';
-import { useCollapse, useAuth } from '@infygen/hooks';
+import { useCollapse, useAuth } from '@sprintpulse/hooks';
 import { useStyles } from './styles';
-import { useThemeContext } from '@infygen/theme';
+import { useThemeContext } from '@sprintpulse/theme';
 
 // Default admin colors (before theme selection)
 const ADMIN_DEFAULT_COLORS = {

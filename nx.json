@@ -3,7 +3,7 @@
   "defaultBase": "master",
   "projects": {
     "administration": "web/apps",
-    "wind-tree": "web/tenants/wind-tree",
+    "sprintpulse": "web/tenants/sprintpulse",
     "shared": "libs"
   },
   "namedInputs": {

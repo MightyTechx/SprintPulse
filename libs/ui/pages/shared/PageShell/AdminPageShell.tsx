@@ -8,12 +8,12 @@ import {
   Divider,
   TextField,
   InputAdornment,
-} from '@infygen/component';
+} from '@sprintpulse/component';
 import GroupIcon from '@mui/icons-material/Group';
 import SearchIcon from '@mui/icons-material/Search';
-import { useAdminKeyframes } from '@infygen/hooks';
+import { useAdminKeyframes } from '@sprintpulse/hooks';
 import { useStyles } from './styles/AdminPageShell.styles';
-import TabPanel from '@infygen/component/TabPanel';
+import TabPanel from '@sprintpulse/component/TabPanel';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 

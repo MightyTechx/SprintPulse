@@ -1,6 +1,6 @@
-import { Box, Typography, Divider } from '@infygen/component';
+import { Box, Typography, Divider } from '@sprintpulse/component';
 import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
-import { constants } from '@infygen/utils';
+import { constants } from '@sprintpulse/utils';
 import { useStyles } from './SignIn.styles';
 import useSignIn from './hooks/useSignIn';
 import SignInForm from './components/SignInForm';

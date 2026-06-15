@@ -1,7 +1,7 @@
-import { Box, Typography, InputAdornment, IconButton, TextField, Button } from '@infygen/component';
+import { Box, Typography, InputAdornment, IconButton, TextField, Button } from '@sprintpulse/component';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import { useFieldError } from '@infygen/hooks';
+import { useFieldError } from '@sprintpulse/hooks';
 
 function getStrength(pw: string) {
   let score = 0;

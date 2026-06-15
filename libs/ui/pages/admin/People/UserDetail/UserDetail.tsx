@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { constants } from '@infygen/utils';
+import { constants } from '@sprintpulse/utils';
 import type { TransitionProps } from '@mui/material/transitions';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -24,9 +24,9 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import AutorenewIcon from '@mui/icons-material/Autorenew';
 import CheckIcon from '@mui/icons-material/Check';
-import { useAuthActionMutation } from '@infygen/services';
-import { useNotification } from '@infygen/hooks';
-import { IAuthUser } from '@infygen/interfaces';
+import { useAuthActionMutation } from '@sprintpulse/services';
+import { useNotification } from '@sprintpulse/hooks';
+import { IAuthUser } from '@sprintpulse/interfaces';
 import {
   Loader,
   Typography,
@@ -41,7 +41,7 @@ import {
   MenuItem,
   InputAdornment,
   Tooltip,
-} from '@infygen/component';
+} from '@sprintpulse/component';
 import { useStyles } from './styles';
 
 export const SlideUp = React.forwardRef(

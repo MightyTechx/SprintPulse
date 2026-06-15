@@ -1,5 +1,5 @@
 import * as XLSX from 'xlsx';
-import type { ReportMetadata, KpiRow, DowntimeRow } from '../types';
+import type { ReportMetadata, KpiRow, IncidentRow } from '../types';
 
 // Define brand colors for Excel
 const EXCEL_COLORS = {
@@ -19,13 +19,13 @@ const EXCEL_COLORS = {
 // Build KPI worksheet data with dynamic columns
 function buildKpiWorksheetData(
   data: any[],
-  turbineIds: string[] = ['t01', 't02', 't03', 't04', 't05', 't06', 't07', 't08', 't09', 't10'],
+  sprintIds: string[] = ['s01', 's02', 's03', 's04', 's05', 's06', 's07', 's08', 's09', 's10'],
 ): any[] {
   const headers = ['Key Performance Indicator'];
 
-  turbineIds.forEach((id) => {
-    const turbineNum = id.replace('t', '').toUpperCase().padStart(2, '0');
-    headers.push(`T-${turbineNum}`);
+  sprintIds.forEach((id) => {
+    const sprintNum = id.replace('s', '').toUpperCase().padStart(2, '0');
+    headers.push(`SPR-${sprintNum}`);
   });
 
   headers.push('Total / Avg');
@@ -34,11 +34,11 @@ function buildKpiWorksheetData(
     const rowData: any[] = [];
 
     // First column - KPI label (handle different key names)
-    const kpiValue = row.kpi || row.parameter || row.date || row.turbine || '-';
+    const kpiValue = row.kpi || row.parameter || row.date || row.sprint || '-';
     rowData.push(kpiValue);
 
-    // Data columns for each turbine
-    turbineIds.forEach((id) => {
+    // Data columns for each sprint
+    sprintIds.forEach((id) => {
       rowData.push(row[id] || '-');
     });
 
@@ -52,18 +52,32 @@ function buildKpiWorksheetData(
   return [headers, ...rows];
 }
 
-// Build Downtime worksheet data
-function buildDowntimeWorksheetData(data: DowntimeRow[]): any[] {
-  const headers = ['Turbine', 'From', 'To', 'Duration', 'Downtime Type', 'Fault Status', 'Remarks'];
+// Build Incident (Detailed Downtime Log) worksheet data
+function buildDowntimeWorksheetData(data: IncidentRow[]): any[] {
+  const headers = [
+    'S.No',
+    'Team',
+    'Assignee',
+    'Assigned To',
+    'Incident Number',
+    'From Date',
+    'To Date',
+    'Issue',
+    'Total Hours',
+    'Status',
+  ];
 
   const rows = data.map((row) => [
-    row.turbineNo,
-    row.from,
-    row.to,
-    row.duration,
-    row.downtimeType,
-    row.faultStatus,
-    row.remarks,
+    row.id,
+    row.team,
+    row.assignee,
+    row.assignedTo,
+    row.incidentNumber,
+    row.fromDate,
+    row.toDate,
+    row.issue,
+    row.totalHours,
+    row.status,
   ]);
 
   return [headers, ...rows];
@@ -133,9 +147,9 @@ function autoFitColumns(ws: XLSX.WorkSheet, data: any[][], minWidth = 8, maxWidt
 function buildWorksheetFromData(
   data: any[],
   sheetName: string,
-  turbineIds: string[] = ['t01', 't02', 't03', 't04', 't05', 't06', 't07', 't08', 't09', 't10'],
+  sprintIds: string[] = ['s01', 's02', 's03', 's04', 's05', 's06', 's07', 's08', 's09', 's10'],
 ): { ws: XLSX.WorkSheet; dataArray: any[] } {
-  const dataArray = buildKpiWorksheetData(data, turbineIds);
+  const dataArray = buildKpiWorksheetData(data, sprintIds);
   const ws = XLSX.utils.aoa_to_sheet(dataArray);
 
   const headerRef = XLSX.utils.encode_range({
@@ -181,7 +195,7 @@ export function generateExcelReport(
   metadata: ReportMetadata,
   kpiData: any[],
   downtimeData: any[] = [],
-  turbineIds: string[] = ['t01', 't02', 't03', 't04', 't05', 't06', 't07', 't08', 't09', 't10'],
+  sprintIds: string[] = ['s01', 's02', 's03', 's04', 's05', 's06', 's07', 's08', 's09', 's10'],
 ): void {
   const wb = XLSX.utils.book_new();
 
@@ -191,7 +205,7 @@ export function generateExcelReport(
   const { ws: kpiWs, dataArray: kpiDataArray } = buildWorksheetFromData(
     kpiData,
     'Report Data',
-    turbineIds,
+    sprintIds,
   );
   XLSX.utils.book_append_sheet(wb, kpiWs, metadata.reportName || 'Report Data');
 
@@ -227,10 +241,10 @@ export function generateExcelReport(
   // Sheet 3: Report Info
   // ========================
   const infoData = [
-    ['SprintPulse Wind Energy Report'],
+    ['SprintPulse Report'],
     [],
     ['Report Name:', metadata.reportName],
-    ['Turbine:', metadata.turbine],
+    ['Sprint:', metadata.sprint],
     ['Date Range:', `${metadata.fromDate} - ${metadata.toDate}`],
     ['Generated:', metadata.generatedAt],
   ];

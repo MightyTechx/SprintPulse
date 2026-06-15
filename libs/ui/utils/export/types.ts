@@ -2,7 +2,7 @@
 
 export interface ReportMetadata {
   reportName: string;
-  turbine: string;
+  sprint: string;
   fromDate: string;
   toDate: string;
   generatedAt: string;
@@ -11,28 +11,30 @@ export interface ReportMetadata {
 export interface KpiRow {
   id: number | string;
   kpi: string;
-  t01: string | number;
-  t02: string | number;
-  t03: string | number;
-  t04: string | number;
-  t05: string | number;
-  t06: string | number;
-  t07: string | number;
-  t08: string | number;
-  t09: string | number;
-  t10: string | number;
+  s01: string | number;
+  s02: string | number;
+  s03: string | number;
+  s04: string | number;
+  s05: string | number;
+  s06: string | number;
+  s07: string | number;
+  s08: string | number;
+  s09: string | number;
+  s10: string | number;
   total: string | number;
 }
 
-export interface DowntimeRow {
+export interface IncidentRow {
   id: number | string;
-  turbineNo: string;
-  from: string;
-  to: string;
-  duration: string;
-  downtimeType: string;
-  faultStatus: string;
-  remarks: string;
+  team: string;
+  assignee: string;
+  assignedTo: string;
+  incidentNumber: string;
+  fromDate: string;
+  toDate: string;
+  issue: string;
+  totalHours: string;
+  status: string;
 }
 
 export type DocType = 'PDF' | 'Excel (XLSX)' | 'SVG';

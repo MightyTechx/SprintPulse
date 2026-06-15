@@ -28,7 +28,7 @@ router.get('/status', getStatus);
  * @route   POST /api/admin/whatsapp/send
  * @desc    Send a report immediately via WhatsApp
  * @access  Admin
- * @body    { recipient: string, reportType: string, turbineIds?: string[] }
+ * @body    { recipient: string, reportType: string, sprintIds?: string[] }
  */
 router.post('/send', sendReport);
 
@@ -43,7 +43,7 @@ router.get('/scheduled', getScheduledReports);
  * @route   POST /api/admin/whatsapp/scheduled
  * @desc    Create a new scheduled report
  * @access  Admin
- * @body    { recipient: string, reportType: string, frequency: 'hourly' | 'daily', turbineIds?: string[] }
+ * @body    { recipient: string, reportType: string, frequency: 'hourly' | 'daily', sprintIds?: string[] }
  */
 router.post('/scheduled', createScheduledReport);
 
@@ -51,7 +51,7 @@ router.post('/scheduled', createScheduledReport);
  * @route   PUT /api/admin/whatsapp/scheduled/:id
  * @desc    Update a scheduled report
  * @access  Admin
- * @body    { recipient?: string, reportType?: string, frequency?: 'hourly' | 'daily', enabled?: boolean, turbineIds?: string[] }
+ * @body    { recipient?: string, reportType?: string, frequency?: 'hourly' | 'daily', enabled?: boolean, sprintIds?: string[] }
  */
 router.put('/scheduled/:id', updateScheduledReport);
 

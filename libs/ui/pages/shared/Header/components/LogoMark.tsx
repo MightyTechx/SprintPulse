@@ -1,4 +1,4 @@
-import { Typography } from '@infygen/component';
+import { Typography } from '@sprintpulse/component';
 
 interface LogoMarkProps {
   compact?: boolean;

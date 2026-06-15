@@ -25,7 +25,7 @@ export class ChatAIController {
         res.json({
           response:
             'AI chat is not configured. Please set the GEMINI_API_KEY in your environment variables to enable the AI assistant.',
-          suggestions: ['Turbine status', 'Power generation', 'Maintenance schedule'],
+          suggestions: ['Sprint status', 'Team velocity', 'Sprint schedule'],
         });
         return;
       }
@@ -55,15 +55,15 @@ export class ChatAIController {
         model: this.modelName,
         contents,
         config: {
-          systemInstruction: `You are an expert AI assistant for Sprint Pulse Operations Hub, a wind turbine monitoring and energy management system. You help users with:
+          systemInstruction: `You are an expert AI assistant for SprintPulse, a Jira-style sprint management and agile delivery platform. You help users with:
 
-- Wind turbine operations and monitoring
-- Power generation analytics
-- SCADA parameters and real-time data
-- Maintenance schedules and troubleshooting
-- Reports and business intelligence
+- Sprint planning and tracking
+- Team velocity and burndown analytics
+- Issue, story, and ticket workflows
+- Backlog grooming and prioritization
+- Reports and agile delivery intelligence
 
-Be concise, informative, and helpful. Use emojis sparingly for better readability. When discussing turbine parameters, include specific details like units (kW, m/s, RPM, etc.).`,
+Be concise, informative, and helpful. Use emojis sparingly for better readability. When discussing sprint metrics, include specific details like story points, velocity, cycle time, etc.`,
         },
       });
 
@@ -90,21 +90,21 @@ Be concise, informative, and helpful. Use emojis sparingly for better readabilit
     const suggestions: string[] = [];
 
     // Context-aware suggestions based on user query
-    if (msg.includes('turbine') || msg.includes('wtg')) {
-      suggestions.push('Show turbine status', 'View SCADA parameters', 'Check fault logs');
-    } else if (msg.includes('power') || msg.includes('generation') || msg.includes('energy')) {
-      suggestions.push('Power analytics', 'Generation report', 'Energy efficiency');
-    } else if (msg.includes('maintenance') || msg.includes('maintain')) {
-      suggestions.push('Maintenance schedule', 'Spare parts', 'Service history');
+    if (msg.includes('sprint') || msg.includes('board')) {
+      suggestions.push('Show sprint status', 'View burndown chart', 'Check blocked issues');
+    } else if (msg.includes('velocity') || msg.includes('story') || msg.includes('points')) {
+      suggestions.push('Velocity analytics', 'Sprint report', 'Team capacity');
+    } else if (msg.includes('backlog') || msg.includes('grooming')) {
+      suggestions.push('Backlog view', 'Prioritize stories', 'Estimate tasks');
     } else if (msg.includes('report') || msg.includes('analytics')) {
-      suggestions.push('Daily report', 'Weekly summary', 'Export data');
-    } else if (msg.includes('troubleshoot') || msg.includes('error') || msg.includes('fault')) {
-      suggestions.push('Common issues', 'Diagnostic steps', 'Contact support');
+      suggestions.push('Daily standup', 'Weekly summary', 'Export data');
+    } else if (msg.includes('block') || msg.includes('issue') || msg.includes('bug')) {
+      suggestions.push('Blocked issues', 'Triage steps', 'Contact support');
     } else if (msg.includes('help') || msg.includes('how')) {
       suggestions.push('System overview', 'Navigation guide', 'Feature list');
     } else {
       // Default suggestions
-      suggestions.push('Turbine status', 'Power generation', 'Maintenance');
+      suggestions.push('Sprint status', 'Team velocity', 'Backlog');
     }
 
     return suggestions.slice(0, 4);

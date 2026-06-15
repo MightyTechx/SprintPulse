@@ -5,15 +5,15 @@ import { GlobalStyles } from '@mui/material';
 
 import { globalStyles } from './app.styles';
 import { LazyMenuItems } from './routes';
-import { constants } from '@infygen/utils';
-import { ErrorBoundary, MainContent, Loader } from '@infygen/component';
-import { useAuth } from '@infygen/hooks';
-import { AppRoleContext } from '@infygen/theme';
+import { constants } from '@sprintpulse/utils';
+import { ErrorBoundary, MainContent, Loader } from '@sprintpulse/component';
+import { useAuth } from '@sprintpulse/hooks';
+import { AppRoleContext } from '@sprintpulse/theme';
 
 const {
   // Admin pages
   AdminDashboardPage,
-  AdminTurbineDetailPage,
+  AdminSprintDetailPage,
   AdminTicketDetailPage,
   AdminSprintStatusMatrixPage,
   AdminPeopleManagementPage,
@@ -23,7 +23,6 @@ const {
   AdminTechnicalDocumentsPage,
   AdminOperationsPage,
   AdminCreateOperationsPage,
-  AdminPermitDetailsPage,
   SettingsPage,
   HelpSupportPage,
 
@@ -82,7 +81,7 @@ const AppRoutes = () => {
 
             {/* Admin routes */}
             <Route path={AdminPath.DASHBOARD} element={<AdminDashboardPage />} />
-            <Route path={AdminPath.TURBINE_DETAIL} element={<AdminTurbineDetailPage />} />
+            <Route path={AdminPath.TURBINE_DETAIL} element={<AdminSprintDetailPage />} />
             <Route path={AdminPath.TICKET_DETAIL} element={<AdminTicketDetailPage />} />
             <Route path={AdminPath.SPRINT_STATUS_MATRIX} element={<AdminSprintStatusMatrixPage />} />
             <Route path={AdminPath.ACCESS_MANAGEMENT} element={<AdminPeopleManagementPage />} />
@@ -92,7 +91,6 @@ const AppRoutes = () => {
             <Route path={AdminPath.TECHNICAL_DOCUMENTS} element={<AdminTechnicalDocumentsPage />} />
             <Route path={AdminPath.OPERATIONS} element={<AdminOperationsPage />} />
             <Route path={AdminPath.CREATE_OPERATIONS} element={<AdminCreateOperationsPage />} />
-            <Route path={AdminPath.PERMIT_DETAILS} element={<AdminPermitDetailsPage />} />
             <Route path={AdminPath.SETTINGS} element={<SettingsPage />} />
             <Route path={AdminPath.HELP_SUPPORT} element={<HelpSupportPage />} />
 

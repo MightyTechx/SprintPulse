@@ -11,8 +11,8 @@ const EXTENSIONS = ['.ts', '.tsx', '.js', '.jsx'] as const;
  * next to the base file using the naming convention:
  *   {basename}.{partner}{ext}
  *
- * Example: resolving './Button.styles' when partner='wind-tree'
- *   checks for Button.styles.wind-tree.ts → returns it if found.
+ * Example: resolving './Button.styles' when partner='sprintpulse'
+ *   checks for Button.styles.sprintpulse.ts → returns it if found.
  *
  * Prevents circular replacements by skipping imports that come from an
  * already-overridden file (one whose path contains .{partner}.).

@@ -6,7 +6,7 @@ try {
     cwd: process.cwd(),
     baseUrl: '.',
     paths: {
-      '@infygen/*': ['./libs/*'],
+      '@sprintpulse/*': ['./libs/*'],
     },
   });
   console.log('tsconfig-paths registered successfully');

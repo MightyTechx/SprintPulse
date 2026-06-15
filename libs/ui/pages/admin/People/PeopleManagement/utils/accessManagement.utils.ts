@@ -1,5 +1,5 @@
 import * as yup from 'yup';
-import { IAuthUser } from '@infygen/interfaces';
+import { IAuthUser } from '@sprintpulse/interfaces';
 import {
   EditFormShape,
   InitialCreateValues,

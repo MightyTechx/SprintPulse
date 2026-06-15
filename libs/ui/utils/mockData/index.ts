@@ -2,7 +2,7 @@
  * Mock Data Index - Central export for all mock data
  *
  * Usage:
- * import { MOCK_TURBINE_DATA, useMockTurbineData } from '@infygen/ui/utils/mockData';
+ * import { MOCK_SPRINT_DATA, useMockTurbineData } from '@sprintpulse/ui/utils/mockData';
  *
  * To remove mock data when API is ready:
  * 1. Delete the entire mockData folder

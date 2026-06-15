@@ -8,17 +8,17 @@ import path from 'path';
 import fs from 'fs';
 
 // Centralized error handling middleware
-import { errorHandler, notFoundHandler } from '@infygen/middleware';
+import { errorHandler, notFoundHandler } from '@sprintpulse/middleware';
 
 // Import route modules
 import authRoutes from '../api/auth/Auth.routes';
 import adminRoutes from '../api/admin/routes';
 
 // Prisma client
-import { prisma } from '@infygen/database';
+import { prisma } from '@sprintpulse/database';
 
 // Constants for route paths
-import { ADMIN_PATHS } from '@infygen/constants';
+import { ADMIN_PATHS } from '@sprintpulse/constants';
 
 const app = express();
 

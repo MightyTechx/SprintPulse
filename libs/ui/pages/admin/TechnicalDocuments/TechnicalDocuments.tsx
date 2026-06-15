@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Box, DataTable, Typography, Grid, TextField, PageHeader } from '@infygen/component';
+import { Box, DataTable, Typography, Grid, TextField, PageHeader } from '@sprintpulse/component';
 import { InputAdornment, Autocomplete } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import DescriptionIcon from '@mui/icons-material/Description';
@@ -12,7 +12,7 @@ import {
   TYPE_SX,
   columns,
 } from './utils/technicalDocuments.utils';
-import { useAdminKeyframes } from '@infygen/hooks';
+import { useAdminKeyframes } from '@sprintpulse/hooks';
 
 const TechnicalDocuments = () => {
   const { classes } = useStyles();

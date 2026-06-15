@@ -1,9 +1,9 @@
 import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { Chip, Switch, Link } from '@mui/material';
-import { useAuthActionMutation } from '@infygen/services';
-import { constants } from '@infygen/utils';
-import { useAuth, useNotification, useMediaQuery } from '@infygen/hooks';
-import { IAuthUser, UserRole } from '@infygen/interfaces';
+import { useAuthActionMutation } from '@sprintpulse/services';
+import { constants } from '@sprintpulse/utils';
+import { useAuth, useNotification, useMediaQuery } from '@sprintpulse/hooks';
+import { IAuthUser, UserRole } from '@sprintpulse/interfaces';
 import { UserRow, InitialCreateValues } from '../types/peopleManagement.types';
 import {
   loadNewUserDraft,
@@ -12,7 +12,7 @@ import {
   fmtDateUser,
   fmtDateTimeUser,
 } from '../utils/accessManagement.utils';
-import { Column } from '@infygen/component';
+import { Column } from '@sprintpulse/component';
 import { AccessRequestRow } from '../../PeopleRequests/types/accessRequests.types';
 
 const usePeopleManagement = () => {

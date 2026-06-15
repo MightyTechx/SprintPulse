@@ -1,6 +1,6 @@
 /**
  * theme barrel export
- * Import using: import { theme, createAppStyles, createAppMetadata, ... } from '@infygen/theme'
+ * Import using: import { theme, createAppStyles, createAppMetadata, ... } from '@sprintpulse/theme'
  *
  * Includes:
  * - Theme configuration (theme, palette)

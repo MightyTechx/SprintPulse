@@ -12,10 +12,10 @@ import {
   Alert,
   InputAdornment,
   Stack,
-} from '@infygen/component';
+} from '@sprintpulse/component';
 import { useStyles } from './styles/Profile.styles';
-import { useAppDispatch, useAuth, useNotification } from '@infygen/hooks';
-import { updateUser, useAuthActionMutation } from '@infygen/services';
+import { useAppDispatch, useAuth, useNotification } from '@sprintpulse/hooks';
+import { updateUser, useAuthActionMutation } from '@sprintpulse/services';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';

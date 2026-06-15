@@ -9,11 +9,11 @@ import {
   ForgotPasswordSchema,
   VerifyOtpSchema,
   ResetPasswordSchema,
-} from '@infygen/interfaces';
-import { BadRequestException, HttpException, UnauthorizedException } from '@infygen/middleware';
-import { prisma } from '@infygen/database';
-import { sendEmail, generateOtp } from '@infygen/config';
-import { PrismaClient } from '@infygen/prisma';
+} from '@sprintpulse/interfaces';
+import { BadRequestException, HttpException, UnauthorizedException } from '@sprintpulse/middleware';
+import { prisma } from '@sprintpulse/database';
+import { sendEmail, generateOtp } from '@sprintpulse/config';
+import { PrismaClient } from '@sprintpulse/prisma';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'serivceops-jwt-secret-key';
 const JWT_EXPIRES_IN = (process.env.JWT_EXPIRES_IN || '24h') as jwt.SignOptions['expiresIn'];
@@ -377,7 +377,7 @@ export class AuthController {
 
     // Notify admin (fire and forget)
     sendEmail(
-      process.env.ADMIN_EMAIL || 'admin@infygen.tech',
+      process.env.ADMIN_EMAIL || 'admin@sprintpulse.tech',
       'serivceops — New Access Request',
       `<h2>New Access Request</h2>
        <p><strong>${fullName}</strong> (${validatedData.email}) has signed up and is requesting <strong>${validatedData.role}</strong> access.</p>
@@ -1075,8 +1075,8 @@ export class AuthController {
           return;
         }
 
-        if (!/@infygen\.tech$/i.test(email)) {
-          res.status(400).json({ message: 'Email must be a @infygen.tech address' });
+        if (!/@sprintpulse\.tech$/i.test(email)) {
+          res.status(400).json({ message: 'Email must be a @sprintpulse.tech address' });
           return;
         }
 

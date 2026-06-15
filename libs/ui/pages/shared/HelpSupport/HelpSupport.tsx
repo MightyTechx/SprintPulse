@@ -10,7 +10,7 @@ import {
   InputAdornment,
   Grid,
   PageHeader,
-} from '@infygen/component';
+} from '@sprintpulse/component';
 import TextField from '@mui/material/TextField';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
@@ -21,7 +21,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
-import { useAdminKeyframes } from '@infygen/hooks';
+import { useAdminKeyframes } from '@sprintpulse/hooks';
 import { useStyles } from './styles/HelpSupport.styles';
 import { FAQ_DATA, QUICK_LINKS, CHAT_SUGGESTIONS } from '../../../utils/mockData';
 
@@ -167,7 +167,7 @@ const HelpSupport = () => {
                       Email Support
                     </Typography>
                     <Typography fontWeight={700} fontSize='0.95rem'>
-                      support@infygen.in
+                      support@sprintpulse.tech
                     </Typography>
                     <Typography fontSize='0.72rem' color='text.disabled'>
                       Response within 24 hours
@@ -358,7 +358,7 @@ const HelpSupport = () => {
               <Button
                 variant='outlined'
                 startIcon={<EmailIcon />}
-                onClick={() => window.open('mailto:support@infygen.in', '_blank')}
+                onClick={() => window.open('mailto:support@sprintpulse.tech', '_blank')}
                 className={`${classes.needHelpButton} ${classes.needHelpButtonOutlined}`}
               >
                 Email Us

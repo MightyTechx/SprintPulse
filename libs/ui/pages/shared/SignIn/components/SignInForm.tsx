@@ -1,8 +1,8 @@
-import { InputAdornment, IconButton } from '@infygen/component';
+import { InputAdornment, IconButton } from '@sprintpulse/component';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import { constants } from '@infygen/utils';
-import { useFieldError } from '@infygen/hooks';
+import { constants } from '@sprintpulse/utils';
+import { useFieldError } from '@sprintpulse/hooks';
 import { TextField, Typography, Button, Box } from '../../../../components';
 
 interface SignInFormProps {

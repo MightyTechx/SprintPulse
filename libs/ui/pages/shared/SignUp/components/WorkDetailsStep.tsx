@@ -1,7 +1,7 @@
-import { Box, Typography, Grid, Select, MenuItem, TextField } from '@infygen/component';
+import { Box, Typography, Grid, Select, MenuItem, TextField } from '@sprintpulse/component';
 import { FormControl, InputLabel, FormHelperText, SelectChangeEvent } from '@mui/material';
 import WorkIcon from '@mui/icons-material/Work';
-import { useFieldError } from '@infygen/hooks';
+import { useFieldError } from '@sprintpulse/hooks';
 
 const DEPARTMENT_OPTIONS = [
   'IT Administration',
@@ -145,7 +145,7 @@ const WorkDetailsStep = ({
               name='reasonForAccess'
               label='Reason for Access'
               type='text'
-              placeholder='Briefly describe why you need access to infygen...'
+              placeholder='Briefly describe why you need access to SprintPulse...'
               value={values.reasonForAccess}
               onChange={onChange}
               onBlur={onBlur}

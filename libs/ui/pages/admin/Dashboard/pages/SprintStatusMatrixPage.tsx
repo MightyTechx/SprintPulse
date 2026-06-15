@@ -25,7 +25,7 @@ import InsightsIcon from '@mui/icons-material/Insights';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 import GroupWorkIcon from '@mui/icons-material/GroupWork';
 import { useAdminKeyframes, useLiveDateTime } from '../../../../hooks';
-import { constants } from '@infygen/utils';
+import { constants } from '@sprintpulse/utils';
 import { useStyles } from '../styles/Dashboard.styles';
 import { MOCK_TICKETS } from '../utils/dashboard.utils';
 

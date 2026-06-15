@@ -10,7 +10,7 @@ import {
   Chip,
   Card,
   Column,
-} from '@infygen/component';
+} from '@sprintpulse/component';
 import { InputAdornment, Typography } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
@@ -19,27 +19,11 @@ import BuildIcon from '@mui/icons-material/Build';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import PendingActionsIcon from '@mui/icons-material/PendingActions';
 import EditNoteIcon from '@mui/icons-material/EditNote';
-import TabPanel from '@infygen/component/TabPanel';
+import TabPanel from '@sprintpulse/component/TabPanel';
 import { useStyles } from './styles';
-import { constants } from '@infygen/utils';
-
-export interface PermitRow {
-  id: string;
-  permitId: string;
-  permitType: string;
-  ownerName: string;
-  wtg: string;
-  component: string;
-  workLocation: string;
-  permitStatus: string;
-  approvalStatus: string;
-  requestedTime: string;
-  approvedBy: string;
-  validUntil: string;
-  isEmergency: boolean;
-  priority: string;
-  riskLevel: string;
-}
+import { constants } from '@sprintpulse/utils';
+import { Ticket, TICKET_STATUS_CONFIG } from '../Dashboard/types/sprintData.types';
+import { MOCK_TICKETS } from '../Dashboard/utils/dashboard.utils';
 
 const Operations = () => {
   const { classes } = useStyles();
@@ -49,183 +33,62 @@ const Operations = () => {
   const [tabValue, setTabValue] = useState(0);
   const [tableSearch, setTableSearch] = useState('');
 
-  // Mock permit data
-  const permitData: PermitRow[] = [
-    {
-      id: '1',
-      permitId: 'P-047183',
-      permitType: 'General Work Permit',
-      ownerName: 'Bhogim Prathap',
-      wtg: 'SWS RAL-SC3-OAL01-VRB047',
-      component: 'Transformer',
-      workLocation: 'HT Yard',
-      permitStatus: 'TBT Details Pending',
-      approvalStatus: 'Approved',
-      requestedTime: '31 Mar 2026, 9:34 AM',
-      approvedBy: 'John Martin',
-      validUntil: '02 Apr 2026, 6:00 PM',
-      isEmergency: false,
-      priority: 'High',
-      riskLevel: 'Medium',
-    },
-    {
-      id: '2',
-      permitId: 'P-047184',
-      permitType: 'Hot Work Permit',
-      ownerName: 'Ravi Kumar',
-      wtg: 'SWS RAL-SC3-OAL02-VRB048',
-      component: 'Generator',
-      workLocation: 'LV Panel Room',
-      permitStatus: 'In Progress',
-      approvalStatus: 'Approved',
-      requestedTime: '30 Mar 2026, 10:15 AM',
-      approvedBy: 'Sarah Wilson',
-      validUntil: '01 Apr 2026, 5:00 PM',
-      isEmergency: true,
-      priority: 'Critical',
-      riskLevel: 'High',
-    },
-    {
-      id: '3',
-      permitId: 'P-047185',
-      permitType: 'Electrical Work',
-      ownerName: 'Anita Singh',
-      wtg: 'SWS RAL-SC3-OAL03-VRB049',
-      component: 'Nacelle',
-      workLocation: 'Tower Base',
-      permitStatus: 'Draft',
-      approvalStatus: 'Pending',
-      requestedTime: '29 Mar 2026, 2:30 PM',
-      approvedBy: '-',
-      validUntil: '-',
-      isEmergency: false,
-      priority: 'Low',
-      riskLevel: 'Low',
-    },
-    {
-      id: '4',
-      permitId: 'P-047186',
-      permitType: 'Confined Space Entry',
-      ownerName: 'Suresh Patel',
-      wtg: 'SWS RAL-SC3-OAL04-VRB050',
-      component: 'Hub',
-      workLocation: 'Hub Interior',
-      permitStatus: 'Rejected',
-      approvalStatus: 'Rejected',
-      requestedTime: '28 Mar 2026, 11:00 AM',
-      approvedBy: '-',
-      validUntil: '-',
-      isEmergency: false,
-      priority: 'Medium',
-      riskLevel: 'Medium',
-    },
-    {
-      id: '5',
-      permitId: 'P-047187',
-      permitType: 'General Work Permit',
-      ownerName: 'Meera Das',
-      wtg: 'SWS RAL-SC3-OAL05-VRB051',
-      component: 'Rotor',
-      workLocation: 'Bolt Area',
-      permitStatus: 'Completed',
-      approvalStatus: 'Approved',
-      requestedTime: '27 Mar 2026, 3:45 PM',
-      approvedBy: 'Mike Chen',
-      validUntil: '30 Mar 2026, 8:00 PM',
-      isEmergency: false,
-      priority: 'High',
-      riskLevel: 'Low',
-    },
-  ];
+  // Mock ticket data (mirrors Dashboard's Ticket Overview)
+  const permitData: Ticket[] = MOCK_TICKETS;
 
-  // Table columns matching the PTW details format
-  const columns: Column<PermitRow>[] = [
+  // Table columns matching the Dashboard's Ticket Overview layout
+  const columns: Column<Ticket>[] = [
     {
-      id: 'permitId',
-      label: 'Permit ID',
-      minWidth: 100,
-      sortable: true,
-      format: (value: unknown) => (
-        <Typography
-          sx={{
-            fontWeight: 700,
-            color: '#4f46e5',
-            cursor: 'pointer',
-            '&:hover': { textDecoration: 'underline' },
-          }}
-        >
-          {value as string}
+      id: 'id',
+      label: 'S. No',
+      minWidth: 60,
+      align: 'center',
+      format: (_v, row) => (
+        <Typography sx={{ fontSize: '0.78rem', fontWeight: 600 }}>
+          {String((row as Ticket).id)}
         </Typography>
       ),
     },
     {
-      id: 'permitType',
-      label: 'Permit Type',
-      minWidth: 130,
+      id: 'team',
+      label: 'Team',
+      minWidth: 110,
+      align: 'center',
       sortable: true,
-      format: (value: unknown) => (
-        <Typography sx={{ fontSize: '0.8rem', fontWeight: 500 }}>{value as string}</Typography>
-      ),
     },
     {
-      id: 'ownerName',
-      label: 'Owner',
+      id: 'assignee',
+      label: 'Assignee',
       minWidth: 140,
+      align: 'center',
       sortable: true,
     },
     {
-      id: 'wtg',
-      label: 'WTG',
-      minWidth: 180,
-      sortable: true,
-      format: (value: unknown) => (
-        <Typography sx={{ fontSize: '0.8rem', color: '#475569' }}>{value as string}</Typography>
-      ),
-    },
-    {
-      id: 'component',
-      label: 'Component',
+      id: 'issueType',
+      label: 'Issue Type',
       minWidth: 100,
-      sortable: true,
-    },
-    {
-      id: 'workLocation',
-      label: 'Location',
-      minWidth: 100,
-      sortable: true,
-    },
-    {
-      id: 'permitStatus',
-      label: 'Status',
-      minWidth: 140,
+      align: 'center',
       sortable: true,
       format: (value: unknown) => {
-        const v = value as string;
-        let color = '#64748b';
-        let bgColor = 'rgba(100,116,139,0.1)';
-        if (v.toLowerCase().includes('pending')) {
-          color = '#f59e0b';
-          bgColor = 'rgba(245,158,11,0.1)';
-        } else if (v.toLowerCase().includes('approved') || v.toLowerCase().includes('completed')) {
-          color = '#10b981';
-          bgColor = 'rgba(16,185,129,0.1)';
-        } else if (v.toLowerCase().includes('rejected')) {
-          color = '#ef4444';
-          bgColor = 'rgba(239,68,68,0.1)';
-        } else if (v.toLowerCase().includes('progress')) {
-          color = '#3b82f6';
-          bgColor = 'rgba(59,130,246,0.1)';
-        }
+        const v = String(value);
+        const palette: Record<string, { bg: string; fg: string; border: string }> = {
+          Story: { bg: 'rgba(99,102,241,0.12)', fg: '#4f46e5', border: 'rgba(99,102,241,0.3)' },
+          Task: { bg: 'rgba(6,182,212,0.12)', fg: '#0891b2', border: 'rgba(6,182,212,0.3)' },
+          Bug: { bg: 'rgba(239,68,68,0.12)', fg: '#ef4444', border: 'rgba(239,68,68,0.3)' },
+          Epic: { bg: 'rgba(139,92,246,0.12)', fg: '#7c3aed', border: 'rgba(139,92,246,0.3)' },
+          Spike: { bg: 'rgba(245,158,11,0.12)', fg: '#d97706', border: 'rgba(245,158,11,0.3)' },
+        };
+        const p = palette[v] ?? palette.Task;
         return (
           <Chip
+            size='small'
             label={v}
-            size='small'
             sx={{
-              background: bgColor,
-              color,
+              background: p.bg,
+              border: `1px solid ${p.border}`,
+              color: p.fg,
               fontWeight: 600,
-              fontSize: '0.7rem',
-              border: `1px solid ${color}40`,
+              fontSize: '0.65rem',
               height: 22,
             }}
           />
@@ -233,204 +96,255 @@ const Operations = () => {
       },
     },
     {
-      id: 'approvalStatus',
-      label: 'Approval',
-      minWidth: 100,
-      sortable: true,
-      format: (value: unknown) => {
-        const v = value as string;
-        let color = '#64748b';
-        let bgColor = 'rgba(100,116,139,0.1)';
-        if (v.toLowerCase().includes('approved')) {
-          color = '#10b981';
-          bgColor = 'rgba(16,185,129,0.1)';
-        } else if (v.toLowerCase().includes('rejected')) {
-          color = '#ef4444';
-          bgColor = 'rgba(239,68,68,0.1)';
-        }
-        return (
-          <Chip
-            label={v}
-            size='small'
-            sx={{
-              background: bgColor,
-              color,
-              fontWeight: 600,
-              fontSize: '0.7rem',
-              border: `1px solid ${color}40`,
-              height: 22,
-            }}
-          />
-        );
-      },
-    },
-    {
-      id: 'isEmergency',
-      label: 'Emergency',
-      minWidth: 90,
-      sortable: true,
-      format: (value: unknown) => {
-        const isEmergency = value as boolean;
-        return (
-          <Chip
-            label={isEmergency ? 'YES' : 'NO'}
-            size='small'
-            sx={{
-              background: isEmergency ? 'rgba(239,68,68,0.15)' : 'rgba(100,116,139,0.1)',
-              color: isEmergency ? '#ef4444' : '#64748b',
-              fontWeight: 700,
-              fontSize: '0.7rem',
-              border: `1px solid ${isEmergency ? '#ef4444' : '#64748b'}50`,
-              height: 22,
-            }}
-          />
-        );
-      },
-    },
-    {
-      id: 'priority',
-      label: 'Priority',
-      minWidth: 90,
-      sortable: true,
-      format: (value: unknown) => {
-        const v = value as string;
-        let color = '#64748b';
-        let bgColor = 'rgba(100,116,139,0.1)';
-        if (v.toLowerCase().includes('critical')) {
-          color = '#dc2626';
-          bgColor = 'rgba(220,38,38,0.12)';
-        } else if (v.toLowerCase().includes('high')) {
-          color = '#f59e0b';
-          bgColor = 'rgba(245,158,11,0.12)';
-        } else if (v.toLowerCase().includes('medium')) {
-          color = '#3b82f6';
-          bgColor = 'rgba(59,130,246,0.12)';
-        } else {
-          color = '#10b981';
-          bgColor = 'rgba(16,185,129,0.12)';
-        }
-        return (
-          <Chip
-            label={v}
-            size='small'
-            sx={{
-              background: bgColor,
-              color,
-              fontWeight: 600,
-              fontSize: '0.7rem',
-              border: `1px solid ${color}40`,
-              height: 22,
-            }}
-          />
-        );
-      },
-    },
-    {
-      id: 'riskLevel',
-      label: 'Risk',
-      minWidth: 80,
-      sortable: true,
-      format: (value: unknown) => {
-        const v = value as string;
-        let color = '#64748b';
-        let bgColor = 'rgba(100,116,139,0.1)';
-        if (v.toLowerCase().includes('high')) {
-          color = '#dc2626';
-          bgColor = 'rgba(220,38,38,0.12)';
-        } else if (v.toLowerCase().includes('medium')) {
-          color = '#f59e0b';
-          bgColor = 'rgba(245,158,11,0.12)';
-        } else {
-          color = '#10b981';
-          bgColor = 'rgba(16,185,129,0.12)';
-        }
-        return (
-          <Chip
-            label={v}
-            size='small'
-            sx={{
-              background: bgColor,
-              color,
-              fontWeight: 600,
-              fontSize: '0.7rem',
-              border: `1px solid ${color}40`,
-              height: 22,
-            }}
-          />
-        );
-      },
-    },
-    {
-      id: 'requestedTime',
-      label: 'Requested',
-      minWidth: 130,
-      sortable: true,
-    },
-    {
-      id: 'approvedBy',
-      label: 'Approved By',
+      id: 'issueNo',
+      label: 'Issue No',
       minWidth: 120,
+      align: 'center',
+      sortable: true,
+      format: (value: unknown) => (
+        <Typography
+          sx={{
+            fontSize: '0.75rem',
+            fontWeight: 600,
+            fontFamily: 'monospace',
+            color: '#4f46e5',
+          }}
+        >
+          {String(value)}
+        </Typography>
+      ),
+    },
+    {
+      id: 'summary',
+      label: 'Summary',
+      minWidth: 220,
+      align: 'left',
+      sortable: true,
+      format: (value: unknown) => (
+        <Typography
+          sx={{
+            fontSize: '0.78rem',
+            fontWeight: 500,
+            color: 'text.primary',
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            maxWidth: 280,
+          }}
+          title={String(value)}
+        >
+          {String(value)}
+        </Typography>
+      ),
+    },
+    {
+      id: 'timeLoggingId',
+      label: 'Time Logging ID',
+      minWidth: 130,
+      align: 'center',
       sortable: true,
     },
     {
-      id: 'validUntil',
-      label: 'Valid Until',
-      minWidth: 140,
+      id: 'status',
+      label: 'Status',
+      minWidth: 130,
+      align: 'center',
+      sortable: true,
+      format: (value: unknown) => {
+        const v = String(value) as keyof typeof TICKET_STATUS_CONFIG;
+        const cfg = TICKET_STATUS_CONFIG[v];
+        if (!cfg) return <Typography>{String(value)}</Typography>;
+        return (
+          <Chip
+            size='small'
+            label={cfg.label}
+            sx={{
+              background: cfg.bgColor,
+              border: `1px solid ${cfg.borderColor}`,
+              color: cfg.color,
+              fontWeight: 600,
+              fontSize: '0.65rem',
+              height: 22,
+            }}
+          />
+        );
+      },
+    },
+    {
+      id: 'storyPoints',
+      label: 'Story Points',
+      minWidth: 90,
+      align: 'center',
+      sortable: true,
+      format: (value: unknown) => (
+        <Typography sx={{ fontSize: '0.78rem', fontWeight: 700 }}>{String(value)}</Typography>
+      ),
+    },
+    {
+      id: 'workStartDate',
+      label: 'Actual Effort',
+      minWidth: 110,
+      align: 'center',
+      sortable: true,
+      format: (_v, row) => {
+        const ticket = row as Ticket;
+        const effort = ticket.storyPoints || 0;
+        return (
+          <Typography sx={{ fontSize: '0.78rem', fontWeight: 700 }}>
+            {effort === 13
+              ? '2d · 4h'
+              : effort >= 8
+                ? '1d · 3h'
+                : effort >= 5
+                  ? '1d · 1h'
+                  : effort === 3
+                    ? '6h'
+                    : effort === 2
+                      ? '4h'
+                      : effort === 1
+                        ? '2h'
+                        : '—'}
+          </Typography>
+        );
+      },
+    },
+    {
+      id: 'fixVersion',
+      label: 'Fix Version',
+      minWidth: 110,
+      align: 'center',
+      sortable: true,
+    },
+    {
+      id: 'carryForward',
+      label: 'Carry Forward',
+      minWidth: 120,
+      align: 'center',
+      sortable: true,
+      format: (_v, row) => {
+        const carry = (row as Ticket).carryForward;
+        if (!carry) {
+          return (
+            <Typography sx={{ fontSize: '0.7rem', color: '#94a3b8', fontStyle: 'italic' }}>
+              —
+            </Typography>
+          );
+        }
+        return (
+          <Typography
+            sx={{
+              fontSize: '0.75rem',
+              fontWeight: 600,
+              fontFamily: 'monospace',
+              color: '#4f46e5',
+            }}
+          >
+            {carry}
+          </Typography>
+        );
+      },
+    },
+    {
+      id: 'workStartDate',
+      label: 'Work Start Date',
+      minWidth: 130,
+      align: 'center',
+      sortable: true,
+    },
+    {
+      id: 'workEndDate',
+      label: 'Work End Date',
+      minWidth: 130,
+      align: 'center',
       sortable: true,
     },
   ];
+
+  // Map of tab index → status filter
+  const statusFilters: Record<number, string | null> = {
+    0: null,
+    1: 'In Progress',
+    2: 'In Review',
+    3: 'In Test',
+    4: 'Done',
+  };
+
+  // Filter rows based on active tab + search query
+  const filteredData = permitData.filter((t) => {
+    const statusFilter = statusFilters[tabValue];
+    if (statusFilter && t.status !== statusFilter) {
+      return false;
+    }
+    if (tableSearch) {
+      const q = tableSearch.toLowerCase();
+      return (
+        t.team.toLowerCase().includes(q) ||
+        t.assignee.toLowerCase().includes(q) ||
+        t.issueType.toLowerCase().includes(q) ||
+        t.issueNo.toLowerCase().includes(q) ||
+        t.summary.toLowerCase().includes(q) ||
+        t.timeLoggingId.toLowerCase().includes(q) ||
+        t.status.toLowerCase().includes(q) ||
+        t.fixVersion.toLowerCase().includes(q) ||
+        (t.carryForward || '').toLowerCase().includes(q) ||
+        t.workStartDate.toLowerCase().includes(q) ||
+        t.workEndDate.toLowerCase().includes(q)
+      );
+    }
+    return true;
+  });
 
   // Mock data for cards
   const statCards = [
     {
-      label: 'Total Operations',
+      label: 'All Tickets',
       value: permitData.length,
       Icon: EngineeringIcon,
       cls: classes.statCard0,
-      sub: 'All Operations',
+      sub: 'All Tickets',
       color: '#4f46e5',
       tabIndex: 0,
     },
     {
-      label: 'Maintenance',
-      value: permitData.filter((d) => d.permitType.includes('Maintenance')).length,
+      label: 'In Progress',
+      value: permitData.filter((d) => d.status === 'In Progress').length,
       Icon: BuildIcon,
       cls: classes.statCard1,
-      sub: 'Active Maintenance',
-      color: '#f59e0b',
+      sub: 'In Progress',
+      color: '#3b82f6',
       tabIndex: 1,
     },
     {
-      label: 'Work Permit',
-      value: permitData.filter((d) => d.permitType.includes('Permit')).length,
+      label: 'In Review',
+      value: permitData.filter((d) => d.status === 'In Review').length,
       Icon: AssignmentIcon,
       cls: classes.statCard2,
-      sub: 'Work Permits',
-      color: '#10b981',
+      sub: 'In Review',
+      color: '#8b5cf6',
       tabIndex: 2,
     },
     {
-      label: 'Pending',
-      value: permitData.filter((d) => d.permitStatus.toLowerCase().includes('pending')).length,
+      label: 'In Test',
+      value: permitData.filter((d) => d.status === 'In Test').length,
       Icon: PendingActionsIcon,
       cls: classes.statCard3,
-      sub: 'Awaiting Approval',
-      color: '#ef4444',
+      sub: 'In Test',
+      color: '#f59e0b',
       tabIndex: 3,
     },
     {
-      label: 'Draft',
-      value: permitData.filter((d) => d.permitStatus.toLowerCase().includes('draft')).length,
+      label: 'Done',
+      value: permitData.filter((d) => d.status === 'Done').length,
       Icon: EditNoteIcon,
       cls: classes.statCard4,
-      sub: 'Draft Operations',
-      color: '#0ea5e9',
+      sub: 'Done',
+      color: '#10b981',
       tabIndex: 4,
     },
   ];
 
-  const handleRowClick = (row: PermitRow) => {
-    navigate(`${AdminPath.PERMIT_DETAILS.replace(':id', row.id)}`);
+  const handleRowClick = (row: Ticket) => {
+    navigate(AdminPath.TICKET_DETAIL.replace(':id', encodeURIComponent(row.issueNo)));
   };
 
   return (
@@ -446,7 +360,7 @@ const Operations = () => {
       <Box className={classes.actionBar}>
         {/* Status Badge */}
         <Chip
-          label={`${permitData.filter((d) => d.permitStatus.toLowerCase().includes('pending')).length} Pending`}
+          label={`${permitData.filter((d) => d.status === 'In Progress').length} In Progress`}
           size='small'
           sx={{
             background: 'rgba(100,116,139,0.12)',
@@ -466,7 +380,7 @@ const Operations = () => {
               '& .MuiChip-label': { flex: 1 },
             },
           }}
-          onClick={() => setTabValue(3)}
+          onClick={() => setTabValue(1)}
           icon={<PendingActionsIcon sx={{ fontSize: '16px !important' }} />}
         />
         {/* Create Operations Button */}
@@ -556,14 +470,14 @@ const Operations = () => {
           allowScrollButtonsMobile
           sx={{ flex: 1 }}
         >
-          <Tab icon={<EngineeringIcon />} iconPosition='start' label='All' />
-          <Tab icon={<BuildIcon />} iconPosition='start' label='Maintenance' />
-          <Tab icon={<AssignmentIcon />} iconPosition='start' label='Work Permit' />
-          <Tab icon={<PendingActionsIcon />} iconPosition='start' label='Pending' />
-          <Tab icon={<EditNoteIcon />} iconPosition='start' label='Draft' />
+          <Tab icon={<EngineeringIcon />} iconPosition='start' label='All Tickets' />
+          <Tab icon={<BuildIcon />} iconPosition='start' label='In Progress' />
+          <Tab icon={<AssignmentIcon />} iconPosition='start' label='In Review' />
+          <Tab icon={<PendingActionsIcon />} iconPosition='start' label='In Test' />
+          <Tab icon={<EditNoteIcon />} iconPosition='start' label='Done' />
         </Tabs>
         <TextField
-          placeholder='Search permits...'
+          placeholder='Search tickets...'
           value={tableSearch}
           onChange={(e) => setTableSearch(e.target.value)}
           className={classes.tabsSearchField}
@@ -585,7 +499,7 @@ const Operations = () => {
           <Box className={classes.tableContainer}>
             <DataTable
               columns={columns}
-              data={permitData}
+              data={filteredData}
               rowKey='id'
               searchable={false}
               initialRowsPerPage={10}

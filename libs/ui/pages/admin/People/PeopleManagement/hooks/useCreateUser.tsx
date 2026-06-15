@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
-import { useNotification } from '@infygen/hooks';
-import { useAuthActionMutation } from '@infygen/services';
+import { useNotification } from '@sprintpulse/hooks';
+import { useAuthActionMutation } from '@sprintpulse/services';
 import { useFormik } from 'formik';
 
 export const CITY_OPTIONS = [

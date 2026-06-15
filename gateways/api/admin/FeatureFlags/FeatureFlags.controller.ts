@@ -18,7 +18,7 @@ const parseRoles = (roles: string) => {
 const parseFlag = (flag: any) => ({ ...flag, roles: parseRoles(flag.roles) });
 
 export class FeatureFlagsController {
-  // prisma is exported as Promise<PrismaClient> from @infygen/database
+  // prisma is exported as Promise<PrismaClient> from @sprintpulse/database
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   constructor(private prismaPromise: any) {}
 

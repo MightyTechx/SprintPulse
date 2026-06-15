@@ -14,9 +14,9 @@ export const PARTNER_CONFIGS: Record<string, PartnerConfig> = {
     features: ['admin', 'user', 'reports', 'system', 'dashboard'],
     apiUrl: '/api',
   },
-  'wind-tree': {
-    name: 'Wind Tree',
-    theme: 'wind-tree',
+  sprintpulse: {
+    name: 'SprintPulse',
+    theme: 'sprintpulse',
     features: ['admin', 'user', 'reports'],
     apiUrl: '/api',
   },
@@ -35,5 +35,5 @@ export const isAdministration = (partner: string): boolean => {
 };
 
 export const isGeneralePartner = (partner: string): boolean => {
-  return partner === 'wind-tree';
+  return partner === 'sprintpulse';
 };

@@ -1,4 +1,4 @@
-import { Box, Typography, Chip } from '@infygen/component';
+import { Box, Typography, Chip } from '@sprintpulse/component';
 import type { SvgIconComponent } from '@mui/icons-material';
 import { useStyles } from './styles';
 

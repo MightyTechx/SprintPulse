@@ -1,5 +1,5 @@
 import { Backdrop, CircularProgress, Box, Typography } from '@mui/material';
-import { useAuth, useLoader } from '@infygen/hooks';
+import { useAuth, useLoader } from '@sprintpulse/hooks';
 
 export interface DSLoaderProps {
   text?: string;

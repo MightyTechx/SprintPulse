@@ -57,13 +57,13 @@ const getPartner = (): string | undefined => {
  *
  * @example
  * const useMetadata = createAppMetadata(
- *   { tenet: 'Infy Energy', title: 'Welcome' },
+ *   { tenet: 'SprintPulse', title: 'Welcome' },
  *   {
  *     admin: { tenet: 'Admin Dashboard' },
  *     user: { tenet: 'User Dashboard' },
  *   },
  *   {
- *     'wind-tree': { tenet: 'Wind Tree' },
+ *     sprintpulse: { tenet: 'SprintPulse' },
  *   }
  * );
  *

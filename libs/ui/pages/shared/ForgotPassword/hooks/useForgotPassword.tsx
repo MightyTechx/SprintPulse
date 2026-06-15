@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useForm, useFormWithSessionStorage, useNotification, useFieldError } from '@infygen/hooks';
-import { ForgotPasswordSchema, VerifyOtpSchema, ResetPasswordSchema } from '@infygen/interfaces';
-import { constants } from '@infygen/utils';
-import { useAuthActionMutation } from '@infygen/services';
+import { useForm, useFormWithSessionStorage, useNotification, useFieldError } from '@sprintpulse/hooks';
+import { ForgotPasswordSchema, VerifyOtpSchema, ResetPasswordSchema } from '@sprintpulse/interfaces';
+import { constants } from '@sprintpulse/utils';
+import { useAuthActionMutation } from '@sprintpulse/services';
 
 export type Step = 'email' | 'otp' | 'reset';
 

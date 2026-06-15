@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AppBar, Badge, Box, Chip, IconButton, Toolbar, useTheme } from '@infygen/component';
-import { useMediaQuery } from '@infygen/hooks';
+import { AppBar, Badge, Box, Chip, IconButton, Toolbar, useTheme } from '@sprintpulse/component';
+import { useMediaQuery } from '@sprintpulse/hooks';
 import { Tooltip } from '../../../components';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import BadgeIcon from '@mui/icons-material/Badge';
@@ -15,8 +15,8 @@ import LogoMark from './components/LogoMark';
 import NotificationsMenu from './components/NotificationsMenu';
 import UserMenu from './components/UserMenu';
 import ChatDialog from '../../../components/ChatDialog/ChatDialog';
-import { useThemeContext } from '@infygen/theme';
-import { constants } from '@infygen/utils';
+import { useThemeContext } from '@sprintpulse/theme';
+import { constants } from '@sprintpulse/utils';
 
 // Default admin colors (before theme selection)
 const ADMIN_DEFAULT_COLORS = {

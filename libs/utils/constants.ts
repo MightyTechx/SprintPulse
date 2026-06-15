@@ -16,7 +16,6 @@ const AdminPath = {
   USER_DETAIL: `${ADMIN_BASE}/people-management/access/:id`,
   OPERATIONS: `${ADMIN_BASE}/operations-management`,
   CREATE_OPERATIONS: `${ADMIN_BASE}/operations-management/create`,
-  PERMIT_DETAILS: `${ADMIN_BASE}/operations-management/permit/:id`,
   TICKET_DETAIL: `${ADMIN_BASE}/dashboard/ticket/:id`,
   FEATURE_FLAGS: `${ADMIN_BASE}/feature-flags`,
 };

@@ -1,4 +1,4 @@
-import { Box, Typography } from '@infygen/component';
+import { Box, Typography } from '@sprintpulse/component';
 import PersonIcon from '@mui/icons-material/Person';
 import WorkIcon from '@mui/icons-material/Work';
 import LockIcon from '@mui/icons-material/Lock';

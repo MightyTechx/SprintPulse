@@ -1,7 +1,7 @@
 import type { Content, TDocumentDefinitions, DynamicContent } from 'pdfmake/interfaces';
 import { PDF_COLORS, LAYOUT } from './pdf.styles';
 import { buildHeader, buildKpiTable, buildDowntimeTable } from './pdf.builders';
-import type { ReportMetadata, KpiRow, DowntimeRow } from '../types';
+import type { ReportMetadata, KpiRow } from '../types';
 
 // Document styles
 const styles: Record<string, any> = {
@@ -49,7 +49,7 @@ const buildFooter: DynamicContent = (currentPage: number, pageCount: number): Co
   return {
     columns: [
       {
-        text: 'SprintPulse Wind Energy Management System',
+        text: 'SprintPulse Sprint Management System',
         fontSize: 8,
         color: PDF_COLORS.textLight,
         alignment: 'left',
@@ -71,9 +71,9 @@ function buildDocDefinition(
   metadata: ReportMetadata,
   kpiData: any[],
   downtimeData: any[],
-  turbineIds: string[] = ['t01', 't02', 't03', 't04', 't05', 't06', 't07', 't08', 't09', 't10'],
+  sprintIds: string[] = ['s01', 's02', 's03', 's04', 's05', 's06', 's07', 's08', 's09', 's10'],
 ): TDocumentDefinitions {
-  const content: Content[] = [buildHeader(metadata), buildKpiTable(kpiData, turbineIds)];
+  const content: Content[] = [buildHeader(metadata), buildKpiTable(kpiData, sprintIds)];
 
   // Only add downtime table if we have data
   if (downtimeData && downtimeData.length > 0) {
@@ -92,10 +92,10 @@ function buildDocDefinition(
       margin: [0, 0, 0, 0] as [number, number, number, number],
     },
     info: {
-      title: `${metadata.reportName} - ${metadata.turbine}`,
+      title: `${metadata.reportName} - ${metadata.sprint}`,
       author: 'SprintPulse',
-      subject: 'Wind Energy Report',
-      keywords: 'wind turbine, energy, generation, report',
+      subject: 'Sprint Report',
+      keywords: 'sprint, velocity, agile, report',
     },
   };
 }
@@ -114,7 +114,7 @@ export async function generatePdfReport(
   metadata: ReportMetadata,
   kpiData: any[],
   downtimeData: any[],
-  turbineIds?: string[],
+  sprintIds?: string[],
 ): Promise<void> {
   try {
     // Dynamic import of pdfmake and its fonts
@@ -135,7 +135,7 @@ export async function generatePdfReport(
     }
 
     // Build document
-    const docDefinition = buildDocDefinition(metadata, kpiData, downtimeData, turbineIds);
+    const docDefinition = buildDocDefinition(metadata, kpiData, downtimeData, sprintIds);
     const fileName = generateFileName(metadata, 'pdf');
 
     // Create and download PDF
@@ -154,7 +154,7 @@ export async function openPdfReport(
   metadata: ReportMetadata,
   kpiData: any[],
   downtimeData: any[],
-  turbineIds?: string[],
+  sprintIds?: string[],
 ): Promise<void> {
   try {
     const pdfMakeModule: any = await import('pdfmake/build/pdfmake');
@@ -171,7 +171,7 @@ export async function openPdfReport(
       pdfMake.addVirtualFileSystem(vfs);
     }
 
-    const docDefinition = buildDocDefinition(metadata, kpiData, downtimeData, turbineIds);
+    const docDefinition = buildDocDefinition(metadata, kpiData, downtimeData, sprintIds);
     pdfMake.createPdf(docDefinition).open();
   } catch (error) {
     console.error('PDF open failed:', error);

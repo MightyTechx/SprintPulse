@@ -78,7 +78,7 @@ SprintPulse is an enterprise admin and IT service management portal built for en
 
 ### Multi-Tenant Support
 - Tenant-aware theme and build pipeline
-- **Wind-Tree** tenant ships as a separate Vite build output
+- **SprintPulse** tenant ships as a separate Vite build output
 
 ---
 
@@ -220,9 +220,9 @@ npm run serve:administration
 
 | Email | Password | Role |
 |-------|----------|------|
-| `admin@infygen.tech` | `admin123` | Admin |
-| `consultant@infygen.tech` | `consultant123` | Consultant |
-| `user@infygen.tech` | `user123` | User |
+| `admin@sprintpulse.tech` | `admin123` | Admin |
+| `consultant@sprintpulse.tech` | `consultant123` | Consultant |
+| `user@sprintpulse.tech` | `user123` | User |
 
 ---
 
@@ -237,7 +237,7 @@ PORT=3001
 HOST=localhost
 
 # Database
-DATABASE_URL=postgresql://postgres:password@localhost:5432/infyenergy_db?schema=public
+DATABASE_URL=postgresql://postgres:password@localhost:5432/sprintpulse_db?schema=public
 
 # JWT
 JWT_SECRET=your-super-secret-jwt-key-min-32-chars
@@ -248,7 +248,7 @@ SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
 SMTP_USER=your-email@gmail.com
 SMTP_PASS=your-app-password
-SMTP_FROM=SprintPulse <noreply@infygen.tech>
+SMTP_FROM=SprintPulse <noreply@sprintpulse.tech>
 
 # CORS
 CORS_ORIGIN=http://localhost:1600
@@ -358,7 +358,7 @@ All auth operations go through a single `POST /api/auth` endpoint with an `actio
 
 - **Pages** render pure UI and delegate all logic to custom hooks
 - **Hooks** call RTK Query mutations/queries and manage local state
-- **Services** (`@infygen/services`) define RTK Query endpoints
+- **Services** (`@sprintpulse/services`) define RTK Query endpoints
 
 ### Styling
 
@@ -416,7 +416,7 @@ npm run start:backend        # Production start
 ```bash
 npm run serve:administration  # Admin app — http://localhost:1600
 npm run build:administration  # Production build
-npm run build:wind-tree       # Wind-Tree tenant build
+npm run build:sprintpulse     # SprintPulse tenant build
 ```
 
 ### Database

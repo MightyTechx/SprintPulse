@@ -5,7 +5,7 @@ export const SignInSchema = yup.object({
     .string()
     .email('Invalid email')
     .required('required')
-    .matches(/@infygen\.tech$/i, 'Email must be a @infygen.tech address'),
+    .matches(/@sprintpulse\.tech$/i, 'Email must be a @sprintpulse.tech address'),
   password: yup.string().required('required').min(6, 'Min 6 characters'),
 });
 

@@ -28,14 +28,14 @@ const ChatDialog: FC<ChatDialogProps> = ({ open, onClose }) => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 1,
-      text: "Hello! I'm your Sprint Pulse AI assistant, specialized in wind turbine operations and energy management.\n\nI can help you with:\n• Turbine performance and power generation\n• SCADA parameters and monitoring\n• Maintenance schedules and troubleshooting\n• Reports and analytics\n\nWhat would you like to know about today?",
+      text: "Hello! I'm your SprintPulse AI assistant, specialized in sprint management and agile project management.\n\nI can help you with:\n• Sprint performance and velocity tracking\n• Issue workflows and backlog management\n• Sprint planning and troubleshooting\n• Reports and analytics\n\nWhat would you like to know about today?",
       isUser: false,
       timestamp: new Date(),
       suggestions: [
-        'Show turbine status',
-        'How to improve power output?',
-        'Maintenance schedule',
-        'Common turbine issues',
+        'Show sprint status',
+        'How to improve team velocity?',
+        'Sprint planning',
+        'Common sprint issues',
       ],
     },
   ]);

@@ -7,9 +7,9 @@ import {
   Checkbox,
   FormHelperText,
   TextField,
-} from '@infygen/component';
+} from '@sprintpulse/component';
 import LockIcon from '@mui/icons-material/Lock';
-import { useFieldError } from '@infygen/hooks';
+import { useFieldError } from '@sprintpulse/hooks';
 
 function getStrength(pw: string) {
   let score = 0;

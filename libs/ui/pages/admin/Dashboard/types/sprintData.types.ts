@@ -159,8 +159,8 @@ export interface CumulativeFlowPoint {
   'In Progress': number;
   'In Review': number;
   'In Test': number;
-  'Blocked': number;
-  'Done': number;
+  Blocked: number;
+  Done: number;
 }
 
 export interface Dependency {
@@ -328,7 +328,10 @@ export const SPRINT_STATUS_CONFIG: Record<
 };
 
 // Issue Type Configuration
-export const ISSUE_TYPE_CONFIG: Record<Issue['type'], { label: string; color: string; icon: string }> = {
+export const ISSUE_TYPE_CONFIG: Record<
+  Issue['type'],
+  { label: string; color: string; icon: string }
+> = {
   story: {
     label: 'Story',
     color: '#3b82f6',
@@ -362,7 +365,10 @@ export const ISSUE_TYPE_CONFIG: Record<Issue['type'], { label: string; color: st
 };
 
 // Priority Configuration
-export const PRIORITY_CONFIG: Record<Issue['priority'], { label: string; color: string; bgColor: string }> = {
+export const PRIORITY_CONFIG: Record<
+  Issue['priority'],
+  { label: string; color: string; bgColor: string }
+> = {
   lowest: {
     label: 'Lowest',
     color: '#64748b',
@@ -391,7 +397,10 @@ export const PRIORITY_CONFIG: Record<Issue['priority'], { label: string; color: 
 };
 
 // Risk Configuration
-export const RISK_CONFIG: Record<Risk['impact'] | Risk['probability'], { label: string; color: string }> = {
+export const RISK_CONFIG: Record<
+  Risk['impact'] | Risk['probability'],
+  { label: string; color: string }
+> = {
   low: {
     label: 'Low',
     color: '#10b981',
@@ -477,13 +486,46 @@ export interface Ticket {
   ticketLink: string;
 }
 
-export const TICKET_STATUS_CONFIG: Record<TicketStatus, { label: string; color: string; bgColor: string; borderColor: string }> = {
-  'To Do': { label: 'To Do', color: '#64748b', bgColor: 'rgba(100,116,139,0.15)', borderColor: 'rgba(100,116,139,0.4)' },
-  'In Progress': { label: 'In Progress', color: '#3b82f6', bgColor: 'rgba(59,130,246,0.15)', borderColor: 'rgba(59,130,246,0.4)' },
-  'In Review': { label: 'In Review', color: '#8b5cf6', bgColor: 'rgba(139,92,246,0.15)', borderColor: 'rgba(139,92,246,0.4)' },
-  Blocked: { label: 'Blocked', color: '#ef4444', bgColor: 'rgba(239,68,68,0.15)', borderColor: 'rgba(239,68,68,0.4)' },
-  'In Test': { label: 'In Test', color: '#f59e0b', bgColor: 'rgba(245,158,11,0.15)', borderColor: 'rgba(245,158,11,0.4)' },
-  Done: { label: 'Done', color: '#10b981', bgColor: 'rgba(16,185,129,0.15)', borderColor: 'rgba(16,185,129,0.4)' },
+export const TICKET_STATUS_CONFIG: Record<
+  TicketStatus,
+  { label: string; color: string; bgColor: string; borderColor: string }
+> = {
+  'To Do': {
+    label: 'To Do',
+    color: '#64748b',
+    bgColor: 'rgba(100,116,139,0.15)',
+    borderColor: 'rgba(100,116,139,0.4)',
+  },
+  'In Progress': {
+    label: 'In Progress',
+    color: '#3b82f6',
+    bgColor: 'rgba(59,130,246,0.15)',
+    borderColor: 'rgba(59,130,246,0.4)',
+  },
+  'In Review': {
+    label: 'In Review',
+    color: '#8b5cf6',
+    bgColor: 'rgba(139,92,246,0.15)',
+    borderColor: 'rgba(139,92,246,0.4)',
+  },
+  Blocked: {
+    label: 'Blocked',
+    color: '#ef4444',
+    bgColor: 'rgba(239,68,68,0.15)',
+    borderColor: 'rgba(239,68,68,0.4)',
+  },
+  'In Test': {
+    label: 'In Test',
+    color: '#f59e0b',
+    bgColor: 'rgba(245,158,11,0.15)',
+    borderColor: 'rgba(245,158,11,0.4)',
+  },
+  Done: {
+    label: 'Done',
+    color: '#10b981',
+    bgColor: 'rgba(16,185,129,0.15)',
+    borderColor: 'rgba(16,185,129,0.4)',
+  },
 };
 
 // Sprint task categories (replaces turbine components)
@@ -576,13 +618,41 @@ export const SPRINT_TASK_CATEGORIES: SprintTaskCategory[] = [
 ];
 
 // Sprint category colors
-export const SPRINT_CATEGORY_COLORS: Record<string, { color: string; bgColor: string; borderColor: string; glowColor?: string }> = {
-  planning: { color: '#64748b', bgColor: 'rgba(100,116,139,0.15)', borderColor: 'rgba(100,116,139,0.4)' },
-  development: { color: '#3b82f6', bgColor: 'rgba(59,130,246,0.15)', borderColor: 'rgba(59,130,246,0.4)' },
-  quality: { color: '#f59e0b', bgColor: 'rgba(245,158,11,0.15)', borderColor: 'rgba(245,158,11,0.4)' },
-  review: { color: '#8b5cf6', bgColor: 'rgba(139,92,246,0.15)', borderColor: 'rgba(139,92,246,0.4)' },
-  deployment: { color: '#10b981', bgColor: 'rgba(16,185,129,0.15)', borderColor: 'rgba(16,185,129,0.4)' },
-  risk: { color: '#ef4444', bgColor: 'rgba(239,68,68,0.15)', borderColor: 'rgba(239,68,68,0.4)', glowColor: 'rgba(239,68,68,0.5)' },
+export const SPRINT_CATEGORY_COLORS: Record<
+  string,
+  { color: string; bgColor: string; borderColor: string; glowColor?: string }
+> = {
+  planning: {
+    color: '#64748b',
+    bgColor: 'rgba(100,116,139,0.15)',
+    borderColor: 'rgba(100,116,139,0.4)',
+  },
+  development: {
+    color: '#3b82f6',
+    bgColor: 'rgba(59,130,246,0.15)',
+    borderColor: 'rgba(59,130,246,0.4)',
+  },
+  quality: {
+    color: '#f59e0b',
+    bgColor: 'rgba(245,158,11,0.15)',
+    borderColor: 'rgba(245,158,11,0.4)',
+  },
+  review: {
+    color: '#8b5cf6',
+    bgColor: 'rgba(139,92,246,0.15)',
+    borderColor: 'rgba(139,92,246,0.4)',
+  },
+  deployment: {
+    color: '#10b981',
+    bgColor: 'rgba(16,185,129,0.15)',
+    borderColor: 'rgba(16,185,129,0.4)',
+  },
+  risk: {
+    color: '#ef4444',
+    bgColor: 'rgba(239,68,68,0.15)',
+    borderColor: 'rgba(239,68,68,0.4)',
+    glowColor: 'rgba(239,68,68,0.5)',
+  },
 };
 
 // Legacy interface for backward compatibility
@@ -656,20 +726,81 @@ export interface TurbineData {
 export type TurbineStatus = TurbineData['status'];
 export type ScadaStatus = TurbineData['scadaStatus'];
 
-export const STATUS_CONFIG: Record<TurbineStatus, { label: string; color: string; bgColor: string; borderColor: string }> = {
-  running: { label: 'Running', color: '#10b981', bgColor: 'rgba(16,185,129,0.15)', borderColor: 'rgba(16,185,129,0.4)' },
-  stopped: { label: 'Stopped', color: '#64748b', bgColor: 'rgba(100,116,139,0.15)', borderColor: 'rgba(100,116,139,0.4)' },
-  maintenance: { label: 'Maintenance', color: '#f59e0b', bgColor: 'rgba(245,158,11,0.15)', borderColor: 'rgba(245,158,11,0.4)' },
-  fault: { label: 'Fault', color: '#ef4444', bgColor: 'rgba(239,68,68,0.15)', borderColor: 'rgba(239,68,68,0.4)' },
-  standby: { label: 'Standby', color: '#8b5cf6', bgColor: 'rgba(139,92,246,0.15)', borderColor: 'rgba(139,92,246,0.4)' },
+export const STATUS_CONFIG: Record<
+  TurbineStatus,
+  { label: string; color: string; bgColor: string; borderColor: string }
+> = {
+  running: {
+    label: 'Running',
+    color: '#10b981',
+    bgColor: 'rgba(16,185,129,0.15)',
+    borderColor: 'rgba(16,185,129,0.4)',
+  },
+  stopped: {
+    label: 'Stopped',
+    color: '#64748b',
+    bgColor: 'rgba(100,116,139,0.15)',
+    borderColor: 'rgba(100,116,139,0.4)',
+  },
+  maintenance: {
+    label: 'Maintenance',
+    color: '#f59e0b',
+    bgColor: 'rgba(245,158,11,0.15)',
+    borderColor: 'rgba(245,158,11,0.4)',
+  },
+  fault: {
+    label: 'Fault',
+    color: '#ef4444',
+    bgColor: 'rgba(239,68,68,0.15)',
+    borderColor: 'rgba(239,68,68,0.4)',
+  },
+  standby: {
+    label: 'Standby',
+    color: '#8b5cf6',
+    bgColor: 'rgba(139,92,246,0.15)',
+    borderColor: 'rgba(139,92,246,0.4)',
+  },
 };
 
-export const SCADA_STATUS_CONFIG: Record<ScadaStatus, { label: string; color: string; bgColor: string; borderColor: string; glowColor: string }> = {
-  NOMINAL: { label: 'NOMINAL', color: '#10b981', bgColor: 'rgba(16,185,129,0.15)', borderColor: 'rgba(16,185,129,0.4)', glowColor: 'rgba(16,185,129,0.5)' },
-  WARNING: { label: 'WARNING', color: '#f59e0b', bgColor: 'rgba(245,158,11,0.15)', borderColor: 'rgba(245,158,11,0.4)', glowColor: 'rgba(245,158,11,0.5)' },
-  CRITICAL: { label: 'CRITICAL', color: '#ef4444', bgColor: 'rgba(239,68,68,0.15)', borderColor: 'rgba(239,68,68,0.4)', glowColor: 'rgba(239,68,68,0.5)' },
-  OFFLINE: { label: 'OFFLINE', color: '#64748b', bgColor: 'rgba(100,116,139,0.15)', borderColor: 'rgba(100,116,139,0.4)', glowColor: 'rgba(100,116,139,0.5)' },
-  MAINTENANCE: { label: 'MAINTENANCE', color: '#8b5cf6', bgColor: 'rgba(139,92,246,0.15)', borderColor: 'rgba(139,92,246,0.4)', glowColor: 'rgba(139,92,246,0.5)' },
+export const SCADA_STATUS_CONFIG: Record<
+  ScadaStatus,
+  { label: string; color: string; bgColor: string; borderColor: string; glowColor: string }
+> = {
+  NOMINAL: {
+    label: 'NOMINAL',
+    color: '#10b981',
+    bgColor: 'rgba(16,185,129,0.15)',
+    borderColor: 'rgba(16,185,129,0.4)',
+    glowColor: 'rgba(16,185,129,0.5)',
+  },
+  WARNING: {
+    label: 'WARNING',
+    color: '#f59e0b',
+    bgColor: 'rgba(245,158,11,0.15)',
+    borderColor: 'rgba(245,158,11,0.4)',
+    glowColor: 'rgba(245,158,11,0.5)',
+  },
+  CRITICAL: {
+    label: 'CRITICAL',
+    color: '#ef4444',
+    bgColor: 'rgba(239,68,68,0.15)',
+    borderColor: 'rgba(239,68,68,0.4)',
+    glowColor: 'rgba(239,68,68,0.5)',
+  },
+  OFFLINE: {
+    label: 'OFFLINE',
+    color: '#64748b',
+    bgColor: 'rgba(100,116,139,0.15)',
+    borderColor: 'rgba(100,116,139,0.4)',
+    glowColor: 'rgba(100,116,139,0.5)',
+  },
+  MAINTENANCE: {
+    label: 'MAINTENANCE',
+    color: '#8b5cf6',
+    bgColor: 'rgba(139,92,246,0.15)',
+    borderColor: 'rgba(139,92,246,0.4)',
+    glowColor: 'rgba(139,92,246,0.5)',
+  },
 };
 
 // Legacy component interface for backward compatibility

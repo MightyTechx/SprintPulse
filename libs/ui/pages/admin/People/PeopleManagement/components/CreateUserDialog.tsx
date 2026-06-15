@@ -33,8 +33,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import { useStyles } from '../styles';
-import { useNotification } from '@infygen/hooks';
-import { useAuthActionMutation } from '@infygen/services';
+import { useNotification } from '@sprintpulse/hooks';
+import { useAuthActionMutation } from '@sprintpulse/services';
 import { useLocationSearch } from '../../../../../hooks/useLocationSearch';
 import TextField from '../../../../../components/TextField/TextField';
 

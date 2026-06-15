@@ -1,6 +1,6 @@
-import { Box, Typography, Chip } from '@infygen/component';
+import { Box, Typography, Chip } from '@sprintpulse/component';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
-import { useFieldError } from '@infygen/hooks';
+import { useFieldError } from '@sprintpulse/hooks';
 import TextField from '../../../../components/TextField/TextField';
 import Button from '../../../../components/Button/Button';
 

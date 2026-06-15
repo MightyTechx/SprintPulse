@@ -22,7 +22,7 @@ const getApiBaseUrl = (): string => {
 const rawBaseQuery = fetchBaseQuery({
   baseUrl: getApiBaseUrl(),
   prepareHeaders: (headers) => {
-    const token = localStorage.getItem('infygen_token');
+    const token = localStorage.getItem('sprintpulse_token');
     if (token) {
       headers.set('authorization', `Bearer ${token}`);
     }
@@ -38,7 +38,7 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
   const result = await rawBaseQuery(args, api, extraOptions);
 
   // Invalidate FeatureFlags cache after mutations so SideNav updates immediately
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   const method = result.meta?.request?.method?.toUpperCase();
   if (method === 'PATCH' || method === 'POST' || method === 'DELETE') {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -46,10 +46,10 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
   }
 
   if (result.error?.status === 401) {
-    const token = localStorage.getItem('infygen_token');
+    const token = localStorage.getItem('sprintpulse_token');
     if (token) {
-      localStorage.removeItem('infygen_token');
-      localStorage.removeItem('infygen_user');
+      localStorage.removeItem('sprintpulse_token');
+      localStorage.removeItem('sprintpulse_user');
       window.location.href = '/signin';
     }
   }

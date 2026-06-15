@@ -1,14 +1,14 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { Column, Chip, Typography, Button, Stack, Tooltip, Tab } from '@infygen/component';
+import { Column, Chip, Typography, Button, Stack, Tooltip, Tab } from '@sprintpulse/component';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import PendingActionsIcon from '@mui/icons-material/PendingActions';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
 import GroupIcon from '@mui/icons-material/Group';
-import { useAuthActionMutation } from '@infygen/services';
-import { useNotification } from '@infygen/hooks';
-import { IAuthUser } from '@infygen/interfaces';
+import { useAuthActionMutation } from '@sprintpulse/services';
+import { useNotification } from '@sprintpulse/hooks';
+import { IAuthUser } from '@sprintpulse/interfaces';
 import { AccessRequestRow, ActionType } from '../types/accessRequests.types';
 import { getFilteredData, getTabLists, getTableData } from '../utils/accessRequests.utils';
 

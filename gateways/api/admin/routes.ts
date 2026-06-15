@@ -3,7 +3,7 @@ import { Router } from 'express';
 import featureFlagsRoutes from './FeatureFlags/FeatureFlags.routes';
 import chatAIRoutes from './ChatAI/ChatAI.routes';
 import whatsAppReportsRoutes from './WhatsAppReports/WhatsAppReports.routes';
-import { ADMIN_PATHS } from '@infygen/constants';
+import { ADMIN_PATHS } from '@sprintpulse/constants';
 
 const router = Router();
 

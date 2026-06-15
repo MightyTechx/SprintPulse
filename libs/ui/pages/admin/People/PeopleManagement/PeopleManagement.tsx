@@ -12,7 +12,7 @@ import {
   Button,
   Card,
   PageHeader,
-} from '@infygen/component';
+} from '@sprintpulse/component';
 import { Card as MUICard, InputAdornment, Stack } from '@mui/material';
 import GroupIcon from '@mui/icons-material/Group';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
@@ -24,12 +24,12 @@ import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import usePeopleManagement from './hooks/useAccessManagement';
 import { AccessRequestRow } from '../PeopleRequests/types/accessRequests.types';
-import { IAuthUser } from '@infygen/interfaces';
+import { IAuthUser } from '@sprintpulse/interfaces';
 import { UserDetailDialog } from '../UserDetail';
 import { CreateUserDialog } from './components/CreateUserDialog';
-import { useAdminKeyframes } from '@infygen/hooks';
+import { useAdminKeyframes } from '@sprintpulse/hooks';
 import { useStyles } from './styles';
-import TabPanel from '@infygen/component/TabPanel';
+import TabPanel from '@sprintpulse/component/TabPanel';
 
 const PeopleManagement = () => {
   const { classes } = useStyles();

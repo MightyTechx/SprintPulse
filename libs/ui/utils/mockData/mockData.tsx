@@ -257,7 +257,7 @@ export const STATUS_CONFIG = {
 
 // ─── Mock Turbine Data ─────────────────────────────────────────────────────────
 
-export const MOCK_TURBINE_DATA: TurbineData[] = [
+export const MOCK_SPRINT_DATA: TurbineData[] = [
   {
     id: 1,
     turbineNo: 'T-01',
@@ -1639,9 +1639,9 @@ export const MOCK_FEATURE_FLAGS: FeatureFlagData[] = [
   },
   {
     id: 7,
-    name: 'Turbine Config Wizard',
-    key: 'turbine_config_wizard',
-    description: 'Step-by-step wizard for turbine configuration',
+    name: 'Sprint Configuration',
+    key: 'sprint_config_wizard',
+    description: 'Step-by-step wizard for sprint configuration',
     environment: 'Development',
     status: 'Disabled',
     roles: ['Admin'],
@@ -1678,15 +1678,15 @@ export const FAQ_DATA: FaqCategoryData[] = [
     questions: [
       {
         q: 'How do I access the admin dashboard?',
-        a: 'Navigate to the Dashboard from the sidebar menu. The dashboard provides an overview of all turbines, their status, power generation metrics, and real-time monitoring data.',
+        a: 'Navigate to the Dashboard from the sidebar menu. The dashboard provides an overview of all sprints, their status, velocity metrics, and real-time progress data.',
       },
       {
         q: 'What are the different user roles available?',
-        a: 'The system supports Admin and Consultant roles. Admins have full access to all features including configuration, reports, and user management. Consultants have limited access based on enabled feature flags.',
+        a: 'The system supports Admin and Member roles. Admins have full access to all features including configuration, reports, and user management. Members have access based on enabled feature flags and sprint participation.',
       },
       {
-        q: 'How do I configure turbine parameters?',
-        a: 'Go to Turbine Config from the sidebar to view and modify turbine parameters. You can update operational thresholds, maintenance schedules, and monitoring configurations.',
+        q: 'How do I configure sprint parameters?',
+        a: 'Go to Sprint Configuration from the sidebar to view and modify sprint parameters. You can update sprint durations, capacity, story point thresholds, and team configurations.',
       },
     ],
   },
@@ -1695,12 +1695,12 @@ export const FAQ_DATA: FaqCategoryData[] = [
     icon: '📊',
     questions: [
       {
-        q: 'How do I generate a generation report?',
-        a: 'Navigate to Generation Reports from the sidebar. Select your date range, filter by turbines, and click Generate Report. You can export reports in various formats.',
+        q: 'How do I generate a sprint report?',
+        a: 'Navigate to Reports from the sidebar. Select your date range, filter by sprints, and click Generate Report. You can export reports in various formats.',
       },
       {
-        q: 'What data is included in the incentive report?',
-        a: 'Incentive reports include actual vs forecast energy generation, FER (Forecast Error Rate) percentages, and calculated incentives based on performance metrics.',
+        q: 'What data is included in the velocity report?',
+        a: 'Velocity reports include actual vs planned story points, velocity trends across sprints, burndown data, and team performance metrics.',
       },
       {
         q: 'Can I schedule automated reports?',
@@ -1728,11 +1728,11 @@ export const FAQ_DATA: FaqCategoryData[] = [
     questions: [
       {
         q: 'How do I contact technical support?',
-        a: 'You can reach our technical support team via email at support@infygen.in or call us during business hours. The Chat Bot is also available 24/7 for immediate assistance.',
+        a: 'You can reach our technical support team via email at support@sprintpulse.tech or call us during business hours. The Chat Bot is also available 24/7 for immediate assistance.',
       },
       {
         q: 'What information should I include in a support ticket?',
-        a: 'Include the turbine ID, error code if any, steps to reproduce the issue, and screenshots if available. This helps our team resolve issues faster.',
+        a: 'Include the sprint ID, ticket key, error code if any, steps to reproduce the issue, and screenshots if available. This helps our team resolve issues faster.',
       },
       {
         q: 'How long does it take to get a response?',
@@ -1774,32 +1774,32 @@ export const QUICK_LINKS: QuickLinkData[] = [
 ];
 
 export const CHAT_SUGGESTIONS = [
-  { icon: '💡', text: 'Show turbine status' },
-  { icon: '⚡', text: 'How to improve power output?' },
-  { icon: '📅', text: 'Maintenance schedule for this week' },
-  { icon: '🔧', text: 'Common turbine issues and solutions' },
+  { icon: '💡', text: 'Show sprint status' },
+  { icon: '⚡', text: 'How to improve team velocity?' },
+  { icon: '📅', text: 'Sprint plan for this week' },
+  { icon: '🔧', text: 'Common sprint blockers and solutions' },
 ];
 
 // ─── Report Types ─────────────────────────────────────────────────────────────
 
 export const REPORT_TYPES = [
-  'Daily Generation Report',
-  'Weekly Generation Report',
-  'Monthly Generation Report',
-  'Temperature Alerts',
+  'Daily Sprint Report',
+  'Weekly Sprint Report',
+  'Monthly Sprint Report',
+  'Velocity Trends',
   'Time Series',
   'Multi-Time Analysis (Time Series)',
   'Multi-Scatter 2×2 Pairwise',
   'Heat Map',
   'Day-Wise Maximum',
   'Day-Wise Average',
-  'Power Curve',
-  'Wind Rose',
-  'Generation',
+  'Burndown Chart',
+  'Velocity Trend',
+  'Sprint Generation',
   'Status Timeline',
   'Event Log',
-  'Downtime Analysis (MTBF & MTTR)',
-  'Machine Availability',
+  'Cycle Time Analysis',
+  'Sprint Capacity',
   'Trace Files',
 ];
 
@@ -1808,32 +1808,27 @@ export const REPORT_TYPES = [
 export const MIN_DATE = dayjs('2026-01-01');
 export const MAX_DATE = dayjs().startOf('day');
 
-// ─── Turbine List ───────────────────────────────────────────────────────────────
+// ─── Sprint List ───────────────────────────────────────────────────────────────
 
 export const TURBINE_LIST = [
-  'T-01',
-  'T-02',
-  'T-03',
-  'T-04',
-  'T-05',
-  'T-06',
-  'T-07',
-  'T-08',
-  'T-09',
-  'T-10',
+  'Frontend',
+  'Backend',
+  'QA',
+  'DevOps',
+  'Design',
 ];
 
 export const TURBINE_IDS = [
-  't01',
-  't02',
-  't03',
-  't04',
-  't05',
-  't06',
-  't07',
-  't08',
-  't09',
-  't10',
+  's01',
+  's02',
+  's03',
+  's04',
+  's05',
+  's06',
+  's07',
+  's08',
+  's09',
+  's10',
 ] as const;
 
 export const SELECT_ALL_KEY = '__select_all__';
@@ -1841,8 +1836,7 @@ export const SELECT_ALL_KEY = '__select_all__';
 export const DOC_TYPES = [
   { value: 'pdf' as const, label: 'PDF' },
   { value: 'xlsx' as const, label: 'Excel (XLSX)' },
-  { value: 'svg' as const, label: 'SVG' },
-  { value: 'whatsapp' as const, label: 'WhatsApp' },
+  { value: 'pptx' as const, label: 'PowerPoint (PPTX)' },
 ];
 
 // ─── Color Constants ───────────────────────────────────────────────────────────
@@ -1879,11 +1873,11 @@ export const DOWNTIME_COLORS = {
 // ─── Helper Functions ──────────────────────────────────────────────────────────
 
 export const getTurbineById = (id: number): TurbineData | undefined => {
-  return MOCK_TURBINE_DATA.find((t) => t.id === id);
+  return MOCK_SPRINT_DATA.find((t) => t.id === id);
 };
 
 export const getTurbineByNo = (turbineNo: string): TurbineData | undefined => {
-  return MOCK_TURBINE_DATA.find((t) => t.turbineNo === turbineNo);
+  return MOCK_SPRINT_DATA.find((t) => t.turbineNo === turbineNo);
 };
 
 // ─── Use Mock Data Hook (for easy API replacement) ────────────────────────────
@@ -1892,11 +1886,11 @@ export const getTurbineByNo = (turbineNo: string): TurbineData | undefined => {
  * Hook to use mock turbine data with simulated updates
  * Replace with actual API hook when ready:
  *
- * import { useGetTurbinesQuery } from '@infygen/services';
+ * import { useGetTurbinesQuery } from '@sprintpulse/services';
  * const { data: turbineData = [], isLoading } = useGetTurbinesQuery();
  */
 export const useMockTurbineData = () => {
-  const [turbineData, setTurbineData] = useState<TurbineData[]>(MOCK_TURBINE_DATA);
+  const [turbineData, setTurbineData] = useState<TurbineData[]>(MOCK_SPRINT_DATA);
 
   useEffect(() => {
     const id = setInterval(() => {
@@ -1925,7 +1919,7 @@ export const useMockTurbineData = () => {
  * Hook to use mock feature flags
  * Replace with actual API hook when ready:
  *
- * import { useGetFeatureFlagsQuery } from '@infygen/services';
+ * import { useGetFeatureFlagsQuery } from '@sprintpulse/services';
  * const { data: flags = [] } = useGetFeatureFlagsQuery();
  */
 export const useMockFeatureFlags = () => {
@@ -1938,6 +1932,6 @@ export const useMockFeatureFlags = () => {
  * Hook to use mock inventory data
  * Replace with actual API hook when ready:
  *
- * import { useGetInventoryQuery } from '@infygen/services';
+ * import { useGetInventoryQuery } from '@sprintpulse/services';
  * const { data: inventory = [] } = useGetInventoryQuery();
  */

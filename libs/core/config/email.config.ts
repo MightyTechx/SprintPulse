@@ -10,16 +10,10 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-interface EmailOptions {
-  to: string;
-  subject: string;
-  html: string;
-}
-
 export const sendEmail = async (to: string, subject: string, html: string): Promise<void> => {
   try {
     await transporter.sendMail({
-      from: process.env.SMTP_FROM || 'noreply@infygen.tech',
+      from: process.env.SMTP_FROM || 'noreply@sprintpulse.tech',
       to,
       subject,
       html,

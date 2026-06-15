@@ -3,7 +3,7 @@
 
 services:
   - type: web
-    name: infyenergy-api
+    name: sprintpulse-api
     env: node
     region: oregon
     plan: free

@@ -1,4 +1,4 @@
-import { IAuthActionRequest } from '@infygen/interfaces';
+import { IAuthActionRequest } from '@sprintpulse/interfaces';
 import { baseApi } from './baseServices';
 
 export const authApi = baseApi.injectEndpoints({

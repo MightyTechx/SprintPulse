@@ -10,7 +10,7 @@ import {
   Autocomplete,
   CircularProgress,
   InputAdornment,
-} from '@infygen/component';
+} from '@sprintpulse/component';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -18,7 +18,7 @@ import dayjs from 'dayjs';
 import PersonIcon from '@mui/icons-material/Person';
 import SearchIcon from '@mui/icons-material/Search';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
-import { useFieldError } from '@infygen/hooks';
+import { useFieldError } from '@sprintpulse/hooks';
 import { useLocationSearch } from '../../../../hooks/useLocationSearch';
 import TextField from '../../../../components/TextField/TextField';
 import { SelectChangeEvent } from '@mui/material';

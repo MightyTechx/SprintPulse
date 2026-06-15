@@ -93,21 +93,21 @@ function generateKpiTableSvg(
   data: any[],
   startX: number,
   startY: number,
-  turbineIds: string[],
+  sprintIds: string[],
 ): string {
   const headers = ['Key Performance Indicator'];
-  turbineIds.forEach((id) => {
-    const num = id.replace('t', '').toUpperCase().padStart(2, '0');
-    headers.push(`T-${num}`);
+  sprintIds.forEach((id) => {
+    const num = id.replace('s', '').toUpperCase().padStart(2, '0');
+    headers.push(`SPR-${num}`);
   });
   headers.push('Total / Avg');
 
-  const colWidths = [200, ...turbineIds.map(() => 50), 70];
+  const colWidths = [200, ...sprintIds.map(() => 50), 70];
 
   const rows = data.map((row) => {
     const rowData = [];
-    rowData.push(row.kpi || row.parameter || row.date || row.turbine || '-');
-    turbineIds.forEach((id) => {
+    rowData.push(row.kpi || row.parameter || row.date || row.sprint || '-');
+    sprintIds.forEach((id) => {
       rowData.push(row[id] || '-');
     });
     rowData.push(row.total || row.avg || '-');
@@ -117,25 +117,41 @@ function generateKpiTableSvg(
   return generateTableSvg(headers, rows, startX, startY, colWidths, 26);
 }
 
-// Generate Downtime table SVG
+// Generate Incident (Detailed Downtime Log) table SVG
 function generateDowntimeTableSvg(data: any[], startX: number, startY: number): string {
-  const headers = ['Turbine', 'From', 'To', 'Duration', 'Downtime Type', 'Fault Status', 'Remarks'];
-  const colWidths = [55, 100, 100, 70, 85, 120, '*'];
+  const headers = [
+    'S.No',
+    'Team',
+    'Assignee',
+    'Assigned To',
+    'Incident #',
+    'From Date',
+    'To Date',
+    'Issue',
+    'Total Hours',
+    'Status',
+  ];
+  // S.No | Team | Assignee | Assigned To | Incident# | From | To | Issue(*) | Total Hours | Status
+  const numericWidths: number[] = [30, 70, 80, 80, 70, 90, 90, 0, 65, 70];
 
   const rows = data.map((row) => [
-    row.turbineNo || row.turbine || '-',
-    row.from || '-',
-    row.to || '-',
-    row.duration || '-',
-    row.downtimeType || '-',
-    row.faultStatus || '-',
-    row.remarks || '-',
+    row.id ?? '-',
+    row.team || '-',
+    row.assignee || '-',
+    row.assignedTo || '-',
+    row.incidentNumber || '-',
+    row.fromDate || '-',
+    row.toDate || '-',
+    row.issue || '-',
+    row.totalHours || '-',
+    row.status || '-',
   ]);
 
-  // Adjust widths for variable column
-  const numericWidths: number[] = [55, 100, 100, 70, 85, 120];
-  const lastColWidth = 800 - numericWidths.reduce((a, b) => a + b, 0);
-  const finalWidths: number[] = [...numericWidths, lastColWidth];
+  // Issue column is the variable-width one (marked with 0 in numericWidths)
+  const fixedTotal = numericWidths.reduce((a, b) => a + b, 0);
+  const availableWidth = 1020 - startX * 2;
+  const lastColWidth = Math.max(80, availableWidth - fixedTotal);
+  const finalWidths: number[] = numericWidths.map((w) => (w === 0 ? lastColWidth : w));
 
   return generateTableSvg(headers, rows, startX, startY, finalWidths, 26);
 }
@@ -146,7 +162,7 @@ export function generateSvgExport(
   chartSvgData: string,
   kpiData?: any[],
   downtimeData?: any[],
-  turbineIds?: string[],
+  sprintIds?: string[],
 ): void {
   const width = 1100;
   const height = 750;
@@ -155,9 +171,9 @@ export function generateSvgExport(
   const hasKpiData = kpiData && kpiData.length > 0;
   const hasDowntimeData = downtimeData && downtimeData.length > 0;
   const tIds =
-    turbineIds && turbineIds.length > 0
-      ? turbineIds
-      : ['t01', 't02', 't03', 't04', 't05', 't06', 't07', 't08', 't09', 't10'];
+    sprintIds && sprintIds.length > 0
+      ? sprintIds
+      : ['s01', 's02', 's03', 's04', 's05', 's06', 's07', 's08', 's09', 's10'];
 
   // Build content based on what's available
   let contentSvg = '';
@@ -223,7 +239,7 @@ export function generateSvgExport(
 
   <!-- Company Name -->
   <text x="40" y="38" class="title">SprintPulse</text>
-  <text x="40" y="58" class="subtitle" style="fill: rgba(255,255,255,0.9);">Wind Energy Management</text>
+  <text x="40" y="58" class="subtitle" style="fill: rgba(255,255,255,0.9);">Sprint Management Platform</text>
 
   <!-- Report Info -->
   <text x="${width - 40}" y="35" text-anchor="end" class="subtitle" style="fill: ${COLORS.white}; font-weight: 600; font-size: 14px;">${escapeXml(metadata.reportName)}</text>
@@ -245,8 +261,8 @@ export function generateSvgExport(
   <line x1="40" y1="${height - 45}" x2="${width - 40}" y2="${height - 45}" stroke="${COLORS.border}" stroke-width="1" />
 
   <!-- Footer Text -->
-  <text x="40" y="${height - 18}" class="date">Turbine: ${escapeXml(metadata.turbine)}</text>
-  <text x="${width - 40}" y="${height - 18}" text-anchor="end" class="date">SprintPulse Wind Energy Management System</text>
+  <text x="40" y="${height - 18}" class="date">Sprint: ${escapeXml(metadata.sprint)}</text>
+  <text x="${width - 40}" y="${height - 18}" text-anchor="end" class="date">SprintPulse Sprint Management System</text>
 </svg>`;
 
   // Create blob and download

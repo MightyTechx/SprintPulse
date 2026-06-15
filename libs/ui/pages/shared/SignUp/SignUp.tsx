@@ -1,6 +1,6 @@
 import { Avatar, SelectChangeEvent } from '@mui/material';
-import { Box, Typography, Button } from '@infygen/component';
-import { constants } from '@infygen/utils';
+import { Box, Typography, Button } from '@sprintpulse/component';
+import { constants } from '@sprintpulse/utils';
 import { useStyles } from './SignUp.styles';
 import useSignUp, { STEPS } from './hooks/useSignUp';
 import StepProgress from './components/StepProgress';

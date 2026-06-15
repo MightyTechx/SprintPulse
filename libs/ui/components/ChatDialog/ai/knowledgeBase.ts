@@ -1,10 +1,10 @@
-// ─── Wind Energy AI Assistant Knowledge Base ─────────────────────────────────
+// ─── Sprint Management AI Assistant Knowledge Base ──────────────────────────
 
 // ─── Intent Categories ─────────────────────────────────────────────────────
 type IntentCategory =
   | 'greeting'
-  | 'turbine_info'
-  | 'power_generation'
+  | 'sprint_info'
+  | 'velocity_generation'
   | 'maintenance'
   | 'status'
   | 'analytics'
@@ -27,33 +27,32 @@ const INTENT_PATTERNS: IntentPattern[] = [
     keywords: ['hello', 'hi', 'hey', 'greetings', 'start'],
   },
   {
-    patterns: ['turbine', 'wtg', 'wind turbine', 'generator', 'rotor', 'blade', 'nacelle'],
-    category: 'turbine_info',
+    patterns: ['sprint', 'ticket', 'issue', 'story', 'task', 'backlog', 'board'],
+    category: 'sprint_info',
     keywords: [
-      'turbine',
-      'wtg',
-      'wind turbine',
-      'generator',
-      'rotor',
-      'blade',
-      'nacelle',
-      'pitch',
-      'yaw',
-      'gearbox',
+      'sprint',
+      'ticket',
+      'issue',
+      'story',
+      'task',
+      'backlog',
+      'board',
+      'epic',
+      'spike',
+      'subtask',
     ],
   },
   {
-    patterns: ['power', 'generation', 'mw', 'kwh', 'output', 'energy', 'active power', 'capacity'],
-    category: 'power_generation',
+    patterns: ['velocity', 'points', 'capacity', 'burndown', 'commitment', 'completion', 'throughput'],
+    category: 'velocity_generation',
     keywords: [
-      'power',
-      'generation',
-      'mw',
-      'kwh',
-      'output',
-      'energy',
-      'active',
+      'velocity',
+      'points',
       'capacity',
+      'burndown',
+      'commitment',
+      'completion',
+      'throughput',
       'efficiency',
     ],
   },
@@ -62,42 +61,42 @@ const INTENT_PATTERNS: IntentPattern[] = [
       'maintenance',
       'maintain',
       'service',
-      'repair',
-      'breakdown',
-      'fault',
-      'issue',
-      'problem',
+      'support',
+      'refactor',
+      'tech debt',
+      'bug',
+      'defect',
     ],
     category: 'maintenance',
     keywords: [
       'maintenance',
       'maintain',
       'service',
-      'repair',
-      'breakdown',
-      'fault',
-      'issue',
-      'problem',
+      'support',
+      'refactor',
+      'tech debt',
+      'bug',
+      'defect',
       'preventive',
     ],
   },
   {
-    patterns: ['status', 'running', 'stopped', 'standby', 'fault', 'online', 'offline', 'working'],
+    patterns: ['status', 'active', 'completed', 'upcoming', 'blocked', 'in progress', 'done', 'todo'],
     category: 'status',
     keywords: [
       'status',
-      'running',
-      'stopped',
-      'standby',
-      'fault',
-      'online',
-      'offline',
-      'working',
+      'active',
+      'completed',
+      'upcoming',
+      'blocked',
+      'in progress',
+      'done',
+      'todo',
       'state',
     ],
   },
   {
-    patterns: ['analytics', 'chart', 'graph', 'report', 'data', 'trend', 'performance', 'kpi'],
+    patterns: ['analytics', 'chart', 'graph', 'report', 'data', 'trend', 'performance', 'kpi', 'metric'],
     category: 'analytics',
     keywords: [
       'analytics',
@@ -112,13 +111,13 @@ const INTENT_PATTERNS: IntentPattern[] = [
     ],
   },
   {
-    patterns: ['troubleshoot', 'error', 'warning', 'alert', 'fix', 'resolve', 'help', 'how do i'],
+    patterns: ['troubleshoot', 'error', 'warning', 'blocker', 'fix', 'resolve', 'help', 'how do i'],
     category: 'troubleshooting',
     keywords: [
       'troubleshoot',
       'error',
       'warning',
-      'alert',
+      'blocker',
       'fix',
       'resolve',
       'help',
@@ -154,8 +153,8 @@ const INTENT_PATTERNS: IntentPattern[] = [
       'daily',
       'monthly',
       'weekly',
-      'incentive',
-      'fer',
+      'velocity',
+      'burndown',
     ],
   },
 ];
@@ -171,92 +170,92 @@ const RESPONSE_TEMPLATES: ResponseTemplate[] = [
   {
     category: 'greeting',
     responses: [
-      "Hello! Welcome to Sprint Pulse Operations Hub. I'm your AI assistant specialized in wind turbine operations. How can I help you today?",
-      'Hi there! I can help you with turbine monitoring, maintenance schedules, power analytics, and more. What would you like to know?',
-      "Good day! I'm here to assist with wind farm operations. Ask me about turbines, power generation, maintenance, or any system features.",
+      "Hello! Welcome to SprintPulse Operations Hub. I'm your AI assistant specialized in sprint management. How can I help you today?",
+      'Hi there! I can help you with sprint planning, velocity tracking, ticket management, and more. What would you like to know?',
+      "Good day! I'm here to assist with agile project management. Ask me about sprints, velocity, ticket workflows, or any system features.",
     ],
-    followUp: ['turbine status', 'power generation', 'maintenance'],
+    followUp: ['sprint status', 'velocity', 'maintenance'],
   },
   {
-    category: 'turbine_info',
+    category: 'sprint_info',
     responses: [
-      'Wind turbines in our system consist of key components: rotor blades (capture wind energy), nacelle (houses generator), tower (supports the assembly), and control systems. Each WTG unit is monitored via SCADA for real-time parameters.',
-      'Our wind turbines are equipped with advanced monitoring systems. Key parameters include: Active Power (kW), Wind Speed (m/s), Rotor RPM, Gearbox Temperature, and Power Factor. You can view detailed parameters in the Turbine Detail page.',
-      'Turbine specifications vary by model, but typical parameters include: Hub Height, Rotor Diameter, Cut-in/Cut-out Wind Speed, Rated Capacity, and Availability Factor. Check the Fleet Overview for aggregate statistics.',
+      'Sprints in our system follow standard agile practices: time-boxed iterations (typically 2 weeks), a defined backlog, daily standups, and a sprint review. Each sprint is monitored via the Sprint Dashboard for real-time progress.',
+      'Our sprints are equipped with comprehensive tracking systems. Key metrics include: Story Points Completed, Sprint Progress (%), Team Velocity, Cycle Time, and Burndown Rate. You can view detailed metrics in the Sprint Detail page.',
+      'Sprint specifications include: Sprint Goal, Start/End Dates, Capacity (story points), Team Members, and Definition of Done. Check the Sprint Overview for aggregate statistics.',
     ],
-    followUp: ['turbine status', 'power generation', 'SCADA parameters'],
+    followUp: ['sprint status', 'velocity', 'sprint metrics'],
   },
   {
-    category: 'power_generation',
+    category: 'velocity_generation',
     responses: [
-      "Power generation in wind turbines converts kinetic energy from wind to electrical energy. Key metrics: Active Power (kW), Today's Generation (kWh), Total Production (MWh). The Power Analytics feature shows historical generation trends.",
-      'Energy production depends on wind speed - turbines generate power between cut-in (~3 m/s) and cut-out (~25 m/s) wind speeds. Peak output occurs around 12-15 m/s. Use the Fleet Overview to monitor real-time power across all turbines.',
-      'For incentive calculations, we track Actual vs Forecast generation. The FER (Forecast Error Rate) and incentive amounts are calculated based on the renewable energy certificate requirements.',
+      "Velocity in agile teams measures the amount of work completed in a sprint, typically in story points. Key metrics: Story Points Completed, Sprint Progress (%), Planned vs Actual Velocity. The Velocity Analytics feature shows historical trends.",
+      'Team velocity depends on capacity, story point estimates, and historical performance. Healthy teams complete 80-95% of planned points. Use the Sprint Overview to monitor real-time velocity across all sprints.',
+      'For velocity calculations, we track Actual vs Planned points. The velocity chart shows trends over multiple sprints to identify patterns and improve forecasting.',
     ],
-    followUp: ['turbine status', 'power analytics', 'incentive report'],
+    followUp: ['sprint status', 'velocity analytics', 'burndown report'],
   },
   {
     category: 'maintenance',
     responses: [
-      'Wind turbine maintenance includes: ✅ Scheduled preventive maintenance (oil changes, inspections) ✅ Corrective maintenance (fault repair) ✅ Condition monitoring (vibration, temperature analysis). Check the Maintenance status in Fleet Overview.',
-      'Maintenance schedules are critical for turbine reliability. Common tasks: Gearbox oil replacement (~8000 hours), brake pad inspection, pitch system calibration, and control system updates. Report issues immediately through the fault reporting system.',
-      'For maintenance coordination: 1) Check turbine status in Fleet Overview 2) Review SCADA parameters for anomalies 3) Log maintenance activities 4) Update spare parts used. Contact your maintenance coordinator for urgent issues.',
+      'Sprint maintenance includes: ✅ Scheduled story grooming (backlog refinement) ✅ Sprint planning sessions ✅ Daily standups ✅ Sprint reviews and retrospectives. Check the Sprint status in the Overview.',
+      'Maintenance schedules are critical for sprint success. Common tasks: Backlog grooming, story point re-estimation, blocker resolution, and dependency tracking. Report blockers immediately through the issue tracking system.',
+      'For sprint coordination: 1) Check sprint status in Overview 2) Review velocity metrics for anomalies 3) Log sprint activities 4) Update story points completed. Contact your Scrum Master for urgent issues.',
     ],
-    followUp: ['turbine status', 'troubleshooting'],
+    followUp: ['sprint status', 'troubleshooting'],
   },
   {
     category: 'status',
     responses: [
-      'Turbine status types: 🟢 Running (generating power), 🔴 Stopped (no wind or manual stop), 🟡 Standby (ready to start), 🔴 Fault (requires attention), 🟠 Maintenance (scheduled service). Check Fleet Overview for real-time status.',
-      'Current system status shows: Total Turbines, Running count, Fault count, and Maintenance count. Click on any turbine in Fleet Overview for detailed SCADA parameters and historical data.',
-      'Status colors indicate turbine health. Green = operational, Yellow = transitional states, Red = stopped/fault. Use the filter options in Fleet Overview to view specific status types.',
+      'Sprint status types: 🟢 Active (currently in progress), 🔵 Completed (finished), 🟣 Upcoming (planned), 🔴 Cancelled (stopped). Check Sprint Overview for real-time status.',
+      'Current system status shows: Total Sprints, Active count, Blocked count, and Completed count. Click on any sprint in the Overview for detailed metrics and historical data.',
+      'Status colors indicate sprint health. Green = active, Blue = completed, Purple = upcoming, Red = cancelled. Use the filter options in the Overview to view specific status types.',
     ],
-    followUp: ['turbine details', 'maintenance', 'troubleshooting'],
+    followUp: ['sprint details', 'maintenance', 'troubleshooting'],
   },
   {
     category: 'analytics',
     responses: [
-      'Power Analytics provides: 📊 Stacked bar charts for daily energy generation by turbine 📈 Line charts for generation trends 🔍 Date range filtering 📋 Turbine selection. Switch to Power Analytics view from the toolbar.',
-      'Analytics help identify: ⚡ Peak generation periods 📉 Underperforming turbines 🌀 Wind pattern correlations. Export data for external reporting using the Export button.',
-      'For custom reports: 1) Select date range 2) Choose turbine(s) 3) Select chart type 4) View aggregated data. KPI cards show Total Energy, Peak Output, and Average per Day.',
+      'Velocity Analytics provides: 📊 Stacked bar charts for daily story points by sprint 📈 Line charts for velocity trends 🔍 Date range filtering 📋 Sprint selection. Switch to Velocity Analytics view from the toolbar.',
+      'Analytics help identify: ⚡ Peak velocity periods 📉 Underperforming sprints 🌀 Story point estimation accuracy. Export data for external reporting using the Export button.',
+      'For custom reports: 1) Select date range 2) Choose sprint(s) 3) Select chart type 4) View aggregated data. KPI cards show Total Points, Peak Velocity, and Average per Day.',
     ],
-    followUp: ['power analytics', 'reports', 'turbine details'],
+    followUp: ['velocity analytics', 'reports', 'sprint details'],
   },
   {
     category: 'troubleshooting',
     responses: [
-      'For turbine issues: 1) Check Fault status in Fleet Overview 2) Review SCADA parameters for anomalies (temperature, vibration, pressure) 3) Note error codes 4) Contact maintenance team. Critical faults should be escalated immediately.',
-      'Common troubleshooting: 🔧 High gearbox temp → Check cooling system, oil levels 🔧 Low power output → Verify wind speed, check blade pitch 🔧 Communication loss → Check network connections. For persistent issues, create a maintenance ticket.',
-      'SCADA monitoring helps diagnose issues: Temperature alerts indicate cooling problems, Pressure deviations suggest hydraulic issues, Oscillation warnings point to structural concerns. Review Trend data in Turbine Detail for historical patterns.',
+      'For sprint issues: 1) Check Blocked status in Sprint Overview 2) Review velocity metrics for anomalies (low throughput, high cycle time) 3) Note blocker reasons 4) Contact the team. Critical blockers should be escalated immediately.',
+      'Common troubleshooting: 🔧 Low velocity → Review story point estimates, check team capacity 🔧 High cycle time → Identify bottlenecks, review WIP limits 🔧 Communication gaps → Check standup frequency. For persistent issues, create a blocker ticket.',
+      'Sprint monitoring helps diagnose issues: Velocity drops indicate estimation problems, Cycle time spikes suggest bottlenecks, Burndown deviations point to scope creep. Review Trend data in Sprint Detail for historical patterns.',
     ],
-    followUp: ['turbine status', 'maintenance', 'SCADA parameters'],
+    followUp: ['sprint status', 'maintenance', 'sprint metrics'],
   },
   {
     category: 'system_help',
     responses: [
-      'System navigation: 📍 Dashboard (Fleet Overview) - Main monitoring view 📍 Turbine Detail - Individual turbine SCADA data 📍 Power Analytics - Generation charts 📍 Reports - Business intelligence',
-      'Key features: • Real-time turbine monitoring • Power generation analytics • Technical documents repository • User management. Use the sidebar navigation to access all features.',
-      'For best practices: ✅ Monitor Fleet Overview daily ✅ Review Power Analytics weekly ✅ Check Technical Documents for specs ✅ Document all maintenance activities',
+      'System navigation: 📍 Dashboard (Sprint Overview) - Main monitoring view 📍 Sprint Detail - Individual sprint metrics 📍 Velocity Analytics - Velocity charts 📍 Reports - Business intelligence',
+      'Key features: • Real-time sprint monitoring • Velocity analytics • Technical documents repository • User management. Use the sidebar navigation to access all features.',
+      'For best practices: ✅ Monitor Sprint Overview daily ✅ Review Velocity Analytics weekly ✅ Check Technical Documents for processes ✅ Document all sprint activities',
     ],
-    followUp: ['dashboard', 'power analytics', 'reports'],
+    followUp: ['dashboard', 'velocity analytics', 'reports'],
   },
   {
     category: 'reports',
     responses: [
-      'Report types available: 📊 Power Analytics - Energy generation data 📋 Incentive Report - FER and incentive calculations 📁 Technical Documents - Manuals, specs',
-      'Incentive Report calculates: Actual vs Forecast generation, FER (Forecast Error Rate %), and incentive amounts in M.KRW. Data filtered by date range shows daily, monthly, and summary rows.',
-      'For business reporting: Use Power Analytics for generation trends, Incentive Report for certificate calculations. Export to PDF/Excel for stakeholder presentations.',
+      'Report types available: 📊 Velocity Analytics - Sprint velocity data 📋 Burndown Report - Sprint progress tracking 📁 Technical Documents - Process guides, specs',
+      'Burndown Report calculates: Actual vs Planned story points, daily burndown rate, and sprint completion percentage. Data filtered by date range shows daily, sprint-wise, and summary rows.',
+      'For business reporting: Use Velocity Analytics for sprint trends, Burndown Report for progress tracking. Export to PDF/Excel for stakeholder presentations.',
     ],
-    followUp: ['power analytics', 'incentive report', 'reports'],
+    followUp: ['velocity analytics', 'burndown report', 'reports'],
   },
   {
     category: 'unknown',
     responses: [
-      "I'd be happy to help with wind turbine operations! I can assist with: turbine monitoring, power generation, maintenance schedules, SCADA parameters, and system navigation. Could you rephrase your question?",
-      "I'm specialized in wind energy operations. For your query, I need a bit more context. Are you asking about: turbine status, power analytics, maintenance, or system navigation?",
-      "I understand you're looking for information. Let me help you find it: What specific aspect would you like to explore - turbines, power, maintenance, or reports?",
+      "I'd be happy to help with sprint management! I can assist with: sprint monitoring, velocity tracking, maintenance schedules, sprint metrics, and system navigation. Could you rephrase your question?",
+      "I'm specialized in agile project management. For your query, I need a bit more context. Are you asking about: sprint status, velocity analytics, maintenance, or system navigation?",
+      "I understand you're looking for information. Let me help you find it: What specific aspect would you like to explore - sprints, velocity, maintenance, or reports?",
     ],
-    followUp: ['turbine status', 'power analytics', 'maintenance'],
+    followUp: ['sprint status', 'velocity analytics', 'maintenance'],
   },
 ];
 
@@ -312,49 +311,49 @@ function getFollowUpSuggestions(category: IntentCategory): string[] {
 
 // ─── Contextual Data Integration ─────────────────────────────────────────────
 
-interface TurbineContext {
+interface SprintContext {
   totalCount: number;
-  runningCount: number;
-  stoppedCount: number;
-  faultCount: number;
-  maintenanceCount: number;
-  totalPower: number;
-  avgWindSpeed: number;
-  lowStockItems: string[];
+  activeCount: number;
+  completedCount: number;
+  blockedCount: number;
+  upcomingCount: number;
+  totalPoints: number;
+  avgVelocity: number;
+  lowPerformers: string[];
 }
 
-function getTurbineContext(): TurbineContext {
-  // Return general turbine context - actual data can be passed via context parameter
+function getSprintContext(): SprintContext {
+  // Return general sprint context - actual data can be passed via context parameter
   return {
     totalCount: 0,
-    runningCount: 0,
-    stoppedCount: 0,
-    faultCount: 0,
-    maintenanceCount: 0,
-    totalPower: 0,
-    avgWindSpeed: 0,
-    lowStockItems: [],
+    activeCount: 0,
+    completedCount: 0,
+    blockedCount: 0,
+    upcomingCount: 0,
+    totalPoints: 0,
+    avgVelocity: 0,
+    lowPerformers: [],
   };
 }
 
 function enhanceResponseWithContext(
   baseResponse: string,
   intent: IntentCategory,
-  context: TurbineContext,
+  context: SprintContext,
 ): string {
   let enhanced = baseResponse;
 
   // Add contextual data based on intent
   if (intent === 'status' && context.totalCount > 0) {
-    enhanced += `\n\n📊 Current Status: ${context.runningCount}/${context.totalCount} turbines running, ${context.faultCount} faults, ${context.maintenanceCount} in maintenance.`;
+    enhanced += `\n\n📊 Current Status: ${context.activeCount}/${context.totalCount} sprints active, ${context.blockedCount} blocked, ${context.completedCount} completed.`;
   }
 
-  if (intent === 'power_generation') {
-    enhanced += `\n\n⚡ Current Total Power: ${context.totalPower.toFixed(0)} kW across ${context.runningCount} turbines.`;
+  if (intent === 'velocity_generation') {
+    enhanced += `\n\n⚡ Current Total Points: ${context.totalPoints.toFixed(0)} story points across ${context.activeCount} sprints.`;
   }
 
-  if (intent === 'troubleshooting' && context.faultCount > 0) {
-    enhanced += `\n\n⚠️ Active faults detected in: ${context.lowStockItems.join(', ') || 'None'}. Immediate attention recommended.`;
+  if (intent === 'troubleshooting' && context.blockedCount > 0) {
+    enhanced += `\n\n⚠️ Active blockers detected in: ${context.lowPerformers.join(', ') || 'None'}. Immediate attention recommended.`;
   }
 
   return enhanced;
@@ -371,12 +370,12 @@ interface AIResponse {
 export function generateAIResponse(userMessage: string): AIResponse {
   const intent = detectIntent(userMessage);
   const baseResponse = getResponseForIntent(intent);
-  const turbineContext = getTurbineContext();
+  const sprintContext = getSprintContext();
 
   const suggestions = getFollowUpSuggestions(intent);
 
   return {
-    text: enhanceResponseWithContext(baseResponse, intent, turbineContext),
+    text: enhanceResponseWithContext(baseResponse, intent, sprintContext),
     suggestions,
   };
 }
@@ -392,22 +391,22 @@ interface QuickAction {
 
 export const QUICK_ACTIONS: QuickAction[] = [
   {
-    label: 'Turbine Status',
-    icon: 'wind_power',
-    action: 'turbine_status',
-    description: 'View all turbine operational status',
+    label: 'Sprint Status',
+    icon: 'rocket_launch',
+    action: 'sprint_status',
+    description: 'View all sprint operational status',
   },
   {
-    label: 'Power Analytics',
+    label: 'Velocity Analytics',
     icon: 'analytics',
-    action: 'power_analytics',
-    description: 'Open power generation charts',
+    action: 'velocity_analytics',
+    description: 'Open velocity charts',
   },
   {
     label: 'Maintenance',
     icon: 'build',
     action: 'maintenance',
-    description: 'Check maintenance schedule',
+    description: 'Check sprint maintenance schedule',
   },
   {
     label: 'Reports',

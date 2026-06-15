@@ -6,18 +6,18 @@ import {
   useToggleFeatureFlagMutation,
   useDeleteFeatureFlagMutation,
   FeatureFlag,
-} from '@infygen/services';
+} from '@sprintpulse/services';
 import { Slide, Typography, Chip, Switch, Tooltip, IconButton } from '@mui/material';
 import { TransitionProps } from '@mui/material/transitions';
 import React, { useState } from 'react';
-import { Box, Column } from '@infygen/component';
+import { Box, Column } from '@sprintpulse/component';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FlagIcon from '@mui/icons-material/Flag';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import GroupIcon from '@mui/icons-material/Group';
-import { useAdminKeyframes, useAuth } from '@infygen/hooks';
+import { useAdminKeyframes, useAuth } from '@sprintpulse/hooks';
 import { useStyles } from '../styles';
 
 // ─── Types ────────────────────────────────────────────────────────────────────

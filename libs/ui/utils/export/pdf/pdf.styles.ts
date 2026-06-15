@@ -131,5 +131,6 @@ export const LAYOUT = {
 // Column widths for KPI table
 export const KPI_COLUMN_WIDTHS = ['*', 45, 45, 45, 45, 45, 45, 45, 45, 45, 45, 55];
 
-// Column widths for Downtime table - fits within page
-export const DOWNTIME_COLUMN_WIDTHS = [45, 75, 75, 60, 80, 75, '*'];
+// Column widths for Incident (Jira-style) table - fits within landscape page
+// S.No | Team | Assignee | Assigned To | Incident# | From | To | Issue | Total Hours | Status
+export const DOWNTIME_COLUMN_WIDTHS = [25, 50, 60, 60, 55, 70, 70, '*', 50, 55];

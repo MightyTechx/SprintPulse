@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Box, Loader, DataTable, Card, PageHeader } from '@infygen/component';
+import { Box, Loader, DataTable, Card, PageHeader } from '@sprintpulse/component';
 import { Typography, Tabs, TextField, InputAdornment } from '@mui/material';
 import GroupIcon from '@mui/icons-material/Group';
 import SearchIcon from '@mui/icons-material/Search';
@@ -8,8 +8,8 @@ import { usePeopleRequests } from './hooks/useAccessRequests';
 import PersonDetailDialog from './dialogs/PersonDetailDialog';
 import { UserDetailDialog } from '../UserDetail';
 import { PeopleRequestsUtils } from './utils/accessRequests.utils';
-import { useAdminKeyframes } from '@infygen/hooks';
-import TabPanel from '@infygen/component/TabPanel';
+import { useAdminKeyframes } from '@sprintpulse/hooks';
+import TabPanel from '@sprintpulse/component/TabPanel';
 
 const PeopleRequests = () => {
   const { classes } = useStyles();

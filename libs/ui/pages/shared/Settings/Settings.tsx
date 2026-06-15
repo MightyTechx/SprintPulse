@@ -23,9 +23,9 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import { PageHeader } from '@infygen/component';
+import { PageHeader } from '@sprintpulse/component';
 import { useStyles } from './styles/Settings.styles';
-import { useThemeContext } from '@infygen/theme';
+import { useThemeContext } from '@sprintpulse/theme';
 import { getUserPreferences, updateUserTheme } from '../../../services/index';
 
 // ── Tab Config ────────────────────────────────────────────────────────────────
@@ -395,7 +395,7 @@ const GeneralTab = ({ classes }: { classes: Record<string, string> }) => (
             {
               title: 'Support Email',
               desc: 'Contact email shown to users for support queries.',
-              value: 'support@infygen.in',
+              value: 'support@sprintpulse.tech',
             },
             {
               title: 'Default Timezone',

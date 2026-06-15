@@ -5,8 +5,8 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
 import DescriptionIcon from '@mui/icons-material/Description';
 import TuneIcon from '@mui/icons-material/Tune';
 import EngineeringIcon from '@mui/icons-material/Engineering';
-import { constants } from '@infygen/utils';
-import { useGetFeatureFlagsQuery } from '@infygen/services';
+import { constants } from '@sprintpulse/utils';
+import { useGetFeatureFlagsQuery } from '@sprintpulse/services';
 
 export interface MenuItem {
   label: string;
@@ -59,7 +59,7 @@ export const useAdminMenuItems = (): MenuGroup[] => {
         { label: 'Dashboard', icon: <DashboardIcon />, path: AdminPath.DASHBOARD },
         { label: 'People Management', icon: <PeopleIcon />, path: AdminPath.ACCESS_MANAGEMENT },
         { label: 'Operations Management', icon: <EngineeringIcon />, path: AdminPath.OPERATIONS },
-        { label: 'Generation Reports', icon: <AssessmentIcon />, path: AdminPath.REPORTS },
+        { label: 'Status Reports', icon: <AssessmentIcon />, path: AdminPath.REPORTS },
         {
           label: 'Technical Documents',
           icon: <DescriptionIcon />,
@@ -96,7 +96,7 @@ export const useConsultantMenuItems = (): MenuGroup[] => {
 
   if (showReports) {
     items.push({
-      label: 'Generation Reports',
+      label: 'Status Reports',
       icon: <AssessmentIcon />,
       path: ConsultantPath.REPORTS,
     });

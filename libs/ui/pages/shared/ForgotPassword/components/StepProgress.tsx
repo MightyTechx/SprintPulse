@@ -1,4 +1,4 @@
-import { Box, Typography } from '@infygen/component';
+import { Box, Typography } from '@sprintpulse/component';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import MarkEmailReadIcon from '@mui/icons-material/MarkEmailRead';
 import LockResetIcon from '@mui/icons-material/LockReset';

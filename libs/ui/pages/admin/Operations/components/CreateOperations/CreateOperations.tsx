@@ -8,7 +8,7 @@ import {
   UploadFile,
   PageHeader,
   Select,
-} from '@infygen/component';
+} from '@sprintpulse/component';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
@@ -84,14 +84,14 @@ const COMPONENTS = [
   'Generator',
 ];
 
-const WORK_LOCATIONS = ['HT Yard', 'Turbine', 'Substation', 'Line', 'Control Room', 'Storage Area'];
+const WORK_LOCATIONS = ['Frontend', 'Backend', 'DevOps', 'Mobile', 'QA', 'Design'];
 
-const MOCK_WTG_LIST = [
-  'SWSRAL-SC3-0AL01-VRB001',
-  'SWSRAL-SC3-0AL01-VRB002',
-  'SWSRAL-SC3-0AL01-VRB003',
-  'SWSRAL-SC3-0AL01-VRB004',
-  'SWSRAL-SC3-0AL01-VRB005',
+const MOCK_SPRINT_LIST = [
+  'SPR-2025-01',
+  'SPR-2025-02',
+  'SPR-2025-03',
+  'SPR-2025-04',
+  'SPR-2025-05',
 ];
 
 const MOCK_WORK_ORDERS = ['WO-100245', 'WO-100246', 'WO-100247', 'WO-100248', 'WO-100249'];
@@ -525,7 +525,7 @@ const CreateOperations = () => {
               <MenuItem value=''>
                 <em>Select WTG</em>
               </MenuItem>
-              {MOCK_WTG_LIST.map((wtg) => (
+              {MOCK_SPRINT_LIST.map((wtg) => (
                 <MenuItem key={wtg} value={wtg}>
                   {wtg}
                 </MenuItem>

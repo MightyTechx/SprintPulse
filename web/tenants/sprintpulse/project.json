@@ -1,0 +1,22 @@
+{
+  "name": "sprintpulse",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "web/tenants/sprintpulse/src",
+  "projectType": "application",
+  "tags": ["app", "partner:sprintpulse"],
+  "targets": {
+    "build": {
+      "executor": "@nx/vite:build",
+      "options": {
+        "outputPath": "dist/web/tenants/sprintpulse",
+        "configFile": "web/tenants/sprintpulse/vite.config.ts"
+      }
+    },
+    "serve": {
+      "executor": "@nx/vite:dev-server",
+      "options": {
+        "buildTarget": "sprintpulse:build"
+      }
+    }
+  }
+}

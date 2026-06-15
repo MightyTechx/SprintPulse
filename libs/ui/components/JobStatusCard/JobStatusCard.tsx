@@ -11,7 +11,7 @@ import {
   JobPriority,
   JOB_STATUS_CONFIG,
   JOB_PRIORITY_COLORS,
-} from '@infygen/interfaces';
+} from '@sprintpulse/interfaces';
 import { useStyles } from './styles';
 
 /**
@@ -46,7 +46,7 @@ const statusIcons: Record<JobStatus, React.ElementType> = {
  * - No business logic
  * - No data fetching
  * - Just renders based on props
- * - Uses shared interfaces from @infygen/interfaces
+ * - Uses shared interfaces from @sprintpulse/interfaces
  *
  * This makes it easy to:
  * - Test in Storybook with different mock data

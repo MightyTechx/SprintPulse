@@ -1,5 +1,5 @@
 import React from 'react';
-import { IAuthUser } from '@infygen/interfaces';
+import { IAuthUser } from '@sprintpulse/interfaces';
 
 export type UserRow = IAuthUser & { sno: number };
 

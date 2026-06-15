@@ -1,12 +1,12 @@
 import { useNavigate } from 'react-router-dom';
-import { Menu, MenuItem, Divider, ListItemIcon, ListItemText } from '@infygen/component';
+import { Menu, MenuItem, Divider, ListItemIcon, ListItemText } from '@sprintpulse/component';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SettingsIcon from '@mui/icons-material/Settings';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import LogoutIcon from '@mui/icons-material/Logout';
 import BadgeIcon from '@mui/icons-material/Badge';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
-import { constants } from '@infygen/utils';
+import { constants } from '@sprintpulse/utils';
 
 interface UserMenuProps {
   anchorEl: HTMLElement | null;

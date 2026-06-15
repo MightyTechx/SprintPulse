@@ -9,7 +9,7 @@ import {
   Button,
   Divider,
   Slide,
-} from '@infygen/component';
+} from '@sprintpulse/component';
 import { Avatar } from '@mui/material';
 import type { TransitionProps } from '@mui/material/transitions';
 import CloseIcon from '@mui/icons-material/Close';
@@ -21,8 +21,8 @@ import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { useAuthActionMutation } from '@infygen/services';
-import { useNotification } from '@infygen/hooks';
+import { useAuthActionMutation } from '@sprintpulse/services';
+import { useNotification } from '@sprintpulse/hooks';
 import { NotificationItem } from '../hooks/useSharedHeader';
 
 const SlideDown = React.forwardRef(

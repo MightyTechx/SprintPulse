@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { constants } from '@infygen/utils';
-import { useAuth, useLoader } from '@infygen/hooks';
-import { useAuthActionMutation } from '@infygen/services';
-import { IAuthUser } from '@infygen/interfaces';
+import { constants } from '@sprintpulse/utils';
+import { useAuth, useLoader } from '@sprintpulse/hooks';
+import { useAuthActionMutation } from '@sprintpulse/services';
+import { IAuthUser } from '@sprintpulse/interfaces';
 
 export interface NotificationItem {
   id: string;

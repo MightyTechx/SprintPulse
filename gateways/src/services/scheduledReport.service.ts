@@ -14,7 +14,7 @@ interface ScheduledReportJob {
   enabled: boolean;
   lastSent?: Date;
   nextRun?: Date;
-  turbineIds: string[];
+  sprintIds: string[];
 }
 
 // Demo recipients - in production, load from database
@@ -39,22 +39,22 @@ class ScheduledReportService {
     // Hourly report job
     const hourlyJob: ScheduledReportJob = {
       id: 'hourly-report-1',
-      reportType: 'Daily Generation Report',
+      reportType: 'Sprint Pulse Report',
       recipient: DEFAULT_RECIPIENTS[0],
       frequency: 'hourly',
       enabled: true,
-      turbineIds: ['t01', 't02', 't03', 't04', 't05', 't06', 't07', 't08', 't09', 't10'],
+      sprintIds: ['s01', 's02', 's03', 's04', 's05', 's06', 's07', 's08', 's09', 's10'],
       nextRun: this.getNextHourlyRun(),
     };
 
     // Daily report job
     const dailyJob: ScheduledReportJob = {
       id: 'daily-report-1',
-      reportType: 'Daily Generation Report',
+      reportType: 'Sprint Pulse Report',
       recipient: DEFAULT_RECIPIENTS[0],
       frequency: 'daily',
       enabled: true,
-      turbineIds: ['t01', 't02', 't03', 't04', 't05', 't06', 't07', 't08', 't09', 't10'],
+      sprintIds: ['s01', 's02', 's03', 's04', 's05', 's06', 's07', 's08', 's09', 's10'],
       nextRun: this.getNextDailyRun(),
     };
 
@@ -144,34 +144,34 @@ class ScheduledReportService {
    */
   private generateMockKpiData(): any[] {
     const kpiLabels = [
-      'Generation (kWh)',
+      'Story Points Completed',
       'Up Time (hh:mm)',
-      'Unscheduled Down Time (hh:mm)',
-      'Scheduled Down Time (hh:mm)',
-      'Machine Availability (%)',
-      'Average Wind Speed (m/s)',
+      'Unscheduled Blocked Time (hh:mm)',
+      'Scheduled Standup Time (hh:mm)',
+      'Sprint Progress (%)',
+      'Average Velocity (pts/day)',
       'Capacity Utilization Factor (CUF %)',
     ];
 
     return kpiLabels.map((kpi, i) => {
       const values: Record<string, string> = {};
-      ['t01', 't02', 't03', 't04', 't05', 't06', 't07', 't08', 't09', 't10'].forEach((t) => {
-        if (kpi.includes('Generation')) {
-          values[t] = (Math.random() * 1000 + 500).toFixed(2);
-        } else if (kpi.includes('Availability')) {
-          values[t] = (Math.random() * 15 + 85).toFixed(2);
-        } else if (kpi.includes('Wind')) {
-          values[t] = (Math.random() * 10 + 5).toFixed(2);
+      ['s01', 's02', 's03', 's04', 's05', 's06', 's07', 's08', 's09', 's10'].forEach((s) => {
+        if (kpi.includes('Story Points')) {
+          values[s] = (Math.random() * 50 + 20).toFixed(2);
+        } else if (kpi.includes('Progress')) {
+          values[s] = (Math.random() * 30 + 60).toFixed(2);
+        } else if (kpi.includes('Velocity')) {
+          values[s] = (Math.random() * 10 + 5).toFixed(2);
         } else if (kpi.includes('CUF')) {
-          values[t] = (Math.random() * 10 + 20).toFixed(2);
+          values[s] = (Math.random() * 10 + 20).toFixed(2);
         } else if (kpi.includes('Time')) {
-          values[t] = `${Math.floor(Math.random() * 24)
+          values[s] = `${Math.floor(Math.random() * 24)
             .toString()
             .padStart(2, '0')}:${Math.floor(Math.random() * 60)
             .toString()
             .padStart(2, '0')}`;
         } else {
-          values[t] = '-';
+          values[s] = '-';
         }
       });
 
@@ -193,20 +193,20 @@ class ScheduledReportService {
   }
 
   /**
-   * Generate mock downtime data
+   * Generate mock blocker data
    */
   private generateMockDowntimeData(): any[] {
-    const downtimeTypes = ['Scheduled', 'Unscheduled', 'Grid Fault', 'Communication Loss'];
-    const faultStatuses = [
-      '(Cnv) Type C stop : Emergency',
-      '(Grd) Grid fault condition',
-      '(Nac) Yaw mis-alignment',
-      'WTU Communication Timeout',
+    const downtimeTypes = ['Standup', 'Code Review', 'Blocker', 'Communication Loss'];
+    const issueStatuses = [
+      'Blocked: Waiting on dependency',
+      'In Review: Code review pending',
+      'On Hold: Awaiting design',
+      'Communication Timeout with team',
     ];
 
     return Array.from({ length: Math.floor(Math.random() * 5) + 1 }, (_, i) => ({
       id: i + 1,
-      turbineNo: `T-${String(Math.floor(Math.random() * 10) + 1).padStart(2, '0')}`,
+      sprintNo: `S-${String(Math.floor(Math.random() * 10) + 1).padStart(2, '0')}`,
       from: new Date(Date.now() - Math.random() * 3600000).toISOString(),
       to: new Date().toISOString(),
       duration: `${Math.floor(Math.random() * 5)
@@ -215,7 +215,7 @@ class ScheduledReportService {
         .toString()
         .padStart(2, '0')}`,
       downtimeType: downtimeTypes[Math.floor(Math.random() * downtimeTypes.length)],
-      faultStatus: faultStatuses[Math.floor(Math.random() * faultStatuses.length)],
+      issueStatus: issueStatuses[Math.floor(Math.random() * issueStatuses.length)],
       remarks: 'Auto-generated hourly report',
     }));
   }
@@ -239,7 +239,7 @@ class ScheduledReportService {
         job.reportType,
         kpiData,
         downtimeData,
-        job.turbineIds,
+        job.sprintIds,
       );
 
       // Update job status
@@ -323,7 +323,7 @@ class ScheduledReportService {
       job.reportType,
       kpiData,
       downtimeData,
-      job.turbineIds,
+      job.sprintIds,
     );
   }
 }

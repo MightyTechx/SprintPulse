@@ -5,7 +5,7 @@ export const ForgotPasswordSchema = yup.object({
     .string()
     .email('Invalid email')
     .required('required')
-    .matches(/@infygen\.tech$/i, 'Email must be a @infygen.tech address'),
+    .matches(/@sprintpulse\.tech$/i, 'Email must be a @sprintpulse.tech address'),
 });
 
 export const VerifyOtpSchema = yup.object({
@@ -13,7 +13,7 @@ export const VerifyOtpSchema = yup.object({
     .string()
     .email('Invalid email')
     .required('required')
-    .matches(/@infygen\.tech$/i, 'Email must be a @infygen.tech address'),
+    .matches(/@sprintpulse\.tech$/i, 'Email must be a @sprintpulse.tech address'),
   otp: yup.string().required('required').length(6, 'OTP must be 6 characters'),
 });
 
@@ -22,7 +22,7 @@ export const ResetPasswordSchema = yup.object({
     .string()
     .email('Invalid email')
     .required('required')
-    .matches(/@infygen\.tech$/i, 'Email must be a @infygen.tech address'),
+    .matches(/@sprintpulse\.tech$/i, 'Email must be a @sprintpulse.tech address'),
   resetToken: yup.string().required('required'),
   newPassword: yup.string().required('required').min(6, 'Password must be at least 6 characters'),
   confirmPassword: yup

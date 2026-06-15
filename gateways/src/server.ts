@@ -29,10 +29,10 @@ try {
 import app from './app';
 
 // Custom Winston logger
-import { logger } from '@infygen/config';
+import { logger } from '@sprintpulse/config';
 
 // Prisma client for database access
-import { prisma } from '@infygen/database';
+import { prisma } from '@sprintpulse/database';
 
 // Server configuration
 const PORT = parseInt(process.env.PORT || '3600', 10);

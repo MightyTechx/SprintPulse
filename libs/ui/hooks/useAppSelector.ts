@@ -1,5 +1,5 @@
 import { useSelector, TypedUseSelectorHook } from 'react-redux';
-import { RootState } from '@infygen/services';
+import { RootState } from '@sprintpulse/services';
 
 /**
  * Typed version of useSelector hook for the app's RootState

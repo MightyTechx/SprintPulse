@@ -1,8 +1,8 @@
-import { Box, Typography, Paper } from '@infygen/component';
+import { Box, Typography, Paper } from '@sprintpulse/component';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import MarkEmailReadIcon from '@mui/icons-material/MarkEmailRead';
 import LockResetIcon from '@mui/icons-material/LockReset';
-import { constants } from '@infygen/utils';
+import { constants } from '@sprintpulse/utils';
 import { useStyles } from './styles';
 import useForgotPassword from './hooks/useForgotPassword';
 import StepProgress from './components/StepProgress';

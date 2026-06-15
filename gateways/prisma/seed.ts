@@ -144,7 +144,7 @@ async function clearAndSeed() {
     data: {
       firstName: 'Admin',
       lastName: 'User',
-      email: 'srinivas.penumalla@infygen.tech',
+      email: 'srinivas.penumalla@sprintpulse.tech',
       password: adminPassword,
       phone: '+1-555-0001',
       workLocation: 'New York - HQ',
@@ -176,7 +176,7 @@ async function clearAndSeed() {
     data: {
       firstName: 'Regular',
       lastName: 'User',
-      email: 'user@infygen.tech',
+      email: 'user@sprintpulse.tech',
       password: userPassword,
       phone: '+1-555-0002',
       workLocation: 'Chicago - Branch',
@@ -208,7 +208,7 @@ async function clearAndSeed() {
     data: {
       firstName: 'Consultant',
       lastName: 'User',
-      email: 'consultant@infygen.tech',
+      email: 'consultant@sprintpulse.tech',
       password: consultantPassword,
       phone: '+1-555-0003',
       workLocation: 'Remote',

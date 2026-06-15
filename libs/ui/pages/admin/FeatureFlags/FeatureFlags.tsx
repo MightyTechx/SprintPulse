@@ -9,7 +9,7 @@ import {
   Loader,
   Card,
   PageHeader,
-} from '@infygen/component';
+} from '@sprintpulse/component';
 import {
   InputAdornment,
   Dialog,
@@ -28,8 +28,8 @@ import {
   FlagRole,
   useCreateFeatureFlagMutation,
   useUpdateFeatureFlagMutation,
-} from '@infygen/services';
-import { useAuth } from '@infygen/hooks';
+} from '@sprintpulse/services';
+import { useAuth } from '@sprintpulse/hooks';
 import { useStyles } from './styles';
 
 const FeatureFlags = () => {

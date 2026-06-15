@@ -1,3 +1,3 @@
-// Admin gateway interfaces are defined in @infygen/interfaces
-// Import directly from @infygen/interfaces instead of this barrel
+// Admin gateway interfaces are defined in @sprintpulse/interfaces
+// Import directly from @sprintpulse/interfaces instead of this barrel
 export {};

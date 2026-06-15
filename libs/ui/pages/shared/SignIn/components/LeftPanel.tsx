@@ -1,4 +1,4 @@
-import { Box, Typography } from '@infygen/component';
+import { Box, Typography } from '@sprintpulse/component';
 import { useMetadata } from '../metadata';
 
 const TurbineSVG = ({ className }: { className?: string }) => (

@@ -5,8 +5,8 @@ import ErrorIcon from '@mui/icons-material/Error';
 import WarningIcon from '@mui/icons-material/Warning';
 import InfoIcon from '@mui/icons-material/Info';
 import CloseIcon from '@mui/icons-material/Close';
-import { useAppSelector, useAppDispatch } from '@infygen/hooks';
-import { hideNotification, NotificationSeverity } from '@infygen/services';
+import { useAppSelector, useAppDispatch } from '@sprintpulse/hooks';
+import { hideNotification, NotificationSeverity } from '@sprintpulse/services';
 import { useStyles } from './styles';
 
 const severityConfig: Record<

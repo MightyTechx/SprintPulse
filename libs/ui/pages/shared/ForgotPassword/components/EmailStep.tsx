@@ -1,5 +1,5 @@
-import { Box, TextField, Button } from '@infygen/component';
-import { useFieldError } from '@infygen/hooks';
+import { Box, TextField, Button } from '@sprintpulse/component';
+import { useFieldError } from '@sprintpulse/hooks';
 
 interface EmailStepProps {
   form: {

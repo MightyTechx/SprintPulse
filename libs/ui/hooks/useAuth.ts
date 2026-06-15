@@ -6,8 +6,8 @@ import {
   enterConsultantMode,
   exitConsultantMode,
   useAuthActionMutation,
-} from '@infygen/services';
-import { UserRole, ISignInResponse } from '@infygen/interfaces';
+} from '@sprintpulse/services';
+import { UserRole, ISignInResponse } from '@sprintpulse/interfaces';
 
 export const useAuth = () => {
   const dispatch = useAppDispatch();
