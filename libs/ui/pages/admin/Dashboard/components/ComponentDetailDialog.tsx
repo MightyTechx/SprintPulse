@@ -10,10 +10,12 @@ import ThermostatIcon from '@mui/icons-material/Thermostat';
 import SpeedIcon from '@mui/icons-material/Speed';
 import ElectricBoltIcon from '@mui/icons-material/ElectricBolt';
 import AirIcon from '@mui/icons-material/Air';
-import { TurbineData } from '../types/turbineData.types';
+// TODO: Refactor from SCADA concepts (turbine/nacelle/rotor) to sprint concepts (story/velocity/burndown)
+import { TurbineData } from '../types/sprintData.types';
 
 interface ComponentDetailDialogProps {
   open: boolean;
+  // Legacy prop name kept (TurbineData is the legacy compat shim type)
   turbine: TurbineData | null;
   component: string;
   onClose: () => void;

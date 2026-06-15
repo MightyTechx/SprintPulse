@@ -1,3 +1,3 @@
 export { useStyles } from './Dashboard.styles';
-export { useTurbineDetailStyles } from './TurbineDetailPage.styles';
+export { useSprintDetailStyles } from './SprintDetailPage.styles';
 export { useTicketDetailStyles } from './TicketDetailPage.styles';

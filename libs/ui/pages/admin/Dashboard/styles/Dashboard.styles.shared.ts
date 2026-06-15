@@ -992,7 +992,7 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     textAlign: 'center',
   },
 
-  cellTurbineNo: {
+  cellSprintNo: {
     fontSize: '0.63rem',
     fontWeight: 600,
     color: '#1e40af',

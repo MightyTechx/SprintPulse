@@ -10,19 +10,19 @@ import {
   Column,
   DataTable,
   Link,
-} from '@infygen/component';
+} from '@sprintpulse/component';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CloseIcon from '@mui/icons-material/Close';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import EventNoteIcon from '@mui/icons-material/EventNote';
 import LinkIcon from '@mui/icons-material/Link';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import { constants } from '@infygen/utils';
+import { constants } from '@sprintpulse/utils';
 import { useTicketDetailStyles } from '../styles/TicketDetailPage.styles';
-import { TICKET_STATUS_CONFIG, Ticket, TicketStatus } from '../types/turbineData.types';
+import { TICKET_STATUS_CONFIG, Ticket, TicketStatus } from '../types/sprintData.types';
 import { MOCK_TICKETS } from '../utils/dashboard.utils';
 import { getActualEffort } from '../utils/effortCalculations';
-import { useAdminKeyframes } from '@infygen/hooks';
+import { useAdminKeyframes } from '@sprintpulse/hooks';
 
 // ─── Helper functions ──────────────────────────────────────────────────────────
 

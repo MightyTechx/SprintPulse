@@ -1,6 +1,6 @@
 export { default } from './Dashboard';
-export { default as TurbineDetailPage } from './components/TurbineDetailPage';
+export { default as SprintDetailPage } from './components/SprintDetailPage';
 export { default as TicketDetailPage } from './components/TicketDetailPage';
 export { default as ComponentDetailDialog } from './components/ComponentDetailDialog';
 export { default as SprintStatusMatrixPage } from './pages/SprintStatusMatrixPage';
-export * from './types/turbineData.types';
+export * from './types/sprintData.types';

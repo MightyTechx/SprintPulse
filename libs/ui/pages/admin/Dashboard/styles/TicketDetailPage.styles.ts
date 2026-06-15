@@ -1,5 +1,5 @@
 import { Theme } from '@mui/material/styles';
-import { createAppStyles } from '@infygen/theme';
+import { createAppStyles } from '@sprintpulse/theme';
 import { getTicketDetailBaseStyles } from './TicketDetailPage.styles.shared';
 
 export const useTicketDetailStyles = createAppStyles(

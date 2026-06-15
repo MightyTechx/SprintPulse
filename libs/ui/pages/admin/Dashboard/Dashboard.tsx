@@ -45,12 +45,11 @@ import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { useAdminKeyframes, useAuth, useLiveDateTime } from '../../../hooks';
 import { useStyles } from './styles';
-import { TurbineData, TICKET_STATUS_CONFIG, Ticket } from './types/turbineData.types';
-import { MOCK_TURBINE_DATA, MOCK_TICKETS } from './utils/dashboard.utils';
+import { TurbineData, TICKET_STATUS_CONFIG, Ticket } from './types/sprintData.types';
+import { MOCK_SPRINT_DATA, MOCK_TICKETS } from './utils/dashboard.utils';
 import { getActualEffort } from './utils/effortCalculations';
-import { constants } from '@infygen/utils';
-import { Column, DataTable, Card } from '@infygen/component';
-import ComponentDetailDialog from './components/ComponentDetailDialog';
+import { constants } from '@sprintpulse/utils';
+import { Column, DataTable, Card } from '@sprintpulse/component';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -178,12 +177,12 @@ const Dashboard = () => {
     .slice(0, 2);
   const { hours, minutes, seconds, dateStr, tzAbbr, tzRegion, utcOffset } = useLiveDateTime();
 
-  const [turbineData, setTurbineData] = useState<TurbineData[]>(MOCK_TURBINE_DATA);
+  const [sprintData, setSprintData] = useState<TurbineData[]>(MOCK_SPRINT_DATA);
   const [view, setView] = useState<'table' | 'chart' | 'incentive'>('table');
   const [chartType, setChartType] = useState<ChartType>('bar');
   const [fromDate, setFromDate] = useState<Dayjs>(MIN_DATE);
   const [toDate, setToDate] = useState<Dayjs>(MAX_DATE);
-  const [selectedTurbines, setSelectedTurbines] = useState<string[]>(ALL_TEAMS);
+  const [selectedSprints, setSelectedSprints] = useState<string[]>(ALL_TEAMS);
 
   // Ticket search (used by the ticket table on the Dashboard)
   const [ticketSearch, setTicketSearch] = useState('');
@@ -206,9 +205,7 @@ const Dashboard = () => {
   }, [ticketSearch]);
 
   // 3D View Dialog State
-  const [componentDialogOpen, setComponentDialogOpen] = useState(false);
-  const [selectedTurbine, setSelectedTurbine] = useState<TurbineData | null>(null);
-  const [selectedComponent, setSelectedComponent] = useState<string>('transformer');
+  const [selectedSprint, setSelectedSprint] = useState<TurbineData | null>(null);
 
   // Incentive data
   const INCENTIVE_DATA = [
@@ -299,13 +296,14 @@ const Dashboard = () => {
 
   useEffect(() => {
     const id = setInterval(() => {
-      setTurbineData((prev) =>
+      setSprintData((prev) =>
         prev.map((t) => {
           if (t.status === 'running') {
             return {
               ...t,
               time: new Date().toLocaleTimeString('en-GB', { hour12: false }),
               activePower: Math.max(0, t.activePower + (Math.random() - 0.5) * 100),
+              // TODO: Replace with sprint velocity metric (currently still using SCADA windSpeed)
               windSpeed: Math.max(3, Math.min(25, t.windSpeed + (Math.random() - 0.5) * 0.5)),
               todayGeneration: t.todayGeneration + t.activePower / 3600,
             };
@@ -318,27 +316,28 @@ const Dashboard = () => {
   }, []);
 
   // ── Fleet stats ───────────────────────────────────────────────────────────────
-  const runningCount = turbineData.filter((t) => t.status === 'running').length;
-  const totalPower = turbineData
+  const runningCount = sprintData.filter((t) => t.status === 'running').length;
+  const totalPower = sprintData
     .filter((t) => t.status === 'running')
     .reduce((s, t) => s + t.activePower, 0);
+  // TODO: Replace with sprint team velocity metric (currently calculating avg of SCADA windSpeed)
   const avgWindSpeed = (
-    turbineData.filter((t) => t.status === 'running').reduce((s, t) => s + t.windSpeed, 0) /
+    sprintData.filter((t) => t.status === 'running').reduce((s, t) => s + t.windSpeed, 0) /
     (runningCount || 1)
   ).toFixed(1);
-  const totalGeneration = turbineData.reduce((s, t) => s + t.todayGeneration, 0);
-  const faultCount = turbineData.filter((t) => t.status === 'fault').length;
-  const maintCount = turbineData.filter((t) => t.status === 'maintenance').length;
+  const totalGeneration = sprintData.reduce((s, t) => s + t.todayGeneration, 0);
+  const faultCount = sprintData.filter((t) => t.status === 'fault').length;
+  const maintCount = sprintData.filter((t) => t.status === 'maintenance').length;
   const doneCount = MOCK_TICKETS.filter((t) => t.status === 'Done').length;
   const fmtVal = (v: number, dec = 1) => v.toFixed(dec);
 
   // ── Chart data ────────────────────────────────────────────────────────────────
   const chartData = useMemo(
-    () => getChartData(fromDate, toDate, selectedTurbines.length ? selectedTurbines : ALL_TEAMS),
-    [fromDate, toDate, selectedTurbines],
+    () => getChartData(fromDate, toDate, selectedSprints.length ? selectedSprints : ALL_TEAMS),
+    [fromDate, toDate, selectedSprints],
   );
 
-  const seriesColors = (selectedTurbines.length ? selectedTurbines : ALL_TEAMS).map(
+  const seriesColors = (selectedSprints.length ? selectedSprints : ALL_TEAMS).map(
     (t) => TEAM_COLORS[ALL_TEAMS.indexOf(t)] ?? '#6366f1',
   );
 
@@ -493,12 +492,12 @@ const Dashboard = () => {
         icon: <RouterIcon sx={{ color: '#f59e0b', fontSize: 20 }} />,
         bg: 'rgba(245,158,11,0.12)',
         border: 'rgba(245,158,11,0.3)',
-        value: `${selectedTurbines.length || ALL_TEAMS.length}`,
+        value: `${selectedSprints.length || ALL_TEAMS.length}`,
         label: 'Teams',
         valueColor: '#f59e0b',
       },
     ],
-    [chartData, fromDate, toDate, selectedTurbines],
+    [chartData, fromDate, toDate, selectedSprints],
   );
 
   // ── Ticket table columns (15 columns in the requested order) ────────────────
@@ -725,7 +724,7 @@ const Dashboard = () => {
               icon: <SettingsIcon sx={{ color: '#4f46e5', fontSize: 20 }} />,
               bg: 'rgba(79,70,229,0.12)',
               border: 'rgba(79,70,229,0.3)',
-              value: turbineData.length,
+              value: sprintData.length,
               label: 'Team Members',
             },
             {
@@ -938,28 +937,28 @@ const Dashboard = () => {
               </Select>
             </FormControl>
 
-            {/* Turbines */}
+            {/* Sprints */}
             <Autocomplete
               multiple
               disableCloseOnSelect
               size='small'
               options={[SELECT_ALL, ...ALL_TEAMS]}
-              value={selectedTurbines}
+              value={selectedSprints}
               onChange={(_, v) => {
                 if (v.includes(SELECT_ALL)) {
-                  setSelectedTurbines(
-                    selectedTurbines.length === ALL_TEAMS.length ? [] : [...ALL_TEAMS],
+                  setSelectedSprints(
+                    selectedSprints.length === ALL_TEAMS.length ? [] : [...ALL_TEAMS],
                   );
                 } else {
-                  setSelectedTurbines(v as string[]);
+                  setSelectedSprints(v as string[]);
                 }
               }}
               getOptionLabel={(o) => (o === SELECT_ALL ? 'Select All' : o)}
               isOptionEqualToValue={(opt, val) => opt === val}
               renderOption={(props, option, { selected }) => {
                 if (option === SELECT_ALL) {
-                  const allSelected = selectedTurbines.length === ALL_TEAMS.length;
-                  const indeterminate = selectedTurbines.length > 0 && !allSelected;
+                  const allSelected = selectedSprints.length === ALL_TEAMS.length;
+                  const indeterminate = selectedSprints.length > 0 && !allSelected;
                   return (
                     <li
                       {...props}
@@ -1272,7 +1271,7 @@ const Dashboard = () => {
 
               {/* Chart */}
               <ReactApexChart
-                key={`${chartType}-${fromDate.valueOf()}-${toDate.valueOf()}-${selectedTurbines.join(',')}`}
+                key={`${chartType}-${fromDate.valueOf()}-${toDate.valueOf()}-${selectedSprints.join(',')}`}
                 type={chartType === 'bar' ? 'bar' : 'area'}
                 options={chartType === 'bar' ? barOptions : lineOptions}
                 series={chartData.series}
@@ -1418,13 +1417,6 @@ const Dashboard = () => {
           </Card>
         ) : null}
       </Box>
-
-      <ComponentDetailDialog
-        open={componentDialogOpen}
-        turbine={selectedTurbine}
-        component={selectedComponent}
-        onClose={() => setComponentDialogOpen(false)}
-      />
     </>
   );
 };

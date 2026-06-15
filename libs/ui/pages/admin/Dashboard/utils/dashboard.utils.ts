@@ -1,6 +1,6 @@
 import { Dayjs } from 'dayjs';
 import {
-  MOCK_TURBINE_DATA,
+  MOCK_SPRINT_DATA,
   STATUS_CONFIG,
   TURBINE_LIST,
   MIN_DATE,
@@ -8,10 +8,10 @@ import {
   TURBINE_COLORS,
   SELECT_ALL_KEY,
 } from '../../../../utils/mockData';
-import type { Ticket } from '../types/turbineData.types';
+import type { Ticket } from '../types/sprintData.types';
 
 // Re-export for Dashboard
-export { MOCK_TURBINE_DATA };
+export { MOCK_SPRINT_DATA };
 
 export const MOCK_TICKETS: Ticket[] = [
   {
@@ -348,7 +348,7 @@ export const ALL_TURBINE_NOS = TURBINE_LIST;
 
 export { MIN_DATE, MAX_DATE, TURBINE_COLORS, SELECT_ALL_KEY };
 
-export const getTurbineStatuses = (turbines: typeof MOCK_TURBINE_DATA): Record<string, string> => {
+export const getTurbineStatuses = (turbines: typeof MOCK_SPRINT_DATA): Record<string, string> => {
   const result: Record<string, string> = {};
   turbines.forEach((t: any) => {
     result[t.turbineNo] = t.status;
