@@ -5,7 +5,7 @@ const CONSULTANT_BASE = '/app/consultant';
 const AdminPath = {
   DASHBOARD: `${ADMIN_BASE}/dashboard`,
   ACCESS_MANAGEMENT: `${ADMIN_BASE}/people-management/access`,
-  TURBINE_DETAIL: `${ADMIN_BASE}/dashboard/turbine/:id`,
+  SPRINT_DETAIL: `${ADMIN_BASE}/dashboard/sprint/:id`,
   SPRINT_STATUS_MATRIX: `${ADMIN_BASE}/sprint-status-matrix`,
   PROFILE: `${ADMIN_BASE}/profile`,
   ANALYTICS: `${ADMIN_BASE}/analytics`,
@@ -15,8 +15,9 @@ const AdminPath = {
   HELP_SUPPORT: `${ADMIN_BASE}/help-support`,
   USER_DETAIL: `${ADMIN_BASE}/people-management/access/:id`,
   OPERATIONS: `${ADMIN_BASE}/operations-management`,
-  CREATE_OPERATIONS: `${ADMIN_BASE}/operations-management/create`,
   TICKET_DETAIL: `${ADMIN_BASE}/dashboard/ticket/:id`,
+  CREATE_TICKET: `${ADMIN_BASE}/tickets/create`,
+  CREATE_INCIDENT: `${ADMIN_BASE}/incidents/create`,
   FEATURE_FLAGS: `${ADMIN_BASE}/feature-flags`,
 };
 

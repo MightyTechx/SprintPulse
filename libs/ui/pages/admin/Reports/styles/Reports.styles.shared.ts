@@ -10,6 +10,65 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
     },
   },
 
+  // ─── Filter Bar ───────────────────────────────────────────────────────────────
+  filterBar: {
+    display: 'flex',
+    alignItems: 'center',
+    flexWrap: 'wrap' as const,
+    gap: theme.spacing(1.5),
+    padding: theme.spacing(1.75, 2.5),
+    background: 'linear-gradient(135deg, rgba(255,255,255,0.98) 0%, rgba(240,244,255,0.95) 100%)',
+    borderRadius: 14,
+    border: '1px solid rgba(99,102,241,0.12)',
+    boxShadow: '0 2px 12px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.9)',
+    [theme.breakpoints.down('md')]: {
+      gap: theme.spacing(1.25),
+      padding: theme.spacing(1.5),
+    },
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column' as const,
+      alignItems: 'stretch' as const,
+      gap: theme.spacing(1),
+    },
+  },
+
+  // ─── Download Button (matches prior "filter bar download" treatment) ─────────
+  downloadButton: {
+    flex: '1 1 180px',
+    minWidth: 170,
+    maxWidth: 280,
+    fontSize: '0.8rem',
+    fontWeight: 700,
+    textTransform: 'uppercase' as const,
+    letterSpacing: '0.04em',
+    borderRadius: '8px',
+    padding: '8px 18px',
+    boxShadow: 'none',
+    background: 'linear-gradient(135deg, #1a4299, #2563eb)',
+    color: '#fff',
+    transition: 'all 0.18s ease',
+    '&:hover': {
+      background: 'linear-gradient(135deg, #1e3a8a, #1d4ed8)',
+      boxShadow: '0 4px 14px rgba(26,66,153,0.4)',
+      transform: 'translateY(-1px)',
+    },
+    '&:active': { transform: 'translateY(0)' },
+    '&:disabled': {
+      background: 'linear-gradient(135deg, #e2e8f0, #cbd5e1)',
+      color: '#94a3b8',
+      transform: 'none',
+      boxShadow: 'none',
+    },
+    [theme.breakpoints.down('md')]: {
+      flex: '1 1 160px',
+      maxWidth: 240,
+    },
+    [theme.breakpoints.down('sm')]: {
+      flex: 'none',
+      width: '100%',
+    },
+  },
+
   // ─── Action Buttons & Filters Section ─────────────────────────────────────────
   actionButtonsSection: {
     display: 'flex',
@@ -184,6 +243,13 @@ export const getBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
       padding: theme.spacing(1.5),
       gap: theme.spacing(1),
     },
+  },
+
+  tableSectionTitleGroup: {
+    display: 'flex',
+    flexDirection: 'column' as const,
+    gap: 2,
+    minWidth: 0,
   },
 
   searchField: {

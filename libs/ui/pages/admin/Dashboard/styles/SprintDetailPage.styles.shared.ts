@@ -1,7 +1,7 @@
 import { Theme } from '@mui/material/styles';
 import { CSSObject } from 'tss-react';
 
-export const getTurbineDetailBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
+export const getSprintDetailBaseStyles = (theme: Theme): Record<string, CSSObject> => ({
   container: {
     padding: theme.spacing(3),
     background: 'linear-gradient(160deg, #f0f4ff 0%, #fafbff 50%, #f0f4ff 100%)',
@@ -480,5 +480,3 @@ export const getTurbineDetailBaseStyles = (theme: Theme): Record<string, CSSObje
     fontWeight: 500,
   },
 });
-
-export const getSprintDetailBaseStyles = getTurbineDetailBaseStyles;

@@ -45,8 +45,9 @@ import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { useAdminKeyframes, useAuth, useLiveDateTime } from '../../../hooks';
 import { useStyles } from './styles';
-import { TurbineData, TICKET_STATUS_CONFIG, Ticket } from './types/sprintData.types';
+import { TICKET_STATUS_CONFIG, Ticket } from './types/sprintData.types';
 import { MOCK_SPRINT_DATA, MOCK_TICKETS } from './utils/dashboard.utils';
+import type { SprintData } from '../../../utils/mockData';
 import { getActualEffort } from './utils/effortCalculations';
 import { constants } from '@sprintpulse/utils';
 import { Column, DataTable, Card } from '@sprintpulse/component';
@@ -177,7 +178,7 @@ const Dashboard = () => {
     .slice(0, 2);
   const { hours, minutes, seconds, dateStr, tzAbbr, tzRegion, utcOffset } = useLiveDateTime();
 
-  const [sprintData, setSprintData] = useState<TurbineData[]>(MOCK_SPRINT_DATA);
+  const [sprintData, setSprintData] = useState<SprintData[]>(MOCK_SPRINT_DATA);
   const [view, setView] = useState<'table' | 'chart' | 'incentive'>('table');
   const [chartType, setChartType] = useState<ChartType>('bar');
   const [fromDate, setFromDate] = useState<Dayjs>(MIN_DATE);
@@ -203,9 +204,6 @@ const Dashboard = () => {
         t.fixVersion.toLowerCase().includes(q),
     );
   }, [ticketSearch]);
-
-  // 3D View Dialog State
-  const [selectedSprint, setSelectedSprint] = useState<TurbineData | null>(null);
 
   // Incentive data
   const INCENTIVE_DATA = [
@@ -298,14 +296,19 @@ const Dashboard = () => {
     const id = setInterval(() => {
       setSprintData((prev) =>
         prev.map((t) => {
-          if (t.status === 'running') {
+          if (t.status === 'active') {
             return {
               ...t,
               time: new Date().toLocaleTimeString('en-GB', { hour12: false }),
-              activePower: Math.max(0, t.activePower + (Math.random() - 0.5) * 100),
-              // TODO: Replace with sprint velocity metric (currently still using SCADA windSpeed)
-              windSpeed: Math.max(3, Math.min(25, t.windSpeed + (Math.random() - 0.5) * 0.5)),
-              todayGeneration: t.todayGeneration + t.activePower / 3600,
+              sprintProgress: Math.max(
+                0,
+                Math.min(100, t.sprintProgress + (Math.random() - 0.5) * 2),
+              ),
+              storyPointsCompleted: Math.max(
+                0,
+                t.storyPointsCompleted + Math.random() * 0.5,
+              ),
+              teamVelocity: Math.max(0, t.teamVelocity + (Math.random() - 0.5) * 0.3),
             };
           }
           return { ...t, time: new Date().toLocaleTimeString('en-GB', { hour12: false }) };
@@ -315,19 +318,18 @@ const Dashboard = () => {
     return () => clearInterval(id);
   }, []);
 
-  // ── Fleet stats ───────────────────────────────────────────────────────────────
-  const runningCount = sprintData.filter((t) => t.status === 'running').length;
-  const totalPower = sprintData
-    .filter((t) => t.status === 'running')
-    .reduce((s, t) => s + t.activePower, 0);
-  // TODO: Replace with sprint team velocity metric (currently calculating avg of SCADA windSpeed)
-  const avgWindSpeed = (
-    sprintData.filter((t) => t.status === 'running').reduce((s, t) => s + t.windSpeed, 0) /
-    (runningCount || 1)
+  // ── Sprint stats ──────────────────────────────────────────────────────────────
+  const activeSprintCount = sprintData.filter((t) => t.status === 'active').length;
+  const totalStoryPoints = sprintData
+    .filter((t) => t.status === 'active')
+    .reduce((s, t) => s + t.storyPointsCompleted, 0);
+  const avgVelocity = (
+    sprintData.filter((t) => t.status === 'active').reduce((s, t) => s + t.teamVelocity, 0) /
+    (activeSprintCount || 1)
   ).toFixed(1);
-  const totalGeneration = sprintData.reduce((s, t) => s + t.todayGeneration, 0);
-  const faultCount = sprintData.filter((t) => t.status === 'fault').length;
-  const maintCount = sprintData.filter((t) => t.status === 'maintenance').length;
+  const totalPlannedPoints = sprintData.reduce((s, t) => s + t.plannedPoints, 0);
+  const completedSprintCount = sprintData.filter((t) => t.status === 'completed').length;
+  const upcomingSprintCount = sprintData.filter((t) => t.status === 'upcoming').length;
   const doneCount = MOCK_TICKETS.filter((t) => t.status === 'Done').length;
   const fmtVal = (v: number, dec = 1) => v.toFixed(dec);
 
@@ -731,49 +733,61 @@ const Dashboard = () => {
               icon: <PlayArrowIcon sx={{ color: '#10b981', fontSize: 20 }} />,
               bg: 'rgba(16,185,129,0.12)',
               border: 'rgba(16,185,129,0.3)',
-              value: runningCount,
+              value: activeSprintCount,
               label: 'Sprint Number',
             },
             {
               icon: <FlashOnIcon sx={{ color: '#f59e0b', fontSize: 20 }} />,
               bg: 'rgba(245,158,11,0.12)',
               border: 'rgba(245,158,11,0.3)',
-              value: fmtVal(totalPower),
+              value: fmtVal(totalStoryPoints, 0),
               label: 'Total Tickets',
             },
             {
               icon: <SpeedIcon sx={{ color: '#8b5cf6', fontSize: 20 }} />,
               bg: 'rgba(139,92,246,0.12)',
               border: 'rgba(139,92,246,0.3)',
-              value: fmtVal(totalGeneration, 0),
+              value: fmtVal(totalPlannedPoints, 0),
               label: 'Total Incidents',
             },
             {
-              icon: <AirIcon sx={{ color: '#3b82f6', fontSize: 20 }} />,
+              icon: <BoltIcon sx={{ color: '#3b82f6', fontSize: 20 }} />,
               bg: 'rgba(59,130,246,0.12)',
               border: 'rgba(59,130,246,0.3)',
-              value: avgWindSpeed,
+              value: avgVelocity,
               label: 'Total In-Progress',
             },
             {
               icon: (
-                <WarningIcon sx={{ color: faultCount > 0 ? '#ef4444' : '#10b981', fontSize: 20 }} />
+                <CheckCircleIcon
+                  sx={{ color: completedSprintCount > 0 ? '#10b981' : '#6b7280', fontSize: 20 }}
+                />
               ),
-              bg: faultCount > 0 ? 'rgba(239,68,68,0.12)' : 'rgba(16,185,129,0.12)',
-              border: faultCount > 0 ? 'rgba(239,68,68,0.3)' : 'rgba(16,185,129,0.3)',
-              value: faultCount,
+              bg: completedSprintCount > 0
+                ? 'rgba(16,185,129,0.12)'
+                : 'rgba(107,114,128,0.12)',
+              border: completedSprintCount > 0
+                ? 'rgba(16,185,129,0.3)'
+                : 'rgba(107,114,128,0.3)',
+              value: completedSprintCount,
               label: 'Total in-Review',
-              valueColor: faultCount > 0 ? '#ef4444' : '#10b981',
+              valueColor: completedSprintCount > 0 ? '#10b981' : '#6b7280',
             },
             {
               icon: (
-                <BuildIcon sx={{ color: maintCount > 0 ? '#f59e0b' : '#6b7280', fontSize: 20 }} />
+                <RefreshIcon
+                  sx={{ color: upcomingSprintCount > 0 ? '#8b5cf6' : '#6b7280', fontSize: 20 }}
+                />
               ),
-              bg: maintCount > 0 ? 'rgba(245,158,11,0.12)' : 'rgba(107,114,128,0.12)',
-              border: maintCount > 0 ? 'rgba(245,158,11,0.3)' : 'rgba(107,114,128,0.3)',
-              value: maintCount,
+              bg: upcomingSprintCount > 0
+                ? 'rgba(139,92,246,0.12)'
+                : 'rgba(107,114,128,0.12)',
+              border: upcomingSprintCount > 0
+                ? 'rgba(139,92,246,0.3)'
+                : 'rgba(107,114,128,0.3)',
+              value: upcomingSprintCount,
               label: 'Total In-Test',
-              valueColor: maintCount > 0 ? '#f59e0b' : '#6b7280',
+              valueColor: upcomingSprintCount > 0 ? '#8b5cf6' : '#6b7280',
             },
             {
               icon: (
@@ -1421,18 +1435,16 @@ const Dashboard = () => {
   );
 };
 
-function getStatusIcon(status: TurbineData['status']) {
+function getStatusIcon(status: SprintData['status']) {
   switch (status) {
-    case 'running':
+    case 'active':
       return <PlayArrowIcon sx={{ fontSize: 12 }} />;
-    case 'stopped':
-      return <StopIcon sx={{ fontSize: 12 }} />;
-    case 'maintenance':
-      return <BuildIcon sx={{ fontSize: 12 }} />;
-    case 'fault':
-      return <WarningIcon sx={{ fontSize: 12 }} />;
-    case 'standby':
+    case 'completed':
+      return <CheckCircleIcon sx={{ fontSize: 12 }} />;
+    case 'upcoming':
       return <RefreshIcon sx={{ fontSize: 12 }} />;
+    case 'cancelled':
+      return <StopIcon sx={{ fontSize: 12 }} />;
   }
 }
 

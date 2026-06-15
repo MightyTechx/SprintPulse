@@ -178,7 +178,6 @@ export interface FeatureFlagData {
   updatedAt: string;
 }
 
-
 export interface KpiRowData {
   id: number;
   kpi: string;
@@ -1810,13 +1809,7 @@ export const MAX_DATE = dayjs().startOf('day');
 
 // ─── Sprint List ───────────────────────────────────────────────────────────────
 
-export const TURBINE_LIST = [
-  'Frontend',
-  'Backend',
-  'QA',
-  'DevOps',
-  'Design',
-];
+export const TURBINE_LIST = ['Frontend', 'Backend', 'QA', 'DevOps', 'Design'];
 
 export const TURBINE_IDS = [
   's01',

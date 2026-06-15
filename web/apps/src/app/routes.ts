@@ -20,9 +20,13 @@ export const LazyMenuItems = {
   SettingsPage: lazy(() => import('@sprintpulse/pages/shared/Settings')),
   HelpSupportPage: lazy(() => import('@sprintpulse/pages/shared/HelpSupport')),
   AdminOperationsPage: lazy(() => import('@sprintpulse/pages/admin/Operations')),
-  AdminCreateOperationsPage: lazy(
-    () => import('@sprintpulse/pages/admin/Operations/components/CreateOperations'),
+  AdminCreateTicketPage: lazy(
+    () => import('@sprintpulse/pages/admin/Tickets/components/CreateTicket'),
   ),
+  AdminCreateIncidentPage: lazy(
+    () => import('@sprintpulse/pages/admin/Incidents/components/CreateIncident'),
+  ),
+  AdminFeatureFlagsPage: lazy(() => import('@sprintpulse/pages/admin/FeatureFlags')),
 
   // Auth pages (shared/public)
   SignInPage: lazy(() => import('@sprintpulse/pages/shared/SignIn')),

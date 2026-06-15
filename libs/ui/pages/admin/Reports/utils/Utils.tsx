@@ -1,10 +1,6 @@
 import { useMemo } from 'react';
 import { Column, Typography, Chip } from '@sprintpulse/component';
-import {
-  getIncidentRows,
-  IncidentRow,
-  INCIDENT_STATUS_CONFIG,
-} from './reports.utils';
+import { getIncidentRows, IncidentRow, INCIDENT_STATUS_CONFIG } from './reports.utils';
 
 export const useUtils = () => {
   const incidentRows = useMemo(() => getIncidentRows(), []);
@@ -36,26 +32,6 @@ export const useUtils = () => {
         ),
       },
       {
-        id: 'assignee',
-        label: 'Assignee',
-        minWidth: 150,
-        sortable: true,
-        align: 'center' as const,
-        format: (v) => (
-          <Typography sx={{ fontSize: '13px', color: '#334155' }}>{String(v)}</Typography>
-        ),
-      },
-      {
-        id: 'assignedTo',
-        label: 'Assigned To',
-        minWidth: 150,
-        sortable: true,
-        align: 'center' as const,
-        format: (v) => (
-          <Typography sx={{ fontSize: '13px', color: '#334155' }}>{String(v)}</Typography>
-        ),
-      },
-      {
         id: 'incidentNumber',
         label: 'Incident Number',
         minWidth: 140,
@@ -76,26 +52,6 @@ export const useUtils = () => {
         ),
       },
       {
-        id: 'fromDate',
-        label: 'From Date',
-        minWidth: 150,
-        sortable: true,
-        align: 'center' as const,
-        format: (v) => (
-          <Typography sx={{ fontSize: '13px', color: '#334155' }}>{String(v)}</Typography>
-        ),
-      },
-      {
-        id: 'toDate',
-        label: 'To Date',
-        minWidth: 150,
-        sortable: true,
-        align: 'center' as const,
-        format: (v) => (
-          <Typography sx={{ fontSize: '13px', color: '#334155' }}>{String(v)}</Typography>
-        ),
-      },
-      {
         id: 'issue',
         label: 'Issue',
         minWidth: 220,
@@ -103,25 +59,6 @@ export const useUtils = () => {
         align: 'left' as const,
         format: (v) => (
           <Typography sx={{ fontSize: '13px', color: '#1e293b', textAlign: 'left' }}>
-            {String(v)}
-          </Typography>
-        ),
-      },
-      {
-        id: 'totalHours',
-        label: 'Total Hours',
-        minWidth: 120,
-        sortable: true,
-        align: 'center' as const,
-        format: (v) => (
-          <Typography
-            sx={{
-              fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
-              fontWeight: 600,
-              fontSize: '12.5px',
-              color: '#0f172a',
-            }}
-          >
             {String(v)}
           </Typography>
         ),
@@ -154,6 +91,65 @@ export const useUtils = () => {
             />
           );
         },
+      },
+      {
+        id: 'assignee',
+        label: 'Assignee',
+        minWidth: 150,
+        sortable: true,
+        align: 'center' as const,
+        format: (v) => (
+          <Typography sx={{ fontSize: '13px', color: '#334155' }}>{String(v)}</Typography>
+        ),
+      },
+      {
+        id: 'assignedTo',
+        label: 'Assigned To',
+        minWidth: 150,
+        sortable: true,
+        align: 'center' as const,
+        format: (v) => (
+          <Typography sx={{ fontSize: '13px', color: '#334155' }}>{String(v)}</Typography>
+        ),
+      },
+      {
+        id: 'fromDate',
+        label: 'From Date',
+        minWidth: 150,
+        sortable: true,
+        align: 'center' as const,
+        format: (v) => (
+          <Typography sx={{ fontSize: '13px', color: '#334155' }}>{String(v)}</Typography>
+        ),
+      },
+      {
+        id: 'toDate',
+        label: 'To Date',
+        minWidth: 150,
+        sortable: true,
+        align: 'center' as const,
+        format: (v) => (
+          <Typography sx={{ fontSize: '13px', color: '#334155' }}>{String(v)}</Typography>
+        ),
+      },
+      {
+        id: 'totalHours',
+        label: 'Total Hours',
+        minWidth: 120,
+        sortable: true,
+        align: 'center' as const,
+        format: (v) => (
+          <Typography
+            sx={{
+              fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+              fontWeight: 600,
+              fontSize: '12.5px',
+              color: '#0f172a',
+            }}
+          >
+            {String(v)}
+          </Typography>
+        ),
       },
     ],
     [],

@@ -22,7 +22,9 @@ const {
   AdminReportsPage,
   AdminTechnicalDocumentsPage,
   AdminOperationsPage,
-  AdminCreateOperationsPage,
+  AdminCreateTicketPage,
+  AdminCreateIncidentPage,
+  AdminFeatureFlagsPage,
   SettingsPage,
   HelpSupportPage,
 
@@ -81,16 +83,21 @@ const AppRoutes = () => {
 
             {/* Admin routes */}
             <Route path={AdminPath.DASHBOARD} element={<AdminDashboardPage />} />
-            <Route path={AdminPath.TURBINE_DETAIL} element={<AdminSprintDetailPage />} />
+            <Route path={AdminPath.SPRINT_DETAIL} element={<AdminSprintDetailPage />} />
             <Route path={AdminPath.TICKET_DETAIL} element={<AdminTicketDetailPage />} />
-            <Route path={AdminPath.SPRINT_STATUS_MATRIX} element={<AdminSprintStatusMatrixPage />} />
+            <Route
+              path={AdminPath.SPRINT_STATUS_MATRIX}
+              element={<AdminSprintStatusMatrixPage />}
+            />
             <Route path={AdminPath.ACCESS_MANAGEMENT} element={<AdminPeopleManagementPage />} />
             <Route path={AdminPath.USER_DETAIL} element={<AdminUserDetailPage />} />
             <Route path={AdminPath.PROFILE} element={<AdminProfilePage />} />
             <Route path={AdminPath.REPORTS} element={<AdminReportsPage />} />
             <Route path={AdminPath.TECHNICAL_DOCUMENTS} element={<AdminTechnicalDocumentsPage />} />
             <Route path={AdminPath.OPERATIONS} element={<AdminOperationsPage />} />
-            <Route path={AdminPath.CREATE_OPERATIONS} element={<AdminCreateOperationsPage />} />
+            <Route path={AdminPath.CREATE_TICKET} element={<AdminCreateTicketPage />} />
+            <Route path={AdminPath.CREATE_INCIDENT} element={<AdminCreateIncidentPage />} />
+            <Route path={AdminPath.FEATURE_FLAGS} element={<AdminFeatureFlagsPage />} />
             <Route path={AdminPath.SETTINGS} element={<SettingsPage />} />
             <Route path={AdminPath.HELP_SUPPORT} element={<HelpSupportPage />} />
 
@@ -112,6 +119,7 @@ const AppRoutes = () => {
             />
             <Route path={ConsultantPath.OPERATIONS} element={<AdminOperationsPage />} />
             <Route path={ConsultantPath.ANALYTICS} element={<AdminDashboardPage />} />
+            <Route path={ConsultantPath.FEATURE_FLAGS} element={<AdminFeatureFlagsPage />} />
 
             <Route path={Path.NOT_FOUND} element={<NotFoundPage />} />
           </Routes>

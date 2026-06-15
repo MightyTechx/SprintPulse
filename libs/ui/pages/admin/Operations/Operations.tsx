@@ -13,7 +13,6 @@ import {
 } from '@sprintpulse/component';
 import { InputAdornment, Typography } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import AddIcon from '@mui/icons-material/Add';
 import EngineeringIcon from '@mui/icons-material/Engineering';
 import BuildIcon from '@mui/icons-material/Build';
 import AssignmentIcon from '@mui/icons-material/Assignment';
@@ -355,77 +354,6 @@ const Operations = () => {
         icon={EngineeringIcon}
         variant='admin'
       />
-
-      {/* ── Action Bar (Create Operations + Badge) ── */}
-      <Box className={classes.actionBar}>
-        {/* Status Badge */}
-        <Chip
-          label={`${permitData.filter((d) => d.status === 'In Progress').length} In Progress`}
-          size='small'
-          sx={{
-            background: 'rgba(100,116,139,0.12)',
-            border: '1px solid rgba(100,116,139,0.3)',
-            color: '#94a3b8',
-            fontWeight: 600,
-            fontSize: '0.75rem',
-            height: 28,
-            cursor: 'pointer',
-            '&:hover': {
-              background: 'rgba(100,116,139,0.18)',
-            },
-            '@media (max-width:600px)': {
-              width: '48%',
-              maxWidth: 'none',
-              justifyContent: 'flex-start',
-              '& .MuiChip-label': { flex: 1 },
-            },
-          }}
-          onClick={() => setTabValue(1)}
-          icon={<PendingActionsIcon sx={{ fontSize: '16px !important' }} />}
-        />
-        {/* Create Operations Button */}
-        <Box
-          onClick={() => navigate(AdminPath.CREATE_OPERATIONS)}
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: 0.5,
-            px: 1.5,
-            py: 0.625,
-            borderRadius: '8px',
-            background: 'linear-gradient(135deg, #4f46e5 0%, #6366f1 50%, #7c3aed 100%)',
-            boxShadow: '0 2px 8px rgba(99,102,241,0.35)',
-            cursor: 'pointer',
-            transition: 'all 0.25s ease',
-            whiteSpace: 'nowrap',
-            '&:hover': {
-              transform: 'translateY(-1px)',
-              boxShadow: '0 4px 16px rgba(99,102,241,0.45)',
-            },
-            '&:active': { transform: 'translateY(0)' },
-            '@media (max-width:600px)': {
-              width: '48%',
-            },
-          }}
-        >
-          <AddIcon sx={{ fontSize: 16, color: '#fff' }} />
-          <Chip
-            label='Create Operations'
-            size='small'
-            sx={{
-              background: 'transparent',
-              color: '#fff',
-              fontWeight: 600,
-              fontSize: '0.75rem',
-              height: 28,
-              '&:hover': {
-                background: 'transparent',
-              },
-            }}
-          />
-        </Box>
-      </Box>
 
       {/* ── Stat Cards ── */}
       <Box className={classes.statsGrid}>

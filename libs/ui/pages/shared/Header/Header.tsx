@@ -1,6 +1,17 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AppBar, Badge, Box, Chip, IconButton, Toolbar, useTheme } from '@sprintpulse/component';
+import {
+  AppBar,
+  Badge,
+  Box,
+  Chip,
+  IconButton,
+  Toolbar,
+  useTheme,
+  Menu,
+  MenuItem,
+  Typography,
+} from '@sprintpulse/component';
 import { useMediaQuery } from '@sprintpulse/hooks';
 import { Tooltip } from '../../../components';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
@@ -9,6 +20,8 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
 import AddIcon from '@mui/icons-material/Add';
+import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
+import ReportProblemIcon from '@mui/icons-material/ReportProblem';
 import { useStyles } from './styles/Header.styles';
 import { useSharedHeader } from './hooks/useSharedHeader';
 import LogoMark from './components/LogoMark';
@@ -83,6 +96,18 @@ const Header = () => {
   const { AdminPath } = constants;
 
   const [chatOpen, setChatOpen] = useState(false);
+  const [createAnchor, setCreateAnchor] = useState<null | HTMLElement>(null);
+
+  const handleCreateOpen = (e: React.MouseEvent<HTMLElement>) => {
+    setCreateAnchor(e.currentTarget);
+  };
+  const handleCreateClose = () => {
+    setCreateAnchor(null);
+  };
+  const handleCreateNavigate = (path: string) => () => {
+    handleCreateClose();
+    navigate(path);
+  };
 
   const {
     isAdmin,
@@ -190,12 +215,14 @@ const Header = () => {
 
           <Box className={classes.headerRightSpacer} />
 
-          {/* Create Operations */}
-          <Tooltip title='Create Operations' placement='bottom' arrow>
+          {/* Create (Ticket / Incident) */}
+          <Tooltip title='Create New' placement='bottom' arrow>
             <IconButton
               size='small'
               className={classes.iconBtnBase}
-              onClick={() => navigate(AdminPath.CREATE_OPERATIONS)}
+              onClick={handleCreateOpen}
+              aria-haspopup='true'
+              aria-expanded={createAnchor ? 'true' : undefined}
               sx={{
                 padding: 0,
                 borderRadius: '50%',
@@ -209,6 +236,117 @@ const Header = () => {
               <AddIcon className={classes.icon} />
             </IconButton>
           </Tooltip>
+
+          {/* Create Menu Dropdown */}
+          <Menu
+            anchorEl={createAnchor}
+            open={Boolean(createAnchor)}
+            onClose={handleCreateClose}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+            slotProps={{
+              paper: {
+                sx: {
+                  mt: 1,
+                  minWidth: 240,
+                  background:
+                    'linear-gradient(160deg, rgba(15,23,42,0.95) 0%, rgba(30,41,59,0.95) 100%)',
+                  backdropFilter: 'blur(16px)',
+                  border: '1px solid rgba(255,255,255,0.12)',
+                  boxShadow: '0 12px 36px rgba(0,0,0,0.45)',
+                  borderRadius: 2.5,
+                  overflow: 'hidden',
+                  color: '#fff',
+                },
+              },
+            }}
+          >
+            <Box
+              sx={{
+                px: 2,
+                py: 1.25,
+                background:
+                  'linear-gradient(135deg, rgba(99,102,241,0.18) 0%, rgba(124,58,237,0.12) 100%)',
+                borderBottom: '1px solid rgba(255,255,255,0.08)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 1,
+              }}
+            >
+              <AddIcon sx={{ fontSize: 16, color: '#a5b4fc' }} />
+              <Typography sx={{ fontSize: '0.78rem', fontWeight: 700, color: '#e2e8f0' }}>
+                CREATE NEW
+              </Typography>
+            </Box>
+            <MenuItem
+              onClick={handleCreateNavigate(AdminPath.CREATE_TICKET)}
+              sx={{
+                py: 1.25,
+                px: 2,
+                gap: 1.5,
+                transition: 'all 0.18s ease',
+                '&:hover': { background: 'rgba(79,70,229,0.18)' },
+              }}
+            >
+              <Box
+                sx={{
+                  width: 32,
+                  height: 32,
+                  borderRadius: 1.5,
+                  background: 'linear-gradient(135deg, #4f46e5 0%, #6366f1 100%)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxShadow: '0 4px 12px rgba(79,70,229,0.4)',
+                  flexShrink: 0,
+                }}
+              >
+                <ConfirmationNumberIcon sx={{ fontSize: 16, color: '#fff' }} />
+              </Box>
+              <Box sx={{ flex: 1, minWidth: 0 }}>
+                <Typography sx={{ fontSize: '0.85rem', fontWeight: 600, color: '#f1f5f9' }}>
+                  Create Ticket
+                </Typography>
+                <Typography sx={{ fontSize: '0.7rem', color: 'rgba(226,232,240,0.65)' }}>
+                  Jira-style story, task, bug
+                </Typography>
+              </Box>
+            </MenuItem>
+            <MenuItem
+              onClick={handleCreateNavigate(AdminPath.CREATE_INCIDENT)}
+              sx={{
+                py: 1.25,
+                px: 2,
+                gap: 1.5,
+                transition: 'all 0.18s ease',
+                '&:hover': { background: 'rgba(239,68,68,0.18)' },
+              }}
+            >
+              <Box
+                sx={{
+                  width: 32,
+                  height: 32,
+                  borderRadius: 1.5,
+                  background: 'linear-gradient(135deg, #ef4444 0%, #f97316 100%)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxShadow: '0 4px 12px rgba(239,68,68,0.4)',
+                  flexShrink: 0,
+                }}
+              >
+                <ReportProblemIcon sx={{ fontSize: 16, color: '#fff' }} />
+              </Box>
+              <Box sx={{ flex: 1, minWidth: 0 }}>
+                <Typography sx={{ fontSize: '0.85rem', fontWeight: 600, color: '#f1f5f9' }}>
+                  Create Incident
+                </Typography>
+                <Typography sx={{ fontSize: '0.7rem', color: 'rgba(226,232,240,0.65)' }}>
+                  Log & track incident reports
+                </Typography>
+              </Box>
+            </MenuItem>
+          </Menu>
 
           {/* AI Chat */}
           <Tooltip title='AI Assistant' placement='bottom' arrow>

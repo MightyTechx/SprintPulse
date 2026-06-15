@@ -3,7 +3,7 @@
  * Replaces turbine mock data with sprint/agile data
  */
 
-import { generateMockSprintData } from 'ui/pages/admin/Dashboard';
+import { generateMockSprintData } from '../../pages/admin/Dashboard/types/sprintData.types';
 
 // ─── Types ─────────────────────────────────────────────────────────────────────
 
@@ -280,3 +280,6 @@ export const SPRINT_COLORS = {
   upcoming: '#8b5cf6',
   cancelled: '#ef4444',
 };
+
+export const getSprintById = (id: number): SprintData | undefined =>
+  MOCK_SPRINT_DATA.find((s) => s.id === id);
