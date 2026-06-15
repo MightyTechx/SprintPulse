@@ -130,3 +130,121 @@ model UserPreference {
   @@index([userId])
 }
 
+// ─── Configurations (Reference Data) ──────────────────────────────────────────
+// Centralized reference data used across the entire application.
+// Each model shares the same shape; one controller handles all seven.
+
+model Squad {
+  id          Int      @id @default(autoincrement())
+  name        String
+  key         String   @unique
+  description String   @default("")
+  color       String   @default("#6366f1")
+  iconKey     String?
+  sortOrder   Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdBy   Int?
+  updatedBy   Int?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([sortOrder])
+}
+
+model Team {
+  id          Int      @id @default(autoincrement())
+  name        String
+  key         String   @unique
+  description String   @default("")
+  color       String   @default("#06b6d4")
+  iconKey     String?
+  sortOrder   Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdBy   Int?
+  updatedBy   Int?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([sortOrder])
+}
+
+model IssueType {
+  id          Int      @id @default(autoincrement())
+  name        String
+  key         String   @unique
+  description String   @default("")
+  color       String   @default("#6366f1")
+  sortOrder   Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdBy   Int?
+  updatedBy   Int?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([sortOrder])
+}
+
+model Status {
+  id          Int      @id @default(autoincrement())
+  name        String
+  key         String   @unique
+  description String   @default("")
+  color       String   @default("#6366f1")
+  sortOrder   Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdBy   Int?
+  updatedBy   Int?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([sortOrder])
+}
+
+model FixVersion {
+  id          Int      @id @default(autoincrement())
+  name        String
+  key         String   @unique
+  description String   @default("")
+  color       String   @default("#10b981")
+  sortOrder   Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdBy   Int?
+  updatedBy   Int?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([sortOrder])
+}
+
+model SprintNumber {
+  id          Int      @id @default(autoincrement())
+  name        String
+  key         String   @unique
+  description String   @default("")
+  color       String   @default("#0ea5e9")
+  sortOrder   Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdBy   Int?
+  updatedBy   Int?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([sortOrder])
+}
+
+model Priority {
+  id          Int      @id @default(autoincrement())
+  name        String
+  key         String   @unique
+  description String   @default("")
+  color       String   @default("#f59e0b")
+  sortOrder   Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdBy   Int?
+  updatedBy   Int?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([sortOrder])
+}
+

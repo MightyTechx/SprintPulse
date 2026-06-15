@@ -197,7 +197,7 @@ const SideNav = () => {
           glowColor: `${themeColors.primaryAlpha}40`,
           dotColor: themeColors.primary,
         },
-        'Wind Operations': {
+        Operations: {
           gradient: `linear-gradient(90deg, ${themeColors.primaryAlpha}33 0%, ${themeColors.primaryAlpha}0a 100%)`,
           labelColor: themeColors.primaryLight,
           border: `${themeColors.primaryAlpha}8c`,

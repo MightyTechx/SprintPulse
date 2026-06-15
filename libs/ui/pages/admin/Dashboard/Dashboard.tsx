@@ -304,10 +304,7 @@ const Dashboard = () => {
                 0,
                 Math.min(100, t.sprintProgress + (Math.random() - 0.5) * 2),
               ),
-              storyPointsCompleted: Math.max(
-                0,
-                t.storyPointsCompleted + Math.random() * 0.5,
-              ),
+              storyPointsCompleted: Math.max(0, t.storyPointsCompleted + Math.random() * 0.5),
               teamVelocity: Math.max(0, t.teamVelocity + (Math.random() - 0.5) * 0.3),
             };
           }
@@ -763,12 +760,8 @@ const Dashboard = () => {
                   sx={{ color: completedSprintCount > 0 ? '#10b981' : '#6b7280', fontSize: 20 }}
                 />
               ),
-              bg: completedSprintCount > 0
-                ? 'rgba(16,185,129,0.12)'
-                : 'rgba(107,114,128,0.12)',
-              border: completedSprintCount > 0
-                ? 'rgba(16,185,129,0.3)'
-                : 'rgba(107,114,128,0.3)',
+              bg: completedSprintCount > 0 ? 'rgba(16,185,129,0.12)' : 'rgba(107,114,128,0.12)',
+              border: completedSprintCount > 0 ? 'rgba(16,185,129,0.3)' : 'rgba(107,114,128,0.3)',
               value: completedSprintCount,
               label: 'Total in-Review',
               valueColor: completedSprintCount > 0 ? '#10b981' : '#6b7280',
@@ -779,12 +772,8 @@ const Dashboard = () => {
                   sx={{ color: upcomingSprintCount > 0 ? '#8b5cf6' : '#6b7280', fontSize: 20 }}
                 />
               ),
-              bg: upcomingSprintCount > 0
-                ? 'rgba(139,92,246,0.12)'
-                : 'rgba(107,114,128,0.12)',
-              border: upcomingSprintCount > 0
-                ? 'rgba(139,92,246,0.3)'
-                : 'rgba(107,114,128,0.3)',
+              bg: upcomingSprintCount > 0 ? 'rgba(139,92,246,0.12)' : 'rgba(107,114,128,0.12)',
+              border: upcomingSprintCount > 0 ? 'rgba(139,92,246,0.3)' : 'rgba(107,114,128,0.3)',
               value: upcomingSprintCount,
               label: 'Total In-Test',
               valueColor: upcomingSprintCount > 0 ? '#8b5cf6' : '#6b7280',

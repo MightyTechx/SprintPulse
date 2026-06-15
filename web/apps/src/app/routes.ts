@@ -27,6 +27,7 @@ export const LazyMenuItems = {
     () => import('@sprintpulse/pages/admin/Incidents/components/CreateIncident'),
   ),
   AdminFeatureFlagsPage: lazy(() => import('@sprintpulse/pages/admin/FeatureFlags')),
+  AdminConfigurationsPage: lazy(() => import('@sprintpulse/pages/admin/Configurations')),
 
   // Auth pages (shared/public)
   SignInPage: lazy(() => import('@sprintpulse/pages/shared/SignIn')),

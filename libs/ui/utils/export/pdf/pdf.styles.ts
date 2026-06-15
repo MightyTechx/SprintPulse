@@ -49,7 +49,7 @@ export const TABLE_STYLES = {
     padding: [6, 4, 4, 4],
   },
 
-  // Data cell styling (for KPI turbine columns)
+  // Data cell styling (for KPI columns)
   dataCell: {
     fillColor: PDF_COLORS.white,
     color: PDF_COLORS.textDark,

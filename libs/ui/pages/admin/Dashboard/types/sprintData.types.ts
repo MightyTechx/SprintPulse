@@ -528,7 +528,7 @@ export const TICKET_STATUS_CONFIG: Record<
   },
 };
 
-// Sprint task categories (replaces turbine components)
+// Sprint task categories
 export interface SprintTaskCategory {
   id: string;
   name: string;

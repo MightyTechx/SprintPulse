@@ -42,3 +42,38 @@ export type FeatureFlag = Prisma.FeatureFlagModel
  * 
  */
 export type UserPreference = Prisma.UserPreferenceModel
+/**
+ * Model Squad
+ * 
+ */
+export type Squad = Prisma.SquadModel
+/**
+ * Model Team
+ * 
+ */
+export type Team = Prisma.TeamModel
+/**
+ * Model IssueType
+ * 
+ */
+export type IssueType = Prisma.IssueTypeModel
+/**
+ * Model Status
+ * 
+ */
+export type Status = Prisma.StatusModel
+/**
+ * Model FixVersion
+ * 
+ */
+export type FixVersion = Prisma.FixVersionModel
+/**
+ * Model SprintNumber
+ * 
+ */
+export type SprintNumber = Prisma.SprintNumberModel
+/**
+ * Model Priority
+ * 
+ */
+export type Priority = Prisma.PriorityModel

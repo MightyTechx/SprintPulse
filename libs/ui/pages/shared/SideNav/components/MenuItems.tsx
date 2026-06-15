@@ -5,6 +5,7 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
 import DescriptionIcon from '@mui/icons-material/Description';
 import TuneIcon from '@mui/icons-material/Tune';
 import EngineeringIcon from '@mui/icons-material/Engineering';
+import SettingsIcon from '@mui/icons-material/Settings';
 import { constants } from '@sprintpulse/utils';
 import { useGetFeatureFlagsQuery } from '@sprintpulse/services';
 
@@ -66,6 +67,7 @@ export const useAdminMenuItems = (): MenuGroup[] => {
           path: AdminPath.TECHNICAL_DOCUMENTS,
         },
         { label: 'Feature Flags', icon: <TuneIcon />, path: AdminPath.FEATURE_FLAGS },
+        { label: 'Configurations', icon: <SettingsIcon />, path: AdminPath.CONFIGURATIONS },
         // { label: 'Analytics', icon: <QueryStatsIcon />, path: AdminPath.ANALYTICS },
       ],
     },

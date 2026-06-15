@@ -19,6 +19,7 @@ const AdminPath = {
   CREATE_TICKET: `${ADMIN_BASE}/tickets/create`,
   CREATE_INCIDENT: `${ADMIN_BASE}/incidents/create`,
   FEATURE_FLAGS: `${ADMIN_BASE}/feature-flags`,
+  CONFIGURATIONS: `${ADMIN_BASE}/configurations`,
 };
 
 const UserPath = {

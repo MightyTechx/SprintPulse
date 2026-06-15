@@ -55,7 +55,14 @@ export const ModelName = {
   UserChangeLog: 'UserChangeLog',
   LoginLog: 'LoginLog',
   FeatureFlag: 'FeatureFlag',
-  UserPreference: 'UserPreference'
+  UserPreference: 'UserPreference',
+  Squad: 'Squad',
+  Team: 'Team',
+  IssueType: 'IssueType',
+  Status: 'Status',
+  FixVersion: 'FixVersion',
+  SprintNumber: 'SprintNumber',
+  Priority: 'Priority'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -192,6 +199,127 @@ export const UserPreferenceScalarFieldEnum = {
 } as const
 
 export type UserPreferenceScalarFieldEnum = (typeof UserPreferenceScalarFieldEnum)[keyof typeof UserPreferenceScalarFieldEnum]
+
+
+export const SquadScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  key: 'key',
+  description: 'description',
+  color: 'color',
+  iconKey: 'iconKey',
+  sortOrder: 'sortOrder',
+  isActive: 'isActive',
+  createdBy: 'createdBy',
+  updatedBy: 'updatedBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SquadScalarFieldEnum = (typeof SquadScalarFieldEnum)[keyof typeof SquadScalarFieldEnum]
+
+
+export const TeamScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  key: 'key',
+  description: 'description',
+  color: 'color',
+  iconKey: 'iconKey',
+  sortOrder: 'sortOrder',
+  isActive: 'isActive',
+  createdBy: 'createdBy',
+  updatedBy: 'updatedBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type TeamScalarFieldEnum = (typeof TeamScalarFieldEnum)[keyof typeof TeamScalarFieldEnum]
+
+
+export const IssueTypeScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  key: 'key',
+  description: 'description',
+  color: 'color',
+  sortOrder: 'sortOrder',
+  isActive: 'isActive',
+  createdBy: 'createdBy',
+  updatedBy: 'updatedBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type IssueTypeScalarFieldEnum = (typeof IssueTypeScalarFieldEnum)[keyof typeof IssueTypeScalarFieldEnum]
+
+
+export const StatusScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  key: 'key',
+  description: 'description',
+  color: 'color',
+  sortOrder: 'sortOrder',
+  isActive: 'isActive',
+  createdBy: 'createdBy',
+  updatedBy: 'updatedBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type StatusScalarFieldEnum = (typeof StatusScalarFieldEnum)[keyof typeof StatusScalarFieldEnum]
+
+
+export const FixVersionScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  key: 'key',
+  description: 'description',
+  color: 'color',
+  sortOrder: 'sortOrder',
+  isActive: 'isActive',
+  createdBy: 'createdBy',
+  updatedBy: 'updatedBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FixVersionScalarFieldEnum = (typeof FixVersionScalarFieldEnum)[keyof typeof FixVersionScalarFieldEnum]
+
+
+export const SprintNumberScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  key: 'key',
+  description: 'description',
+  color: 'color',
+  sortOrder: 'sortOrder',
+  isActive: 'isActive',
+  createdBy: 'createdBy',
+  updatedBy: 'updatedBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SprintNumberScalarFieldEnum = (typeof SprintNumberScalarFieldEnum)[keyof typeof SprintNumberScalarFieldEnum]
+
+
+export const PriorityScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  key: 'key',
+  description: 'description',
+  color: 'color',
+  sortOrder: 'sortOrder',
+  isActive: 'isActive',
+  createdBy: 'createdBy',
+  updatedBy: 'updatedBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PriorityScalarFieldEnum = (typeof PriorityScalarFieldEnum)[keyof typeof PriorityScalarFieldEnum]
 
 
 export const SortOrder = {

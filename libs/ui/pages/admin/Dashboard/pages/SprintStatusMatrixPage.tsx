@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef, useEffect, DragEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Avatar,
@@ -24,6 +24,7 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import InsightsIcon from '@mui/icons-material/Insights';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 import GroupWorkIcon from '@mui/icons-material/GroupWork';
+import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import { useAdminKeyframes, useLiveDateTime } from '../../../../hooks';
 import { constants } from '@sprintpulse/utils';
 import { useStyles } from '../styles/Dashboard.styles';
@@ -217,12 +218,26 @@ const SprintStatusMatrixPage = () => {
   const [epicFilter, setEpicFilter] = useState<string>('All Epics');
   const [activeSquad, setActiveSquad] = useState<SquadKey>('All');
 
+  // Local mutable tickets — initialized from MOCK_TICKETS so drag-and-drop can move them
+  const [tickets, setTickets] = useState(() => MOCK_TICKETS.map((t) => ({ ...t })));
+  // Set of ticket ids that should currently show the "just-landed" animation
+  const [recentlyMoved, setRecentlyMoved] = useState<Set<number>>(new Set());
+  // Currently-dragged ticket id (null = not dragging)
+  const [draggedTicketId, setDraggedTicketId] = useState<number | null>(null);
+  // Column currently being hovered as a drop target
+  const [dragOverColumn, setDragOverColumn] = useState<BoardColumnKey | null>(null);
+  // For the "just landed" drop indicator line in a column
+  const [dropIndicatorColumn, setDropIndicatorColumn] = useState<BoardColumnKey | null>(null);
+  const dragImageRef = useRef<HTMLDivElement | null>(null);
+  const dropTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const landTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const activeSquadConfig = SQUADS.find((s) => s.key === activeSquad) ?? SQUADS[0];
 
   // Filter tickets for board view (squad + search)
   const filteredTickets = useMemo(() => {
     const q = search.toLowerCase();
-    return MOCK_TICKETS.filter((t) => {
+    return tickets.filter((t) => {
       if (activeSquad !== 'All' && !activeSquadConfig.teams.includes(t.team)) {
         return false;
       }
@@ -234,12 +249,12 @@ const SprintStatusMatrixPage = () => {
         t.team.toLowerCase().includes(q)
       );
     });
-  }, [search, activeSquad, activeSquadConfig]);
+  }, [tickets, search, activeSquad, activeSquadConfig]);
 
   // Count tickets per squad (for chip badges) — ignores search so users can see totals
   const squadCounts = useMemo(() => {
     const counts: Record<SquadKey, number> = {
-      All: MOCK_TICKETS.length,
+      All: tickets.length,
       Wookies: 0,
       Wagles: 0,
       Falcons: 0,
@@ -247,9 +262,181 @@ const SprintStatusMatrixPage = () => {
     };
     SQUADS.forEach((s) => {
       if (s.key === 'All') return;
-      counts[s.key] = MOCK_TICKETS.filter((t) => s.teams.includes(t.team)).length;
+      counts[s.key] = tickets.filter((t) => s.teams.includes(t.team)).length;
     });
     return counts;
+  }, [tickets]);
+
+  // ─── Drag-and-drop handlers ─────────────────────────────────────────────────
+  // Map any non-board status (e.g. "Blocked") to a real BoardColumnKey
+  const resolveBoardColumn = (status: string): BoardColumnKey => {
+    if (
+      status === 'To Do' ||
+      status === 'In Progress' ||
+      status === 'In Review' ||
+      status === 'In Test' ||
+      status === 'Done'
+    ) {
+      return status;
+    }
+    return 'In Progress';
+  };
+
+  // Build a custom drag image so the floating card looks like the real one,
+  // tilted, lifted, with a soft glow. We pre-render an off-screen clone and
+  // reuse it across the drag session.
+  useEffect(() => {
+    if (draggedTicketId === null) {
+      dragImageRef.current = null;
+      return;
+    }
+    const t = tickets.find((x) => x.id === draggedTicketId);
+    if (!t) return;
+
+    const ghost = document.createElement('div');
+    const cat = getCategoryPalette(t.issueType);
+    ghost.innerHTML = `
+      <div style="
+        background:#ffffff;
+        border:1px solid #e2e8f0;
+        border-left:3px solid ${cat.fg};
+        border-radius:8px;
+        padding:10px 12px;
+        min-width:220px;
+        max-width:260px;
+        font-family:'Inter', system-ui, -apple-system, sans-serif;
+        box-shadow:0 16px 40px rgba(15,23,42,0.18), 0 4px 12px rgba(99,102,241,0.15);
+        transform:rotate(-3deg) scale(1.04);
+        opacity:0.96;
+        position:relative;
+      ">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
+          <span style="
+            display:inline-block;
+            width:6px;height:6px;border-radius:50%;
+            background:${cat.fg};
+          "></span>
+          <span style="
+            font-size:9px;font-weight:800;letter-spacing:0.04em;
+            text-transform:uppercase;color:${cat.fg};
+          ">${t.issueType}</span>
+        </div>
+        <div style="
+          font-size:12px;font-weight:600;color:#0f172a;line-height:1.35;
+          display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+          overflow:hidden;
+        ">${t.summary}</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;">
+          <span style="
+            font-size:10px;font-weight:700;color:#059669;
+            font-family:monospace;
+          ">${t.issueNo}</span>
+          <span style="
+            display:inline-block;width:18px;height:18px;border-radius:50%;
+            background:linear-gradient(135deg,#6366f1,#8b5cf6);
+            color:#fff;font-size:8px;font-weight:800;
+            text-align:center;line-height:18px;border:1.5px solid #fff;
+          ">${getInitials(t.assignee)}</span>
+        </div>
+      </div>
+    `;
+    ghost.style.position = 'absolute';
+    ghost.style.top = '-1000px';
+    ghost.style.left = '-1000px';
+    ghost.style.pointerEvents = 'none';
+    document.body.appendChild(ghost);
+    dragImageRef.current = ghost;
+
+    return () => {
+      if (ghost.parentNode) ghost.parentNode.removeChild(ghost);
+    };
+  }, [draggedTicketId, tickets]);
+
+  const handleDragStart = (e: DragEvent<HTMLDivElement>, ticketId: number) => {
+    setDraggedTicketId(ticketId);
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', String(ticketId));
+    // Use our custom drag image (built in the useEffect above). The element
+    // may not be ready on the very first call in some browsers, so guard it.
+    if (dragImageRef.current) {
+      try {
+        e.dataTransfer.setDragImage(dragImageRef.current, 130, 30);
+      } catch {
+        /* noop — fall back to default browser ghost */
+      }
+    }
+  };
+
+  const handleDragEnd = () => {
+    setDraggedTicketId(null);
+    setDragOverColumn(null);
+    setDropIndicatorColumn(null);
+  };
+
+  const handleColumnDragOver = (e: DragEvent<HTMLDivElement>, column: BoardColumnKey) => {
+    if (draggedTicketId === null) return;
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    if (dragOverColumn !== column) setDragOverColumn(column);
+  };
+
+  const handleColumnDragLeave = (e: DragEvent<HTMLDivElement>, column: BoardColumnKey) => {
+    // Only clear when leaving the column entirely (not when entering a child)
+    const related = e.relatedTarget as Node | null;
+    const current = e.currentTarget as Node | null;
+    if (current && related && current.contains(related)) return;
+    if (dragOverColumn === column) setDragOverColumn(null);
+  };
+
+  const handleColumnDrop = (e: DragEvent<HTMLDivElement>, column: BoardColumnKey) => {
+    e.preventDefault();
+    const ticketId = Number(e.dataTransfer.getData('text/plain'));
+    if (!ticketId) {
+      handleDragEnd();
+      return;
+    }
+
+    setTickets((prev) => {
+      const idx = prev.findIndex((t) => t.id === ticketId);
+      if (idx === -1) return prev;
+      const current = prev[idx];
+      // Skip if no actual change
+      if (resolveBoardColumn(current.status) === column) return prev;
+      const updated = { ...current, status: column };
+      const next = [...prev];
+      next[idx] = updated;
+      return next;
+    });
+
+    setRecentlyMoved((prev) => {
+      const next = new Set(prev);
+      next.add(ticketId);
+      return next;
+    });
+    // Brief drop flash on the destination column
+    setDropIndicatorColumn(column);
+    if (dropTimeoutRef.current) clearTimeout(dropTimeoutRef.current);
+    dropTimeoutRef.current = setTimeout(() => setDropIndicatorColumn(null), 600);
+
+    // Clear the per-ticket "just-landed" flag after the animation finishes
+    if (landTimeoutRef.current) clearTimeout(landTimeoutRef.current);
+    landTimeoutRef.current = setTimeout(() => {
+      setRecentlyMoved((prev) => {
+        if (!prev.has(ticketId)) return prev;
+        const next = new Set(prev);
+        next.delete(ticketId);
+        return next;
+      });
+    }, 700);
+
+    handleDragEnd();
+  };
+
+  useEffect(() => {
+    return () => {
+      if (dropTimeoutRef.current) clearTimeout(dropTimeoutRef.current);
+      if (landTimeoutRef.current) clearTimeout(landTimeoutRef.current);
+    };
   }, []);
 
   // Group tickets by status
@@ -306,6 +493,65 @@ const SprintStatusMatrixPage = () => {
         }
         .squad-chip::after {
           animation: squad-shimmer 2.4s ease-in-out infinite;
+        }
+        @keyframes drop-flash-ToDo {
+          0% { box-shadow: 0 0 0 0 rgba(100,116,139,0.45); }
+          60% { box-shadow: 0 0 0 14px rgba(100,116,139,0); }
+          100% { box-shadow: 0 0 0 0 rgba(100,116,139,0); }
+        }
+        @keyframes drop-flash-InProgress {
+          0% { box-shadow: 0 0 0 0 rgba(59,130,246,0.45); }
+          60% { box-shadow: 0 0 0 14px rgba(59,130,246,0); }
+          100% { box-shadow: 0 0 0 0 rgba(59,130,246,0); }
+        }
+        @keyframes drop-flash-InReview {
+          0% { box-shadow: 0 0 0 0 rgba(139,92,246,0.45); }
+          60% { box-shadow: 0 0 0 14px rgba(139,92,246,0); }
+          100% { box-shadow: 0 0 0 0 rgba(139,92,246,0); }
+        }
+        @keyframes drop-flash-InTest {
+          0% { box-shadow: 0 0 0 0 rgba(245,158,11,0.45); }
+          60% { box-shadow: 0 0 0 14px rgba(245,158,11,0); }
+          100% { box-shadow: 0 0 0 0 rgba(245,158,11,0); }
+        }
+        @keyframes drop-flash-Done {
+          0% { box-shadow: 0 0 0 0 rgba(16,185,129,0.5); }
+          60% { box-shadow: 0 0 0 14px rgba(16,185,129,0); }
+          100% { box-shadow: 0 0 0 0 rgba(16,185,129,0); }
+        }
+        @keyframes card-land {
+          0% { transform: scale(0.94); opacity: 0.6; }
+          60% { transform: scale(1.02); opacity: 1; }
+          100% { transform: scale(1); opacity: 1; }
+        }
+        .ticket-card[draggable='true'] {
+          cursor: grab;
+        }
+        .ticket-card[draggable='true']:active {
+          cursor: grabbing;
+        }
+        .ticket-card:hover .drag-handle {
+          opacity: 0.7;
+          color: #94a3b8;
+        }
+        .ticket-card.is-dragging .drag-handle {
+          opacity: 0;
+        }
+        .ticket-card.is-dragging {
+          opacity: 0.35;
+          transform: scale(0.97) rotate(-1deg);
+          filter: saturate(0.7);
+          transition: opacity 0.18s ease, transform 0.18s ease, filter 0.18s ease;
+        }
+        .ticket-card.just-landed {
+          animation: card-land 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .drop-pill {
+          animation: drop-pill-in 0.22s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+        }
+        @keyframes drop-pill-in {
+          0% { opacity: 0; transform: translateY(-4px) scale(0.95); }
+          100% { opacity: 1; transform: translateY(0) scale(1); }
         }
       `}</style>
       <Box className={classes.container}>
@@ -1119,22 +1365,29 @@ const SprintStatusMatrixPage = () => {
             >
               {BOARD_COLUMNS.map((col) => {
                 const colTickets = ticketsByStatus[col.key];
+                const isDragOver = dragOverColumn === col.key;
+                const isDropFlash = dropIndicatorColumn === col.key;
                 return (
                   <Box
                     key={col.key}
                     sx={{
-                      background: '#fff',
                       borderRadius: 2,
-                      border: '1px solid',
-                      borderColor: 'divider',
+                      border: '1.5px solid',
+                      borderColor: isDragOver ? col.accent : 'divider',
                       minHeight: 320,
                       display: 'flex',
                       flexDirection: 'column',
-                      transition: 'all 0.2s ease',
-                      '&:hover': {
-                        boxShadow: '0 4px 16px rgba(0,0,0,0.06)',
-                        borderColor: col.accentBorder,
-                      },
+                      position: 'relative',
+                      transition:
+                        'border-color 0.2s ease, box-shadow 0.25s ease, transform 0.25s ease, background 0.2s ease',
+                      background: isDragOver ? col.accentBg : '#fff',
+                      boxShadow: isDragOver
+                        ? `0 0 0 3px ${col.accent}22, 0 12px 32px ${col.accent}1f`
+                        : '0 1px 2px rgba(0,0,0,0.04)',
+                      transform: isDragOver ? 'translateY(-2px)' : 'translateY(0)',
+                      animation: isDropFlash
+                        ? `drop-flash-${col.key.replace(/\s/g, '')} 0.6s ease-out`
+                        : 'none',
                     }}
                   >
                     {/* Column Header */}
@@ -1214,17 +1467,68 @@ const SprintStatusMatrixPage = () => {
                       />
                     </Box>
 
-                    {/* Column Body (Cards) */}
+                    {/* Column Body (Cards) — drop zone */}
                     <Box
+                      onDragOver={(e) => handleColumnDragOver(e, col.key)}
+                      onDragLeave={(e) => handleColumnDragLeave(e, col.key)}
+                      onDrop={(e) => handleColumnDrop(e, col.key)}
                       sx={{
                         p: 1,
                         display: 'flex',
                         flexDirection: 'column',
                         gap: 1,
                         flex: 1,
+                        minHeight: 240,
+                        position: 'relative',
+                        transition: 'background 0.2s ease',
                       }}
                     >
-                      {colTickets.length === 0 ? (
+                      {/* Drop-zone pill shown while hovering */}
+                      {isDragOver && (
+                        <Box
+                          className='drop-pill'
+                          sx={{
+                            mx: 0.5,
+                            mb: 0.5,
+                            py: 1.25,
+                            borderRadius: 1.5,
+                            border: `1.5px dashed ${col.accent}`,
+                            background: `${col.accent}10`,
+                            color: col.accent,
+                            textAlign: 'center',
+                            fontSize: '0.7rem',
+                            fontWeight: 800,
+                            letterSpacing: '0.12em',
+                            textTransform: 'uppercase',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: 0.75,
+                          }}
+                        >
+                          <Box
+                            component='span'
+                            sx={{
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              width: 18,
+                              height: 18,
+                              borderRadius: '50%',
+                              background: col.accent,
+                              color: '#fff',
+                              fontSize: '0.7rem',
+                              fontWeight: 800,
+                              boxShadow: `0 2px 6px ${col.accent}55`,
+                            }}
+                          >
+                            ↓
+                          </Box>
+                          Drop to move here
+                        </Box>
+                      )}
+
+                      {colTickets.length === 0 && !isDragOver ? (
                         <Box
                           sx={{
                             py: 4,
@@ -1242,199 +1546,233 @@ const SprintStatusMatrixPage = () => {
                               : `No ${activeSquadConfig.label} tickets here`}
                           </Typography>
                         </Box>
-                      ) : (
-                        colTickets.map((ticket) => {
-                          const cat = getCategoryPalette(ticket.issueType);
-                          const assigneeGradient =
-                            TEAM_GRADIENTS[
-                              Math.abs(
-                                ticket.assignee.split('').reduce((s, c) => s + c.charCodeAt(0), 0),
-                              ) % TEAM_GRADIENTS.length
-                            ];
-                          return (
-                            <Box
-                              key={ticket.id}
-                              onClick={() =>
-                                navigate(
-                                  AdminPath.TICKET_DETAIL.replace(
-                                    ':id',
-                                    encodeURIComponent(ticket.issueNo),
-                                  ),
-                                )
-                              }
-                              sx={{
-                                p: 1.25,
-                                background: '#fff',
-                                border: '1px solid',
-                                borderColor: 'divider',
-                                borderRadius: 1.5,
-                                cursor: 'pointer',
-                                transition: 'all 0.2s ease',
-                                position: 'relative',
-                                boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
-                                '&:hover': {
-                                  borderColor: cat.border,
-                                  boxShadow: `0 4px 12px rgba(0,0,0,0.08), 0 0 0 1px ${cat.border}`,
-                                  transform: 'translateY(-2px)',
-                                },
-                                '&::before': {
-                                  content: '""',
-                                  position: 'absolute',
-                                  top: 0,
-                                  left: 0,
-                                  width: 3,
-                                  bottom: 0,
-                                  background: cat.fg,
-                                  borderTopLeftRadius: 6,
-                                  borderBottomLeftRadius: 6,
-                                  opacity: 0,
-                                  transition: 'opacity 0.2s ease',
-                                },
-                                '&:hover::before': { opacity: 1 },
-                              }}
-                            >
-                              {/* Category Tag */}
-                              <Box sx={{ mb: 0.75 }}>
-                                <Box
-                                  sx={{
-                                    display: 'inline-flex',
-                                    alignItems: 'center',
-                                    gap: 0.5,
-                                    px: 0.85,
-                                    py: 0.2,
-                                    borderRadius: 0.75,
-                                    background: cat.bg,
-                                    border: `1px solid ${cat.border}`,
-                                  }}
-                                >
-                                  <Box
-                                    sx={{
-                                      width: 5,
-                                      height: 5,
-                                      borderRadius: '50%',
-                                      background: cat.fg,
-                                    }}
-                                  />
-                                  <Typography
-                                    sx={{
-                                      fontSize: '0.6rem',
-                                      fontWeight: 800,
-                                      color: cat.fg,
-                                      letterSpacing: '0.04em',
-                                      textTransform: 'uppercase',
-                                      lineHeight: 1,
-                                    }}
-                                  >
-                                    {ticket.issueType}
-                                  </Typography>
-                                </Box>
-                              </Box>
+                      ) : null}
 
-                              {/* Title */}
-                              <Typography
-                                sx={{
-                                  fontSize: '0.78rem',
-                                  fontWeight: 600,
-                                  color: 'text.primary',
-                                  lineHeight: 1.35,
-                                  mb: 1,
-                                  display: '-webkit-box',
-                                  WebkitLineClamp: 2,
-                                  WebkitBoxOrient: 'vertical',
-                                  overflow: 'hidden',
-                                }}
-                                title={ticket.summary}
-                              >
-                                {ticket.summary}
-                              </Typography>
-
-                              {/* Footer: ID + Avatar */}
+                      {colTickets.map((ticket) => {
+                        const cat = getCategoryPalette(ticket.issueType);
+                        const assigneeGradient =
+                          TEAM_GRADIENTS[
+                            Math.abs(
+                              ticket.assignee.split('').reduce((s, c) => s + c.charCodeAt(0), 0),
+                            ) % TEAM_GRADIENTS.length
+                          ];
+                        const isDragging = draggedTicketId === ticket.id;
+                        const isLanded = recentlyMoved.has(ticket.id);
+                        return (
+                          <Box
+                            key={ticket.id}
+                            className={`ticket-card${
+                              isDragging ? ' is-dragging' : ''
+                            }${isLanded ? ' just-landed' : ''}`}
+                            draggable
+                            onDragStart={(e) => handleDragStart(e, ticket.id)}
+                            onDragEnd={handleDragEnd}
+                            onClick={() => {
+                              if (draggedTicketId !== null) return;
+                              navigate(
+                                AdminPath.TICKET_DETAIL.replace(
+                                  ':id',
+                                  encodeURIComponent(ticket.issueNo),
+                                ),
+                              );
+                            }}
+                            sx={{
+                              p: 1.25,
+                              background: '#fff',
+                              border: '1px solid',
+                              borderColor: 'divider',
+                              borderRadius: 1.5,
+                              cursor: draggedTicketId === null ? 'grab' : 'inherit',
+                              position: 'relative',
+                              boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
+                              transition:
+                                'box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease',
+                              '&:hover': {
+                                boxShadow:
+                                  '0 6px 18px rgba(15,23,42,0.08), 0 1px 3px rgba(0,0,0,0.05)',
+                                transform: 'translateY(-1px)',
+                                borderColor: cat.border,
+                              },
+                              '&:active': {
+                                cursor: 'grabbing',
+                              },
+                              '&::before': {
+                                content: '""',
+                                position: 'absolute',
+                                top: 0,
+                                left: 0,
+                                width: 3,
+                                bottom: 0,
+                                background: cat.fg,
+                                borderTopLeftRadius: 6,
+                                borderBottomLeftRadius: 6,
+                              },
+                            }}
+                          >
+                            {/* Category Tag */}
+                            <Box sx={{ mb: 0.75 }}>
                               <Box
                                 sx={{
-                                  display: 'flex',
+                                  display: 'inline-flex',
                                   alignItems: 'center',
-                                  justifyContent: 'space-between',
-                                  gap: 1,
+                                  gap: 0.5,
+                                  px: 0.85,
+                                  py: 0.2,
+                                  borderRadius: 0.75,
+                                  background: cat.bg,
+                                  border: `1px solid ${cat.border}`,
                                 }}
                               >
                                 <Box
                                   sx={{
-                                    display: 'inline-flex',
-                                    alignItems: 'center',
-                                    gap: 0.5,
-                                    px: 0.75,
-                                    py: 0.2,
-                                    borderRadius: 0.75,
-                                    background: 'rgba(16,185,129,0.08)',
-                                    border: '1px solid rgba(16,185,129,0.25)',
+                                    width: 5,
+                                    height: 5,
+                                    borderRadius: '50%',
+                                    background: cat.fg,
+                                  }}
+                                />
+                                <Typography
+                                  sx={{
+                                    fontSize: '0.6rem',
+                                    fontWeight: 800,
+                                    color: cat.fg,
+                                    letterSpacing: '0.04em',
+                                    textTransform: 'uppercase',
+                                    lineHeight: 1,
                                   }}
                                 >
-                                  <Box
-                                    sx={{
-                                      width: 0,
-                                      height: 0,
-                                      borderLeft: '4px solid transparent',
-                                      borderRight: '4px solid transparent',
-                                      borderBottom: '6px solid #10b981',
-                                      transform: 'rotate(180deg)',
-                                    }}
-                                  />
-                                  <Typography
-                                    sx={{
-                                      fontSize: '0.65rem',
-                                      fontWeight: 700,
-                                      color: '#059669',
-                                      fontFamily: 'monospace',
-                                      lineHeight: 1,
-                                    }}
-                                  >
-                                    {ticket.issueNo}
-                                  </Typography>
-                                </Box>
-
-                                <Tooltip title={ticket.assignee} arrow>
-                                  <Avatar
-                                    sx={{
-                                      width: 22,
-                                      height: 22,
-                                      fontSize: '0.6rem',
-                                      fontWeight: 700,
-                                      background: assigneeGradient,
-                                      border: '1.5px solid #fff',
-                                      boxShadow: '0 1px 2px rgba(0,0,0,0.08)',
-                                    }}
-                                  >
-                                    {getInitials(ticket.assignee)}
-                                  </Avatar>
-                                </Tooltip>
+                                  {ticket.issueType}
+                                </Typography>
                               </Box>
+                            </Box>
 
-                              {/* Story points chip (subtle) */}
-                              {ticket.storyPoints > 0 && (
+                            {/* Title */}
+                            <Typography
+                              sx={{
+                                fontSize: '0.78rem',
+                                fontWeight: 600,
+                                color: 'text.primary',
+                                lineHeight: 1.35,
+                                mb: 1,
+                                display: '-webkit-box',
+                                WebkitLineClamp: 2,
+                                WebkitBoxOrient: 'vertical',
+                                overflow: 'hidden',
+                              }}
+                              title={ticket.summary}
+                            >
+                              {ticket.summary}
+                            </Typography>
+
+                            {/* Footer: ID + Avatar */}
+                            <Box
+                              sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                gap: 1,
+                              }}
+                            >
+                              <Box
+                                sx={{
+                                  display: 'inline-flex',
+                                  alignItems: 'center',
+                                  gap: 0.5,
+                                  px: 0.75,
+                                  py: 0.2,
+                                  borderRadius: 0.75,
+                                  background: 'rgba(16,185,129,0.08)',
+                                  border: '1px solid rgba(16,185,129,0.25)',
+                                }}
+                              >
                                 <Box
                                   sx={{
-                                    position: 'absolute',
-                                    top: 8,
-                                    right: 8,
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: 0.25,
-                                    px: 0.5,
-                                    py: 0.1,
-                                    borderRadius: 0.5,
-                                    background: 'rgba(99,102,241,0.08)',
-                                    color: '#4f46e5',
-                                    fontSize: '0.6rem',
+                                    width: 0,
+                                    height: 0,
+                                    borderLeft: '4px solid transparent',
+                                    borderRight: '4px solid transparent',
+                                    borderBottom: '6px solid #10b981',
+                                    transform: 'rotate(180deg)',
+                                  }}
+                                />
+                                <Typography
+                                  sx={{
+                                    fontSize: '0.65rem',
                                     fontWeight: 700,
+                                    color: '#059669',
+                                    fontFamily: 'monospace',
+                                    lineHeight: 1,
                                   }}
                                 >
-                                  {ticket.storyPoints} SP
-                                </Box>
-                              )}
+                                  {ticket.issueNo}
+                                </Typography>
+                              </Box>
+
+                              <Tooltip title={ticket.assignee} arrow>
+                                <Avatar
+                                  sx={{
+                                    width: 22,
+                                    height: 22,
+                                    fontSize: '0.6rem',
+                                    fontWeight: 700,
+                                    background: assigneeGradient,
+                                    border: '1.5px solid #fff',
+                                    boxShadow: '0 1px 2px rgba(0,0,0,0.08)',
+                                  }}
+                                >
+                                  {getInitials(ticket.assignee)}
+                                </Avatar>
+                              </Tooltip>
                             </Box>
-                          );
-                        })
-                      )}
+
+                            {/* Story points chip (subtle) */}
+                            {ticket.storyPoints > 0 && (
+                              <Box
+                                sx={{
+                                  position: 'absolute',
+                                  top: 8,
+                                  right: 8,
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  gap: 0.25,
+                                  px: 0.5,
+                                  py: 0.1,
+                                  borderRadius: 0.5,
+                                  background: 'rgba(99,102,241,0.08)',
+                                  color: '#4f46e5',
+                                  fontSize: '0.6rem',
+                                  fontWeight: 700,
+                                }}
+                              >
+                                {ticket.storyPoints} SP
+                              </Box>
+                            )}
+
+                            {/* Drag handle (only visible on hover) */}
+                            <Box
+                              className='drag-handle'
+                              sx={{
+                                position: 'absolute',
+                                top: 6,
+                                left: 8,
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                width: 18,
+                                height: 18,
+                                borderRadius: 0.75,
+                                color: '#cbd5e1',
+                                opacity: 0,
+                                transition:
+                                  'opacity 0.18s ease, color 0.18s ease, background 0.18s ease',
+                                pointerEvents: 'none',
+                              }}
+                            >
+                              <DragIndicatorIcon sx={{ fontSize: 14 }} />
+                            </Box>
+                          </Box>
+                        );
+                      })}
                     </Box>
                   </Box>
                 );
@@ -1478,7 +1816,39 @@ const SprintStatusMatrixPage = () => {
               })}
             </Box>
             <Typography sx={{ fontSize: '0.62rem', color: 'text.secondary' }}>
-              Click a card to open the ticket
+              <Box
+                component='span'
+                sx={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 0.5,
+                  px: 0.75,
+                  py: 0.15,
+                  borderRadius: 0.75,
+                  background: 'rgba(99,102,241,0.06)',
+                  border: '1px solid rgba(99,102,241,0.2)',
+                  color: '#4f46e5',
+                  fontWeight: 700,
+                  letterSpacing: '0.02em',
+                }}
+              >
+                <Box
+                  component='span'
+                  sx={{
+                    display: 'inline-block',
+                    fontSize: '0.7rem',
+                    lineHeight: 1,
+                    animation: 'grab-hint 2.6s ease-in-out infinite',
+                    '@keyframes grab-hint': {
+                      '0%, 100%': { transform: 'translateY(0)' },
+                      '50%': { transform: 'translateY(-1px)' },
+                    },
+                  }}
+                >
+                  ⠿
+                </Box>
+                Drag cards between columns · Click to open
+              </Box>
             </Typography>
           </Box>
         </Box>

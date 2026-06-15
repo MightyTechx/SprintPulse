@@ -1,6 +1,6 @@
 /**
  * Sprint Management Mock Data
- * Replaces turbine mock data with sprint/agile data
+ * Sprint/agile telemetry mock data for the Dashboard.
  */
 
 import { generateMockSprintData } from '../../pages/admin/Dashboard/types/sprintData.types';

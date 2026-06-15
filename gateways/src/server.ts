@@ -51,8 +51,9 @@ async function checkDatabaseConnection() {
     await db.$queryRaw`SELECT 1`;
     logger.info('Database connection established');
   } catch (error) {
-    logger.error('Failed to connect to database:', error);
-    process.exit(1); // Stop app if DB is unavailable
+    // Don't kill the server on DB failure — surface the error and keep listening.
+    // Individual requests will fail with a clear DB error instead of a generic 404.
+    logger.error('Failed to connect to database (server will still start):', error);
   }
 }
 

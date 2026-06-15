@@ -25,6 +25,7 @@ const {
   AdminCreateTicketPage,
   AdminCreateIncidentPage,
   AdminFeatureFlagsPage,
+  AdminConfigurationsPage,
   SettingsPage,
   HelpSupportPage,
 
@@ -98,6 +99,7 @@ const AppRoutes = () => {
             <Route path={AdminPath.CREATE_TICKET} element={<AdminCreateTicketPage />} />
             <Route path={AdminPath.CREATE_INCIDENT} element={<AdminCreateIncidentPage />} />
             <Route path={AdminPath.FEATURE_FLAGS} element={<AdminFeatureFlagsPage />} />
+            <Route path={AdminPath.CONFIGURATIONS} element={<AdminConfigurationsPage />} />
             <Route path={AdminPath.SETTINGS} element={<SettingsPage />} />
             <Route path={AdminPath.HELP_SUPPORT} element={<HelpSupportPage />} />
 

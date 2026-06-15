@@ -43,6 +43,19 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
   if (method === 'PATCH' || method === 'POST' || method === 'DELETE') {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (api as any).dispatch((0, baseApi.util.invalidateTags)([{ type: 'FeatureFlags', id: 'LIST' }]));
+    // Invalidate all Configurations entity lists so tab data refreshes everywhere
+    // eslint-disable-next-line @typescript-eslint/no-explicitany
+    (api as any).dispatch(
+      (0, baseApi.util.invalidateTags)([
+        { type: 'Configurations', id: 'LIST-squad' },
+        { type: 'Configurations', id: 'LIST-team' },
+        { type: 'Configurations', id: 'LIST-issueType' },
+        { type: 'Configurations', id: 'LIST-status' },
+        { type: 'Configurations', id: 'LIST-fixVersion' },
+        { type: 'Configurations', id: 'LIST-sprintNumber' },
+        { type: 'Configurations', id: 'LIST-priority' },
+      ]),
+    );
   }
 
   if (result.error?.status === 401) {
@@ -60,6 +73,6 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
 export const baseApi = createApi({
   reducerPath: 'baseApi',
   baseQuery: baseQueryWithReauth,
-  tagTypes: ['FeatureFlags'],
+  tagTypes: ['FeatureFlags', 'Configurations'],
   endpoints: () => ({}), // intentionally empty - endpoints added by injectEndpoints
 });
