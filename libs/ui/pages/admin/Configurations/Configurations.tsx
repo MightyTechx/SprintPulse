@@ -10,6 +10,8 @@ import {
   Button,
   Typography,
   Tooltip,
+  Select,
+  MenuItem,
 } from '@sprintpulse/component';
 import { InputAdornment, CircularProgress, Switch } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
@@ -50,6 +52,7 @@ const Configurations = () => {
     handleSave,
     handleDelete,
     handleToggle,
+    squads,
     entityTabs,
     colorSwatches,
     iconRegistry,
@@ -227,6 +230,57 @@ const Configurations = () => {
               fullWidth
               className={classes.formField}
             />
+
+            {/* Manager Name + Lead Name — Squads and Teams only */}
+            {(activeEntity === 'squad' || activeEntity === 'team') && (
+              <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1.25 }}>
+                <TextField
+                  label='Manager Name'
+                  placeholder='e.g. Priya Sharma'
+                  value={form.managerName}
+                  onChange={(e) => setForm((prev) => ({ ...prev, managerName: e.target.value }))}
+                  size='small'
+                  fullWidth
+                  className={classes.formField}
+                />
+                <TextField
+                  label='Lead Name'
+                  placeholder='e.g. Arjun Mehta'
+                  value={form.leadName}
+                  onChange={(e) => setForm((prev) => ({ ...prev, leadName: e.target.value }))}
+                  size='small'
+                  fullWidth
+                  className={classes.formField}
+                />
+              </Box>
+            )}
+
+            {/* Parent Squad — Teams only */}
+            {activeEntity === 'team' && (
+              <Select
+                label='Parent Squad'
+                value={form.squadId === null ? '__none__' : form.squadId}
+                onChange={(e: any) => {
+                  const raw = e?.target?.value;
+                  setForm((prev) => ({
+                    ...prev,
+                    squadId: raw === '__none__' ? null : Number(raw),
+                  }));
+                }}
+                size='small'
+                fullWidth
+                className={classes.formField}
+              >
+                <MenuItem value='__none__'>
+                  <em style={{ color: '#94a3b8' }}>— No squad —</em>
+                </MenuItem>
+                {squads.map((s) => (
+                  <MenuItem key={s.id} value={s.id}>
+                    {s.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            )}
 
             {/* Icon picker (Squads + Teams only) — kept as-is per request */}
             {(activeEntity === 'squad' || activeEntity === 'team') && (

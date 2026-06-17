@@ -141,12 +141,15 @@ model Squad {
   description String   @default("")
   color       String   @default("#6366f1")
   iconKey     String?
+  managerName String?
+  leadName    String?
   sortOrder   Int      @default(0)
   isActive    Boolean  @default(true)
   createdBy   Int?
   updatedBy   Int?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  teams       Team[]
 
   @@index([sortOrder])
 }
@@ -158,6 +161,10 @@ model Team {
   description String   @default("")
   color       String   @default("#06b6d4")
   iconKey     String?
+  managerName String?
+  leadName    String?
+  squadId     Int?
+  squad       Squad?   @relation(fields: [squadId], references: [id], onDelete: SetNull)
   sortOrder   Int      @default(0)
   isActive    Boolean  @default(true)
   createdBy   Int?
@@ -166,6 +173,7 @@ model Team {
   updatedAt   DateTime @updatedAt
 
   @@index([sortOrder])
+  @@index([squadId])
 }
 
 model IssueType {
@@ -174,6 +182,8 @@ model IssueType {
   key         String   @unique
   description String   @default("")
   color       String   @default("#6366f1")
+  managerName String?
+  leadName    String?
   sortOrder   Int      @default(0)
   isActive    Boolean  @default(true)
   createdBy   Int?
@@ -190,6 +200,8 @@ model Status {
   key         String   @unique
   description String   @default("")
   color       String   @default("#6366f1")
+  managerName String?
+  leadName    String?
   sortOrder   Int      @default(0)
   isActive    Boolean  @default(true)
   createdBy   Int?
@@ -206,6 +218,8 @@ model FixVersion {
   key         String   @unique
   description String   @default("")
   color       String   @default("#10b981")
+  managerName String?
+  leadName    String?
   sortOrder   Int      @default(0)
   isActive    Boolean  @default(true)
   createdBy   Int?
@@ -222,6 +236,8 @@ model SprintNumber {
   key         String   @unique
   description String   @default("")
   color       String   @default("#0ea5e9")
+  managerName String?
+  leadName    String?
   sortOrder   Int      @default(0)
   isActive    Boolean  @default(true)
   createdBy   Int?
@@ -238,6 +254,8 @@ model Priority {
   key         String   @unique
   description String   @default("")
   color       String   @default("#f59e0b")
+  managerName String?
+  leadName    String?
   sortOrder   Int      @default(0)
   isActive    Boolean  @default(true)
   createdBy   Int?

@@ -46,6 +46,8 @@ export type FixVersionMinAggregateOutputType = {
   key: string | null
   description: string | null
   color: string | null
+  managerName: string | null
+  leadName: string | null
   sortOrder: number | null
   isActive: boolean | null
   createdBy: number | null
@@ -60,6 +62,8 @@ export type FixVersionMaxAggregateOutputType = {
   key: string | null
   description: string | null
   color: string | null
+  managerName: string | null
+  leadName: string | null
   sortOrder: number | null
   isActive: boolean | null
   createdBy: number | null
@@ -74,6 +78,8 @@ export type FixVersionCountAggregateOutputType = {
   key: number
   description: number
   color: number
+  managerName: number
+  leadName: number
   sortOrder: number
   isActive: number
   createdBy: number
@@ -104,6 +110,8 @@ export type FixVersionMinAggregateInputType = {
   key?: true
   description?: true
   color?: true
+  managerName?: true
+  leadName?: true
   sortOrder?: true
   isActive?: true
   createdBy?: true
@@ -118,6 +126,8 @@ export type FixVersionMaxAggregateInputType = {
   key?: true
   description?: true
   color?: true
+  managerName?: true
+  leadName?: true
   sortOrder?: true
   isActive?: true
   createdBy?: true
@@ -132,6 +142,8 @@ export type FixVersionCountAggregateInputType = {
   key?: true
   description?: true
   color?: true
+  managerName?: true
+  leadName?: true
   sortOrder?: true
   isActive?: true
   createdBy?: true
@@ -233,6 +245,8 @@ export type FixVersionGroupByOutputType = {
   key: string
   description: string
   color: string
+  managerName: string | null
+  leadName: string | null
   sortOrder: number
   isActive: boolean
   createdBy: number | null
@@ -270,6 +284,8 @@ export type FixVersionWhereInput = {
   key?: Prisma.StringFilter<"FixVersion"> | string
   description?: Prisma.StringFilter<"FixVersion"> | string
   color?: Prisma.StringFilter<"FixVersion"> | string
+  managerName?: Prisma.StringNullableFilter<"FixVersion"> | string | null
+  leadName?: Prisma.StringNullableFilter<"FixVersion"> | string | null
   sortOrder?: Prisma.IntFilter<"FixVersion"> | number
   isActive?: Prisma.BoolFilter<"FixVersion"> | boolean
   createdBy?: Prisma.IntNullableFilter<"FixVersion"> | number | null
@@ -284,6 +300,8 @@ export type FixVersionOrderByWithRelationInput = {
   key?: Prisma.SortOrder
   description?: Prisma.SortOrder
   color?: Prisma.SortOrder
+  managerName?: Prisma.SortOrderInput | Prisma.SortOrder
+  leadName?: Prisma.SortOrderInput | Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdBy?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -301,6 +319,8 @@ export type FixVersionWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringFilter<"FixVersion"> | string
   description?: Prisma.StringFilter<"FixVersion"> | string
   color?: Prisma.StringFilter<"FixVersion"> | string
+  managerName?: Prisma.StringNullableFilter<"FixVersion"> | string | null
+  leadName?: Prisma.StringNullableFilter<"FixVersion"> | string | null
   sortOrder?: Prisma.IntFilter<"FixVersion"> | number
   isActive?: Prisma.BoolFilter<"FixVersion"> | boolean
   createdBy?: Prisma.IntNullableFilter<"FixVersion"> | number | null
@@ -315,6 +335,8 @@ export type FixVersionOrderByWithAggregationInput = {
   key?: Prisma.SortOrder
   description?: Prisma.SortOrder
   color?: Prisma.SortOrder
+  managerName?: Prisma.SortOrderInput | Prisma.SortOrder
+  leadName?: Prisma.SortOrderInput | Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdBy?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -337,6 +359,8 @@ export type FixVersionScalarWhereWithAggregatesInput = {
   key?: Prisma.StringWithAggregatesFilter<"FixVersion"> | string
   description?: Prisma.StringWithAggregatesFilter<"FixVersion"> | string
   color?: Prisma.StringWithAggregatesFilter<"FixVersion"> | string
+  managerName?: Prisma.StringNullableWithAggregatesFilter<"FixVersion"> | string | null
+  leadName?: Prisma.StringNullableWithAggregatesFilter<"FixVersion"> | string | null
   sortOrder?: Prisma.IntWithAggregatesFilter<"FixVersion"> | number
   isActive?: Prisma.BoolWithAggregatesFilter<"FixVersion"> | boolean
   createdBy?: Prisma.IntNullableWithAggregatesFilter<"FixVersion"> | number | null
@@ -350,6 +374,8 @@ export type FixVersionCreateInput = {
   key: string
   description?: string
   color?: string
+  managerName?: string | null
+  leadName?: string | null
   sortOrder?: number
   isActive?: boolean
   createdBy?: number | null
@@ -364,6 +390,8 @@ export type FixVersionUncheckedCreateInput = {
   key: string
   description?: string
   color?: string
+  managerName?: string | null
+  leadName?: string | null
   sortOrder?: number
   isActive?: boolean
   createdBy?: number | null
@@ -377,6 +405,8 @@ export type FixVersionUpdateInput = {
   key?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  managerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -391,6 +421,8 @@ export type FixVersionUncheckedUpdateInput = {
   key?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  managerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -405,6 +437,8 @@ export type FixVersionCreateManyInput = {
   key: string
   description?: string
   color?: string
+  managerName?: string | null
+  leadName?: string | null
   sortOrder?: number
   isActive?: boolean
   createdBy?: number | null
@@ -418,6 +452,8 @@ export type FixVersionUpdateManyMutationInput = {
   key?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  managerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -432,6 +468,8 @@ export type FixVersionUncheckedUpdateManyInput = {
   key?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  managerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -446,6 +484,8 @@ export type FixVersionCountOrderByAggregateInput = {
   key?: Prisma.SortOrder
   description?: Prisma.SortOrder
   color?: Prisma.SortOrder
+  managerName?: Prisma.SortOrder
+  leadName?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
@@ -467,6 +507,8 @@ export type FixVersionMaxOrderByAggregateInput = {
   key?: Prisma.SortOrder
   description?: Prisma.SortOrder
   color?: Prisma.SortOrder
+  managerName?: Prisma.SortOrder
+  leadName?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
@@ -481,6 +523,8 @@ export type FixVersionMinOrderByAggregateInput = {
   key?: Prisma.SortOrder
   description?: Prisma.SortOrder
   color?: Prisma.SortOrder
+  managerName?: Prisma.SortOrder
+  leadName?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
@@ -504,6 +548,8 @@ export type FixVersionSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   key?: boolean
   description?: boolean
   color?: boolean
+  managerName?: boolean
+  leadName?: boolean
   sortOrder?: boolean
   isActive?: boolean
   createdBy?: boolean
@@ -518,6 +564,8 @@ export type FixVersionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   key?: boolean
   description?: boolean
   color?: boolean
+  managerName?: boolean
+  leadName?: boolean
   sortOrder?: boolean
   isActive?: boolean
   createdBy?: boolean
@@ -532,6 +580,8 @@ export type FixVersionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   key?: boolean
   description?: boolean
   color?: boolean
+  managerName?: boolean
+  leadName?: boolean
   sortOrder?: boolean
   isActive?: boolean
   createdBy?: boolean
@@ -546,6 +596,8 @@ export type FixVersionSelectScalar = {
   key?: boolean
   description?: boolean
   color?: boolean
+  managerName?: boolean
+  leadName?: boolean
   sortOrder?: boolean
   isActive?: boolean
   createdBy?: boolean
@@ -554,7 +606,7 @@ export type FixVersionSelectScalar = {
   updatedAt?: boolean
 }
 
-export type FixVersionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "key" | "description" | "color" | "sortOrder" | "isActive" | "createdBy" | "updatedBy" | "createdAt" | "updatedAt", ExtArgs["result"]["fixVersion"]>
+export type FixVersionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "key" | "description" | "color" | "managerName" | "leadName" | "sortOrder" | "isActive" | "createdBy" | "updatedBy" | "createdAt" | "updatedAt", ExtArgs["result"]["fixVersion"]>
 
 export type $FixVersionPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "FixVersion"
@@ -565,6 +617,8 @@ export type $FixVersionPayload<ExtArgs extends runtime.Types.Extensions.Internal
     key: string
     description: string
     color: string
+    managerName: string | null
+    leadName: string | null
     sortOrder: number
     isActive: boolean
     createdBy: number | null
@@ -999,6 +1053,8 @@ export interface FixVersionFieldRefs {
   readonly key: Prisma.FieldRef<"FixVersion", 'String'>
   readonly description: Prisma.FieldRef<"FixVersion", 'String'>
   readonly color: Prisma.FieldRef<"FixVersion", 'String'>
+  readonly managerName: Prisma.FieldRef<"FixVersion", 'String'>
+  readonly leadName: Prisma.FieldRef<"FixVersion", 'String'>
   readonly sortOrder: Prisma.FieldRef<"FixVersion", 'Int'>
   readonly isActive: Prisma.FieldRef<"FixVersion", 'Boolean'>
   readonly createdBy: Prisma.FieldRef<"FixVersion", 'Int'>

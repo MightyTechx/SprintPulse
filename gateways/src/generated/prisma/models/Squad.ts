@@ -47,6 +47,8 @@ export type SquadMinAggregateOutputType = {
   description: string | null
   color: string | null
   iconKey: string | null
+  managerName: string | null
+  leadName: string | null
   sortOrder: number | null
   isActive: boolean | null
   createdBy: number | null
@@ -62,6 +64,8 @@ export type SquadMaxAggregateOutputType = {
   description: string | null
   color: string | null
   iconKey: string | null
+  managerName: string | null
+  leadName: string | null
   sortOrder: number | null
   isActive: boolean | null
   createdBy: number | null
@@ -77,6 +81,8 @@ export type SquadCountAggregateOutputType = {
   description: number
   color: number
   iconKey: number
+  managerName: number
+  leadName: number
   sortOrder: number
   isActive: number
   createdBy: number
@@ -108,6 +114,8 @@ export type SquadMinAggregateInputType = {
   description?: true
   color?: true
   iconKey?: true
+  managerName?: true
+  leadName?: true
   sortOrder?: true
   isActive?: true
   createdBy?: true
@@ -123,6 +131,8 @@ export type SquadMaxAggregateInputType = {
   description?: true
   color?: true
   iconKey?: true
+  managerName?: true
+  leadName?: true
   sortOrder?: true
   isActive?: true
   createdBy?: true
@@ -138,6 +148,8 @@ export type SquadCountAggregateInputType = {
   description?: true
   color?: true
   iconKey?: true
+  managerName?: true
+  leadName?: true
   sortOrder?: true
   isActive?: true
   createdBy?: true
@@ -240,6 +252,8 @@ export type SquadGroupByOutputType = {
   description: string
   color: string
   iconKey: string | null
+  managerName: string | null
+  leadName: string | null
   sortOrder: number
   isActive: boolean
   createdBy: number | null
@@ -278,12 +292,15 @@ export type SquadWhereInput = {
   description?: Prisma.StringFilter<"Squad"> | string
   color?: Prisma.StringFilter<"Squad"> | string
   iconKey?: Prisma.StringNullableFilter<"Squad"> | string | null
+  managerName?: Prisma.StringNullableFilter<"Squad"> | string | null
+  leadName?: Prisma.StringNullableFilter<"Squad"> | string | null
   sortOrder?: Prisma.IntFilter<"Squad"> | number
   isActive?: Prisma.BoolFilter<"Squad"> | boolean
   createdBy?: Prisma.IntNullableFilter<"Squad"> | number | null
   updatedBy?: Prisma.IntNullableFilter<"Squad"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Squad"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Squad"> | Date | string
+  teams?: Prisma.TeamListRelationFilter
 }
 
 export type SquadOrderByWithRelationInput = {
@@ -293,12 +310,15 @@ export type SquadOrderByWithRelationInput = {
   description?: Prisma.SortOrder
   color?: Prisma.SortOrder
   iconKey?: Prisma.SortOrderInput | Prisma.SortOrder
+  managerName?: Prisma.SortOrderInput | Prisma.SortOrder
+  leadName?: Prisma.SortOrderInput | Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdBy?: Prisma.SortOrderInput | Prisma.SortOrder
   updatedBy?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  teams?: Prisma.TeamOrderByRelationAggregateInput
 }
 
 export type SquadWhereUniqueInput = Prisma.AtLeast<{
@@ -311,12 +331,15 @@ export type SquadWhereUniqueInput = Prisma.AtLeast<{
   description?: Prisma.StringFilter<"Squad"> | string
   color?: Prisma.StringFilter<"Squad"> | string
   iconKey?: Prisma.StringNullableFilter<"Squad"> | string | null
+  managerName?: Prisma.StringNullableFilter<"Squad"> | string | null
+  leadName?: Prisma.StringNullableFilter<"Squad"> | string | null
   sortOrder?: Prisma.IntFilter<"Squad"> | number
   isActive?: Prisma.BoolFilter<"Squad"> | boolean
   createdBy?: Prisma.IntNullableFilter<"Squad"> | number | null
   updatedBy?: Prisma.IntNullableFilter<"Squad"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Squad"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Squad"> | Date | string
+  teams?: Prisma.TeamListRelationFilter
 }, "id" | "key">
 
 export type SquadOrderByWithAggregationInput = {
@@ -326,6 +349,8 @@ export type SquadOrderByWithAggregationInput = {
   description?: Prisma.SortOrder
   color?: Prisma.SortOrder
   iconKey?: Prisma.SortOrderInput | Prisma.SortOrder
+  managerName?: Prisma.SortOrderInput | Prisma.SortOrder
+  leadName?: Prisma.SortOrderInput | Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdBy?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -349,6 +374,8 @@ export type SquadScalarWhereWithAggregatesInput = {
   description?: Prisma.StringWithAggregatesFilter<"Squad"> | string
   color?: Prisma.StringWithAggregatesFilter<"Squad"> | string
   iconKey?: Prisma.StringNullableWithAggregatesFilter<"Squad"> | string | null
+  managerName?: Prisma.StringNullableWithAggregatesFilter<"Squad"> | string | null
+  leadName?: Prisma.StringNullableWithAggregatesFilter<"Squad"> | string | null
   sortOrder?: Prisma.IntWithAggregatesFilter<"Squad"> | number
   isActive?: Prisma.BoolWithAggregatesFilter<"Squad"> | boolean
   createdBy?: Prisma.IntNullableWithAggregatesFilter<"Squad"> | number | null
@@ -363,12 +390,15 @@ export type SquadCreateInput = {
   description?: string
   color?: string
   iconKey?: string | null
+  managerName?: string | null
+  leadName?: string | null
   sortOrder?: number
   isActive?: boolean
   createdBy?: number | null
   updatedBy?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  teams?: Prisma.TeamCreateNestedManyWithoutSquadInput
 }
 
 export type SquadUncheckedCreateInput = {
@@ -378,12 +408,15 @@ export type SquadUncheckedCreateInput = {
   description?: string
   color?: string
   iconKey?: string | null
+  managerName?: string | null
+  leadName?: string | null
   sortOrder?: number
   isActive?: boolean
   createdBy?: number | null
   updatedBy?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  teams?: Prisma.TeamUncheckedCreateNestedManyWithoutSquadInput
 }
 
 export type SquadUpdateInput = {
@@ -392,12 +425,15 @@ export type SquadUpdateInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
   iconKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  managerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   updatedBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  teams?: Prisma.TeamUpdateManyWithoutSquadNestedInput
 }
 
 export type SquadUncheckedUpdateInput = {
@@ -407,12 +443,15 @@ export type SquadUncheckedUpdateInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
   iconKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  managerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   updatedBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  teams?: Prisma.TeamUncheckedUpdateManyWithoutSquadNestedInput
 }
 
 export type SquadCreateManyInput = {
@@ -422,6 +461,8 @@ export type SquadCreateManyInput = {
   description?: string
   color?: string
   iconKey?: string | null
+  managerName?: string | null
+  leadName?: string | null
   sortOrder?: number
   isActive?: boolean
   createdBy?: number | null
@@ -436,6 +477,8 @@ export type SquadUpdateManyMutationInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
   iconKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  managerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -451,6 +494,8 @@ export type SquadUncheckedUpdateManyInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
   iconKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  managerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -466,6 +511,8 @@ export type SquadCountOrderByAggregateInput = {
   description?: Prisma.SortOrder
   color?: Prisma.SortOrder
   iconKey?: Prisma.SortOrder
+  managerName?: Prisma.SortOrder
+  leadName?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
@@ -488,6 +535,8 @@ export type SquadMaxOrderByAggregateInput = {
   description?: Prisma.SortOrder
   color?: Prisma.SortOrder
   iconKey?: Prisma.SortOrder
+  managerName?: Prisma.SortOrder
+  leadName?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
@@ -503,6 +552,8 @@ export type SquadMinOrderByAggregateInput = {
   description?: Prisma.SortOrder
   color?: Prisma.SortOrder
   iconKey?: Prisma.SortOrder
+  managerName?: Prisma.SortOrder
+  leadName?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
@@ -518,6 +569,138 @@ export type SquadSumOrderByAggregateInput = {
   updatedBy?: Prisma.SortOrder
 }
 
+export type SquadNullableScalarRelationFilter = {
+  is?: Prisma.SquadWhereInput | null
+  isNot?: Prisma.SquadWhereInput | null
+}
+
+export type SquadCreateNestedOneWithoutTeamsInput = {
+  create?: Prisma.XOR<Prisma.SquadCreateWithoutTeamsInput, Prisma.SquadUncheckedCreateWithoutTeamsInput>
+  connectOrCreate?: Prisma.SquadCreateOrConnectWithoutTeamsInput
+  connect?: Prisma.SquadWhereUniqueInput
+}
+
+export type SquadUpdateOneWithoutTeamsNestedInput = {
+  create?: Prisma.XOR<Prisma.SquadCreateWithoutTeamsInput, Prisma.SquadUncheckedCreateWithoutTeamsInput>
+  connectOrCreate?: Prisma.SquadCreateOrConnectWithoutTeamsInput
+  upsert?: Prisma.SquadUpsertWithoutTeamsInput
+  disconnect?: Prisma.SquadWhereInput | boolean
+  delete?: Prisma.SquadWhereInput | boolean
+  connect?: Prisma.SquadWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.SquadUpdateToOneWithWhereWithoutTeamsInput, Prisma.SquadUpdateWithoutTeamsInput>, Prisma.SquadUncheckedUpdateWithoutTeamsInput>
+}
+
+export type SquadCreateWithoutTeamsInput = {
+  name: string
+  key: string
+  description?: string
+  color?: string
+  iconKey?: string | null
+  managerName?: string | null
+  leadName?: string | null
+  sortOrder?: number
+  isActive?: boolean
+  createdBy?: number | null
+  updatedBy?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type SquadUncheckedCreateWithoutTeamsInput = {
+  id?: number
+  name: string
+  key: string
+  description?: string
+  color?: string
+  iconKey?: string | null
+  managerName?: string | null
+  leadName?: string | null
+  sortOrder?: number
+  isActive?: boolean
+  createdBy?: number | null
+  updatedBy?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type SquadCreateOrConnectWithoutTeamsInput = {
+  where: Prisma.SquadWhereUniqueInput
+  create: Prisma.XOR<Prisma.SquadCreateWithoutTeamsInput, Prisma.SquadUncheckedCreateWithoutTeamsInput>
+}
+
+export type SquadUpsertWithoutTeamsInput = {
+  update: Prisma.XOR<Prisma.SquadUpdateWithoutTeamsInput, Prisma.SquadUncheckedUpdateWithoutTeamsInput>
+  create: Prisma.XOR<Prisma.SquadCreateWithoutTeamsInput, Prisma.SquadUncheckedCreateWithoutTeamsInput>
+  where?: Prisma.SquadWhereInput
+}
+
+export type SquadUpdateToOneWithWhereWithoutTeamsInput = {
+  where?: Prisma.SquadWhereInput
+  data: Prisma.XOR<Prisma.SquadUpdateWithoutTeamsInput, Prisma.SquadUncheckedUpdateWithoutTeamsInput>
+}
+
+export type SquadUpdateWithoutTeamsInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  key?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
+  iconKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  managerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  updatedBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type SquadUncheckedUpdateWithoutTeamsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  key?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
+  iconKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  managerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  updatedBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+
+/**
+ * Count Type SquadCountOutputType
+ */
+
+export type SquadCountOutputType = {
+  teams: number
+}
+
+export type SquadCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  teams?: boolean | SquadCountOutputTypeCountTeamsArgs
+}
+
+/**
+ * SquadCountOutputType without action
+ */
+export type SquadCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SquadCountOutputType
+   */
+  select?: Prisma.SquadCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * SquadCountOutputType without action
+ */
+export type SquadCountOutputTypeCountTeamsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TeamWhereInput
+}
 
 
 export type SquadSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -527,12 +710,16 @@ export type SquadSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   description?: boolean
   color?: boolean
   iconKey?: boolean
+  managerName?: boolean
+  leadName?: boolean
   sortOrder?: boolean
   isActive?: boolean
   createdBy?: boolean
   updatedBy?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  teams?: boolean | Prisma.Squad$teamsArgs<ExtArgs>
+  _count?: boolean | Prisma.SquadCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["squad"]>
 
 export type SquadSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -542,6 +729,8 @@ export type SquadSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   description?: boolean
   color?: boolean
   iconKey?: boolean
+  managerName?: boolean
+  leadName?: boolean
   sortOrder?: boolean
   isActive?: boolean
   createdBy?: boolean
@@ -557,6 +746,8 @@ export type SquadSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   description?: boolean
   color?: boolean
   iconKey?: boolean
+  managerName?: boolean
+  leadName?: boolean
   sortOrder?: boolean
   isActive?: boolean
   createdBy?: boolean
@@ -572,6 +763,8 @@ export type SquadSelectScalar = {
   description?: boolean
   color?: boolean
   iconKey?: boolean
+  managerName?: boolean
+  leadName?: boolean
   sortOrder?: boolean
   isActive?: boolean
   createdBy?: boolean
@@ -580,11 +773,19 @@ export type SquadSelectScalar = {
   updatedAt?: boolean
 }
 
-export type SquadOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "key" | "description" | "color" | "iconKey" | "sortOrder" | "isActive" | "createdBy" | "updatedBy" | "createdAt" | "updatedAt", ExtArgs["result"]["squad"]>
+export type SquadOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "key" | "description" | "color" | "iconKey" | "managerName" | "leadName" | "sortOrder" | "isActive" | "createdBy" | "updatedBy" | "createdAt" | "updatedAt", ExtArgs["result"]["squad"]>
+export type SquadInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  teams?: boolean | Prisma.Squad$teamsArgs<ExtArgs>
+  _count?: boolean | Prisma.SquadCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type SquadIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type SquadIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 
 export type $SquadPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Squad"
-  objects: {}
+  objects: {
+    teams: Prisma.$TeamPayload<ExtArgs>[]
+  }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     name: string
@@ -592,6 +793,8 @@ export type $SquadPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     description: string
     color: string
     iconKey: string | null
+    managerName: string | null
+    leadName: string | null
     sortOrder: number
     isActive: boolean
     createdBy: number | null
@@ -992,6 +1195,7 @@ readonly fields: SquadFieldRefs;
  */
 export interface Prisma__SquadClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  teams<T extends Prisma.Squad$teamsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Squad$teamsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TeamPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1027,6 +1231,8 @@ export interface SquadFieldRefs {
   readonly description: Prisma.FieldRef<"Squad", 'String'>
   readonly color: Prisma.FieldRef<"Squad", 'String'>
   readonly iconKey: Prisma.FieldRef<"Squad", 'String'>
+  readonly managerName: Prisma.FieldRef<"Squad", 'String'>
+  readonly leadName: Prisma.FieldRef<"Squad", 'String'>
   readonly sortOrder: Prisma.FieldRef<"Squad", 'Int'>
   readonly isActive: Prisma.FieldRef<"Squad", 'Boolean'>
   readonly createdBy: Prisma.FieldRef<"Squad", 'Int'>
@@ -1050,6 +1256,10 @@ export type SquadFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.Interna
    */
   omit?: Prisma.SquadOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SquadInclude<ExtArgs> | null
+  /**
    * Filter, which Squad to fetch.
    */
   where: Prisma.SquadWhereUniqueInput
@@ -1068,6 +1278,10 @@ export type SquadFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensions.
    */
   omit?: Prisma.SquadOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SquadInclude<ExtArgs> | null
+  /**
    * Filter, which Squad to fetch.
    */
   where: Prisma.SquadWhereUniqueInput
@@ -1085,6 +1299,10 @@ export type SquadFindFirstArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * Omit specific fields from the Squad
    */
   omit?: Prisma.SquadOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SquadInclude<ExtArgs> | null
   /**
    * Filter, which Squad to fetch.
    */
@@ -1134,6 +1352,10 @@ export type SquadFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions.I
    */
   omit?: Prisma.SquadOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SquadInclude<ExtArgs> | null
+  /**
    * Filter, which Squad to fetch.
    */
   where?: Prisma.SquadWhereInput
@@ -1181,6 +1403,10 @@ export type SquadFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    * Omit specific fields from the Squad
    */
   omit?: Prisma.SquadOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SquadInclude<ExtArgs> | null
   /**
    * Filter, which Squads to fetch.
    */
@@ -1230,6 +1456,10 @@ export type SquadCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
    */
   omit?: Prisma.SquadOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SquadInclude<ExtArgs> | null
+  /**
    * The data needed to create a Squad.
    */
   data: Prisma.XOR<Prisma.SquadCreateInput, Prisma.SquadUncheckedCreateInput>
@@ -1277,6 +1507,10 @@ export type SquadUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
    * Omit specific fields from the Squad
    */
   omit?: Prisma.SquadOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SquadInclude<ExtArgs> | null
   /**
    * The data needed to update a Squad.
    */
@@ -1344,6 +1578,10 @@ export type SquadUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
    */
   omit?: Prisma.SquadOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SquadInclude<ExtArgs> | null
+  /**
    * The filter to search for the Squad to update in case it exists.
    */
   where: Prisma.SquadWhereUniqueInput
@@ -1370,6 +1608,10 @@ export type SquadDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
    */
   omit?: Prisma.SquadOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SquadInclude<ExtArgs> | null
+  /**
    * Filter which Squad to delete.
    */
   where: Prisma.SquadWhereUniqueInput
@@ -1390,6 +1632,30 @@ export type SquadDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
 }
 
 /**
+ * Squad.teams
+ */
+export type Squad$teamsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Team
+   */
+  select?: Prisma.TeamSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Team
+   */
+  omit?: Prisma.TeamOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TeamInclude<ExtArgs> | null
+  where?: Prisma.TeamWhereInput
+  orderBy?: Prisma.TeamOrderByWithRelationInput | Prisma.TeamOrderByWithRelationInput[]
+  cursor?: Prisma.TeamWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TeamScalarFieldEnum | Prisma.TeamScalarFieldEnum[]
+}
+
+/**
  * Squad without action
  */
 export type SquadDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1401,4 +1667,8 @@ export type SquadDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    * Omit specific fields from the Squad
    */
   omit?: Prisma.SquadOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SquadInclude<ExtArgs> | null
 }

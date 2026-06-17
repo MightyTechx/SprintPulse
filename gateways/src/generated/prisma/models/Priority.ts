@@ -46,6 +46,8 @@ export type PriorityMinAggregateOutputType = {
   key: string | null
   description: string | null
   color: string | null
+  managerName: string | null
+  leadName: string | null
   sortOrder: number | null
   isActive: boolean | null
   createdBy: number | null
@@ -60,6 +62,8 @@ export type PriorityMaxAggregateOutputType = {
   key: string | null
   description: string | null
   color: string | null
+  managerName: string | null
+  leadName: string | null
   sortOrder: number | null
   isActive: boolean | null
   createdBy: number | null
@@ -74,6 +78,8 @@ export type PriorityCountAggregateOutputType = {
   key: number
   description: number
   color: number
+  managerName: number
+  leadName: number
   sortOrder: number
   isActive: number
   createdBy: number
@@ -104,6 +110,8 @@ export type PriorityMinAggregateInputType = {
   key?: true
   description?: true
   color?: true
+  managerName?: true
+  leadName?: true
   sortOrder?: true
   isActive?: true
   createdBy?: true
@@ -118,6 +126,8 @@ export type PriorityMaxAggregateInputType = {
   key?: true
   description?: true
   color?: true
+  managerName?: true
+  leadName?: true
   sortOrder?: true
   isActive?: true
   createdBy?: true
@@ -132,6 +142,8 @@ export type PriorityCountAggregateInputType = {
   key?: true
   description?: true
   color?: true
+  managerName?: true
+  leadName?: true
   sortOrder?: true
   isActive?: true
   createdBy?: true
@@ -233,6 +245,8 @@ export type PriorityGroupByOutputType = {
   key: string
   description: string
   color: string
+  managerName: string | null
+  leadName: string | null
   sortOrder: number
   isActive: boolean
   createdBy: number | null
@@ -270,6 +284,8 @@ export type PriorityWhereInput = {
   key?: Prisma.StringFilter<"Priority"> | string
   description?: Prisma.StringFilter<"Priority"> | string
   color?: Prisma.StringFilter<"Priority"> | string
+  managerName?: Prisma.StringNullableFilter<"Priority"> | string | null
+  leadName?: Prisma.StringNullableFilter<"Priority"> | string | null
   sortOrder?: Prisma.IntFilter<"Priority"> | number
   isActive?: Prisma.BoolFilter<"Priority"> | boolean
   createdBy?: Prisma.IntNullableFilter<"Priority"> | number | null
@@ -284,6 +300,8 @@ export type PriorityOrderByWithRelationInput = {
   key?: Prisma.SortOrder
   description?: Prisma.SortOrder
   color?: Prisma.SortOrder
+  managerName?: Prisma.SortOrderInput | Prisma.SortOrder
+  leadName?: Prisma.SortOrderInput | Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdBy?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -301,6 +319,8 @@ export type PriorityWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringFilter<"Priority"> | string
   description?: Prisma.StringFilter<"Priority"> | string
   color?: Prisma.StringFilter<"Priority"> | string
+  managerName?: Prisma.StringNullableFilter<"Priority"> | string | null
+  leadName?: Prisma.StringNullableFilter<"Priority"> | string | null
   sortOrder?: Prisma.IntFilter<"Priority"> | number
   isActive?: Prisma.BoolFilter<"Priority"> | boolean
   createdBy?: Prisma.IntNullableFilter<"Priority"> | number | null
@@ -315,6 +335,8 @@ export type PriorityOrderByWithAggregationInput = {
   key?: Prisma.SortOrder
   description?: Prisma.SortOrder
   color?: Prisma.SortOrder
+  managerName?: Prisma.SortOrderInput | Prisma.SortOrder
+  leadName?: Prisma.SortOrderInput | Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdBy?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -337,6 +359,8 @@ export type PriorityScalarWhereWithAggregatesInput = {
   key?: Prisma.StringWithAggregatesFilter<"Priority"> | string
   description?: Prisma.StringWithAggregatesFilter<"Priority"> | string
   color?: Prisma.StringWithAggregatesFilter<"Priority"> | string
+  managerName?: Prisma.StringNullableWithAggregatesFilter<"Priority"> | string | null
+  leadName?: Prisma.StringNullableWithAggregatesFilter<"Priority"> | string | null
   sortOrder?: Prisma.IntWithAggregatesFilter<"Priority"> | number
   isActive?: Prisma.BoolWithAggregatesFilter<"Priority"> | boolean
   createdBy?: Prisma.IntNullableWithAggregatesFilter<"Priority"> | number | null
@@ -350,6 +374,8 @@ export type PriorityCreateInput = {
   key: string
   description?: string
   color?: string
+  managerName?: string | null
+  leadName?: string | null
   sortOrder?: number
   isActive?: boolean
   createdBy?: number | null
@@ -364,6 +390,8 @@ export type PriorityUncheckedCreateInput = {
   key: string
   description?: string
   color?: string
+  managerName?: string | null
+  leadName?: string | null
   sortOrder?: number
   isActive?: boolean
   createdBy?: number | null
@@ -377,6 +405,8 @@ export type PriorityUpdateInput = {
   key?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  managerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -391,6 +421,8 @@ export type PriorityUncheckedUpdateInput = {
   key?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  managerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -405,6 +437,8 @@ export type PriorityCreateManyInput = {
   key: string
   description?: string
   color?: string
+  managerName?: string | null
+  leadName?: string | null
   sortOrder?: number
   isActive?: boolean
   createdBy?: number | null
@@ -418,6 +452,8 @@ export type PriorityUpdateManyMutationInput = {
   key?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  managerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -432,6 +468,8 @@ export type PriorityUncheckedUpdateManyInput = {
   key?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  managerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -446,6 +484,8 @@ export type PriorityCountOrderByAggregateInput = {
   key?: Prisma.SortOrder
   description?: Prisma.SortOrder
   color?: Prisma.SortOrder
+  managerName?: Prisma.SortOrder
+  leadName?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
@@ -467,6 +507,8 @@ export type PriorityMaxOrderByAggregateInput = {
   key?: Prisma.SortOrder
   description?: Prisma.SortOrder
   color?: Prisma.SortOrder
+  managerName?: Prisma.SortOrder
+  leadName?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
@@ -481,6 +523,8 @@ export type PriorityMinOrderByAggregateInput = {
   key?: Prisma.SortOrder
   description?: Prisma.SortOrder
   color?: Prisma.SortOrder
+  managerName?: Prisma.SortOrder
+  leadName?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
@@ -504,6 +548,8 @@ export type PrioritySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   key?: boolean
   description?: boolean
   color?: boolean
+  managerName?: boolean
+  leadName?: boolean
   sortOrder?: boolean
   isActive?: boolean
   createdBy?: boolean
@@ -518,6 +564,8 @@ export type PrioritySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   key?: boolean
   description?: boolean
   color?: boolean
+  managerName?: boolean
+  leadName?: boolean
   sortOrder?: boolean
   isActive?: boolean
   createdBy?: boolean
@@ -532,6 +580,8 @@ export type PrioritySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   key?: boolean
   description?: boolean
   color?: boolean
+  managerName?: boolean
+  leadName?: boolean
   sortOrder?: boolean
   isActive?: boolean
   createdBy?: boolean
@@ -546,6 +596,8 @@ export type PrioritySelectScalar = {
   key?: boolean
   description?: boolean
   color?: boolean
+  managerName?: boolean
+  leadName?: boolean
   sortOrder?: boolean
   isActive?: boolean
   createdBy?: boolean
@@ -554,7 +606,7 @@ export type PrioritySelectScalar = {
   updatedAt?: boolean
 }
 
-export type PriorityOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "key" | "description" | "color" | "sortOrder" | "isActive" | "createdBy" | "updatedBy" | "createdAt" | "updatedAt", ExtArgs["result"]["priority"]>
+export type PriorityOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "key" | "description" | "color" | "managerName" | "leadName" | "sortOrder" | "isActive" | "createdBy" | "updatedBy" | "createdAt" | "updatedAt", ExtArgs["result"]["priority"]>
 
 export type $PriorityPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Priority"
@@ -565,6 +617,8 @@ export type $PriorityPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     key: string
     description: string
     color: string
+    managerName: string | null
+    leadName: string | null
     sortOrder: number
     isActive: boolean
     createdBy: number | null
@@ -999,6 +1053,8 @@ export interface PriorityFieldRefs {
   readonly key: Prisma.FieldRef<"Priority", 'String'>
   readonly description: Prisma.FieldRef<"Priority", 'String'>
   readonly color: Prisma.FieldRef<"Priority", 'String'>
+  readonly managerName: Prisma.FieldRef<"Priority", 'String'>
+  readonly leadName: Prisma.FieldRef<"Priority", 'String'>
   readonly sortOrder: Prisma.FieldRef<"Priority", 'Int'>
   readonly isActive: Prisma.FieldRef<"Priority", 'Boolean'>
   readonly createdBy: Prisma.FieldRef<"Priority", 'Int'>

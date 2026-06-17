@@ -13,18 +13,24 @@ import {
   MenuItem,
   Divider,
   Button,
+  CircularProgress,
+  Popover,
+  LinearProgress,
 } from '@mui/material';
 import GridViewIcon from '@mui/icons-material/GridView';
 import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
-import FilterListIcon from '@mui/icons-material/FilterList';
-import StarBorderIcon from '@mui/icons-material/StarBorder';
-import StarIcon from '@mui/icons-material/Star';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import InsightsIcon from '@mui/icons-material/Insights';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import PersonIcon from '@mui/icons-material/Person';
+import SortIcon from '@mui/icons-material/Sort';
+import ViewAgendaIcon from '@mui/icons-material/ViewAgenda';
+import ViewStreamIcon from '@mui/icons-material/ViewStream';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
-import GroupWorkIcon from '@mui/icons-material/GroupWork';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
+import BackspaceIcon from '@mui/icons-material/Backspace';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import FlagIcon from '@mui/icons-material/Flag';
+import BoltIcon from '@mui/icons-material/Bolt';
 import { useAdminKeyframes, useLiveDateTime } from '../../../../hooks';
 import { constants } from '@sprintpulse/utils';
 import { useStyles } from '../styles/Dashboard.styles';
@@ -210,12 +216,19 @@ const SprintStatusMatrixPage = () => {
   const { hours, minutes, seconds, dateStr } = useLiveDateTime();
 
   const [search, setSearch] = useState('');
-  const [isFavorite, setIsFavorite] = useState(false);
-  const [groupByAnchor, setGroupByAnchor] = useState<null | HTMLElement>(null);
+  const [debouncedSearch, setDebouncedSearch] = useState('');
+  const [isSearchPending, setIsSearchPending] = useState(false);
   const [epicAnchor, setEpicAnchor] = useState<null | HTMLElement>(null);
-  const [moreAnchor, setMoreAnchor] = useState<null | HTMLElement>(null);
-  const [groupBy, setGroupBy] = useState<'None' | 'Assignee' | 'Epic' | 'Team'>('None');
-  const [epicFilter, setEpicFilter] = useState<string>('All Epics');
+  const [assigneesAnchor, setAssigneesAnchor] = useState<null | HTMLElement>(null);
+  const [progressAnchor, setProgressAnchor] = useState<null | HTMLElement>(null);
+  const [myTicketsAssignee, setMyTicketsAssignee] = useState<string | null>(null);
+  const [myTicketsAnchor, setMyTicketsAnchor] = useState<null | HTMLElement>(null);
+  const [sortBy, setSortBy] = useState<'Default' | 'Story Points' | 'Issue Type' | 'Issue No'>(
+    'Default',
+  );
+  const [sortAnchor, setSortAnchor] = useState<null | HTMLElement>(null);
+  const [density, setDensity] = useState<'Comfortable' | 'Compact'>('Comfortable');
+  const [statusFilter, setStatusFilter] = useState<'All' | BoardColumnKey>('All');
   const [activeSquad, setActiveSquad] = useState<SquadKey>('All');
 
   // Local mutable tickets — initialized from MOCK_TICKETS so drag-and-drop can move them
@@ -232,13 +245,38 @@ const SprintStatusMatrixPage = () => {
   const dropTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const landTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // Debounce the search input so the board doesn't re-filter on every keystroke.
+  // While a debounce is in flight, show a small loader inside the search field.
+  const searchDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => {
+    if (search === debouncedSearch) {
+      setIsSearchPending(false);
+      return;
+    }
+    setIsSearchPending(true);
+    if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
+    searchDebounceRef.current = setTimeout(() => {
+      setDebouncedSearch(search);
+      setIsSearchPending(false);
+    }, 350);
+    return () => {
+      if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
+    };
+  }, [search, debouncedSearch]);
+
   const activeSquadConfig = SQUADS.find((s) => s.key === activeSquad) ?? SQUADS[0];
 
-  // Filter tickets for board view (squad + search)
+  // Filter tickets for board view (squad + search + status + my-tickets)
   const filteredTickets = useMemo(() => {
-    const q = search.toLowerCase();
+    const q = debouncedSearch.toLowerCase();
     return tickets.filter((t) => {
       if (activeSquad !== 'All' && !activeSquadConfig.teams.includes(t.team)) {
+        return false;
+      }
+      if (statusFilter !== 'All' && t.status !== statusFilter) {
+        return false;
+      }
+      if (myTicketsAssignee && t.assignee !== myTicketsAssignee) {
         return false;
       }
       if (!q) return true;
@@ -249,7 +287,44 @@ const SprintStatusMatrixPage = () => {
         t.team.toLowerCase().includes(q)
       );
     });
-  }, [tickets, search, activeSquad, activeSquadConfig]);
+  }, [tickets, debouncedSearch, activeSquad, activeSquadConfig, statusFilter, myTicketsAssignee]);
+
+  // Sprint progress metrics (computed from the full ticket set, not the filtered one,
+  // so the popover always reflects the actual sprint health)
+  const sprintMetrics = useMemo(() => {
+    const total = tickets.length;
+    const done = tickets.filter((t) => t.status === 'Done').length;
+    const inProgress = tickets.filter((t) =>
+      ['In Progress', 'In Review', 'In Test'].includes(t.status),
+    ).length;
+    const blocked = tickets.filter((t) => t.status === 'Blocked').length;
+    const totalPoints = tickets.reduce((s, t) => s + t.storyPoints, 0);
+    const donePoints = tickets
+      .filter((t) => t.status === 'Done')
+      .reduce((s, t) => s + t.storyPoints, 0);
+    const percent = total === 0 ? 0 : Math.round((done / total) * 100);
+    // Demo: assume 14-day sprint, today is day 9 (2026-06-16 of a sprint ending 2026-06-22)
+    const sprintStart = '2026-06-09';
+    const sprintEnd = '2026-06-22';
+    const startMs = new Date(sprintStart).getTime();
+    const endMs = new Date(sprintEnd).getTime();
+    const todayMs = new Date('2026-06-16').getTime();
+    const totalDays = Math.max(1, Math.round((endMs - startMs) / 86400000));
+    const daysElapsed = Math.max(0, Math.round((todayMs - startMs) / 86400000));
+    const daysRemaining = Math.max(0, totalDays - daysElapsed);
+    const expectedPercent = Math.round((daysElapsed / totalDays) * 100);
+    return {
+      total,
+      done,
+      inProgress,
+      blocked,
+      totalPoints,
+      donePoints,
+      percent,
+      daysRemaining,
+      expectedPercent,
+    };
+  }, [tickets]);
 
   // Count tickets per squad (for chip badges) — ignores search so users can see totals
   const squadCounts = useMemo(() => {
@@ -439,8 +514,36 @@ const SprintStatusMatrixPage = () => {
     };
   }, []);
 
-  // Group tickets by status
+  // Group tickets by status, then sort each column based on the sort preference
   const ticketsByStatus = useMemo(() => {
+    const sortTickets = (tickets: typeof MOCK_TICKETS) => {
+      return [...tickets].sort((a, b) => {
+        if (sortBy === 'Story Points') {
+          if (a.storyPoints !== b.storyPoints) {
+            // High story points first
+            return b.storyPoints - a.storyPoints;
+          }
+        }
+        if (sortBy === 'Issue Type') {
+          const typeOrder: Record<string, number> = {
+            Story: 0,
+            Task: 1,
+            Bug: 2,
+            Epic: 3,
+            Spike: 4,
+          };
+          const aType = typeOrder[a.issueType] ?? 5;
+          const bType = typeOrder[b.issueType] ?? 5;
+          return aType - bType;
+        }
+        if (sortBy === 'Issue No') {
+          return a.issueNo.localeCompare(b.issueNo, undefined, { numeric: true });
+        }
+        // Default: preserve original order (which is roughly chronological)
+        return 0;
+      });
+    };
+
     const map: Record<BoardColumnKey, typeof MOCK_TICKETS> = {
       'To Do': [],
       'In Progress': [],
@@ -464,24 +567,44 @@ const SprintStatusMatrixPage = () => {
         map['To Do'].push(t);
       }
     });
-    return map;
-  }, [filteredTickets]);
 
-  // Top 4 assignees (for header avatars)
-  const topAssignees = useMemo(() => {
+    // Apply sorting to each column
+    Object.keys(map).forEach((key) => {
+      const colKey = key as BoardColumnKey;
+      map[colKey] = sortTickets(map[colKey]);
+    });
+
+    return map;
+  }, [filteredTickets, sortBy]);
+
+  // All unique assignees from the current filtered tickets (used for the "+N" popover)
+  const allAssignees = useMemo(() => {
     const seen = new Set<string>();
-    const list: { name: string; gradient: string }[] = [];
+    const list: { name: string; gradient: string; count: number }[] = [];
     filteredTickets.forEach((t) => {
       if (!seen.has(t.assignee)) {
         seen.add(t.assignee);
         list.push({
           name: t.assignee,
           gradient: TEAM_GRADIENTS[list.length % TEAM_GRADIENTS.length],
+          count: 0,
         });
       }
     });
-    return list.slice(0, 4);
+    // Tally ticket count per assignee
+    filteredTickets.forEach((t) => {
+      const entry = list.find((a) => a.name === t.assignee);
+      if (entry) entry.count += 1;
+    });
+    return list;
   }, [filteredTickets]);
+
+  // Top 4 assignees (for header avatars)
+  const topAssignees = useMemo(() => {
+    return allAssignees.slice(0, 4);
+  }, [allAssignees]);
+
+  const remainingAssigneesCount = Math.max(0, allAssignees.length - topAssignees.length);
 
   return (
     <>
@@ -1025,7 +1148,7 @@ const SprintStatusMatrixPage = () => {
               </Box>
             </Box>
 
-            {/* Right Actions: Avatars + Epic + GroupBy + Insights + Star + More */}
+            {/* Right Actions: Search + Avatars + Epic + GroupBy + Insights + Star + More */}
             <Box
               sx={{
                 display: 'flex',
@@ -1035,12 +1158,89 @@ const SprintStatusMatrixPage = () => {
                 ml: { xs: 0, md: 'auto' },
               }}
             >
+              {/* Board Search — moved here from the standalone search bar row,
+                  so it sits inline right after the "Projects / Beyond Gravity · Board" text. */}
+              <TextField
+                placeholder='Search board...'
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                size='small'
+                sx={{
+                  width: { xs: '100%', sm: 240 },
+                  order: { xs: -1, md: 0 },
+                  '& .MuiOutlinedInput-root': {
+                    height: 36,
+                    fontSize: '0.8rem',
+                    background: '#fff',
+                    borderRadius: 2,
+                    '& .MuiOutlinedInput-notchedOutline': {
+                      border: '1px solid #e2e8f0',
+                    },
+                    '&:hover .MuiOutlinedInput-notchedOutline': {
+                      border: '1px solid #cbd5e1',
+                    },
+                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                      border: '1px solid #4f46e5',
+                      borderWidth: 1,
+                    },
+                  },
+                  '& .MuiInputBase-input': {
+                    py: '8px',
+                    px: 1.25,
+                    '&::placeholder': { color: '#94a3b8', opacity: 1 },
+                  },
+                }}
+                slotProps={{
+                  input: {
+                    startAdornment: (
+                      <InputAdornment position='start'>
+                        <SearchIcon sx={{ color: '#94a3b8', fontSize: 18 }} />
+                      </InputAdornment>
+                    ),
+                    endAdornment: (
+                      <InputAdornment position='end'>
+                        {isSearchPending ? (
+                          <CircularProgress size={14} thickness={5} sx={{ color: '#94a3b8' }} />
+                        ) : search ? (
+                          <Tooltip title='Clear search' arrow>
+                            <IconButton
+                              size='small'
+                              onClick={() => setSearch('')}
+                              sx={{
+                                p: 0.25,
+                                color: '#94a3b8',
+                                '&:hover': { color: '#475569', background: '#f1f5f9' },
+                              }}
+                            >
+                              <BackspaceIcon sx={{ fontSize: 16 }} />
+                            </IconButton>
+                          </Tooltip>
+                        ) : null}
+                      </InputAdornment>
+                    ),
+                  },
+                }}
+              />
+
               {/* Team Avatars */}
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <Box sx={{ display: 'flex', mr: 0.5 }}>
                   {topAssignees.map((a, i) => (
-                    <Tooltip key={a.name} title={a.name} arrow>
+                    <Tooltip
+                      key={a.name}
+                      title={
+                        search.toLowerCase() === a.name.toLowerCase()
+                          ? `Clear filter`
+                          : `Filter by ${a.name}`
+                      }
+                      arrow
+                    >
                       <Avatar
+                        onClick={() =>
+                          setSearch((prev) =>
+                            prev.toLowerCase() === a.name.toLowerCase() ? '' : a.name,
+                          )
+                        }
                         sx={{
                           width: 28,
                           height: 28,
@@ -1051,6 +1251,13 @@ const SprintStatusMatrixPage = () => {
                           ml: i === 0 ? 0 : '-8px',
                           boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
                           cursor: 'pointer',
+                          outline:
+                            search.toLowerCase() === a.name.toLowerCase()
+                              ? '2px solid #4f46e5'
+                              : 'none',
+                          outlineOffset: '1px',
+                          transition: 'outline-color 0.15s ease, transform 0.15s ease',
+                          '&:hover': { transform: 'translateY(-1px)' },
                         }}
                       >
                         {getInitials(a.name)}
@@ -1058,29 +1265,150 @@ const SprintStatusMatrixPage = () => {
                     </Tooltip>
                   ))}
                 </Box>
-                {topAssignees.length > 0 && (
+                {remainingAssigneesCount > 0 && (
+                  <Tooltip
+                    title={`View ${remainingAssigneesCount} more member${
+                      remainingAssigneesCount === 1 ? '' : 's'
+                    }`}
+                    arrow
+                  >
+                    <Box
+                      onClick={(e) => setAssigneesAnchor(e.currentTarget)}
+                      sx={{
+                        width: 28,
+                        height: 28,
+                        borderRadius: '50%',
+                        background: '#f1f5f9',
+                        border: '2px solid #fff',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '0.6rem',
+                        fontWeight: 700,
+                        color: '#475569',
+                        ml: '-8px',
+                        cursor: 'pointer',
+                        boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+                        transition: 'background 0.15s ease, transform 0.15s ease',
+                        '&:hover': { background: '#e2e8f0', transform: 'translateY(-1px)' },
+                      }}
+                    >
+                      +{remainingAssigneesCount}
+                    </Box>
+                  </Tooltip>
+                )}
+                <Popover
+                  open={Boolean(assigneesAnchor)}
+                  anchorEl={assigneesAnchor}
+                  onClose={() => setAssigneesAnchor(null)}
+                  anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                  transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                  slotProps={{
+                    paper: {
+                      sx: {
+                        mt: 0.75,
+                        width: 280,
+                        maxHeight: 360,
+                        borderRadius: 2,
+                        boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
+                        border: '1px solid #e2e8f0',
+                        overflow: 'hidden',
+                      },
+                    },
+                  }}
+                >
                   <Box
                     sx={{
-                      width: 28,
-                      height: 28,
-                      borderRadius: '50%',
-                      background: '#f1f5f9',
-                      border: '2px solid #fff',
+                      px: 1.5,
+                      py: 1.25,
+                      borderBottom: '1px solid #e2e8f0',
                       display: 'flex',
                       alignItems: 'center',
-                      justifyContent: 'center',
-                      fontSize: '0.6rem',
-                      fontWeight: 700,
-                      color: '#64748b',
-                      ml: '-8px',
+                      justifyContent: 'space-between',
+                      background: '#fafbfc',
                     }}
                   >
-                    +3
+                    <Typography sx={{ fontSize: '0.72rem', fontWeight: 700, color: '#0f172a' }}>
+                      Active Members
+                    </Typography>
+                    <Typography sx={{ fontSize: '0.65rem', color: '#64748b', fontWeight: 600 }}>
+                      {allAssignees.length} total
+                    </Typography>
                   </Box>
-                )}
+                  <Box sx={{ maxHeight: 280, overflowY: 'auto', py: 0.5 }}>
+                    {allAssignees.map((a) => {
+                      const isActive = search.toLowerCase() === a.name.toLowerCase();
+                      return (
+                        <Box
+                          key={a.name}
+                          onClick={() => {
+                            setSearch((prev) =>
+                              prev.toLowerCase() === a.name.toLowerCase() ? '' : a.name,
+                            );
+                            setAssigneesAnchor(null);
+                          }}
+                          sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 1.25,
+                            px: 1.5,
+                            py: 0.85,
+                            cursor: 'pointer',
+                            background: isActive ? 'rgba(79,70,229,0.08)' : 'transparent',
+                            transition: 'background 0.12s ease',
+                            '&:hover': {
+                              background: isActive ? 'rgba(79,70,229,0.12)' : '#f8fafc',
+                            },
+                          }}
+                        >
+                          <Avatar
+                            sx={{
+                              width: 28,
+                              height: 28,
+                              fontSize: '0.65rem',
+                              fontWeight: 700,
+                              background: a.gradient,
+                              border: '1.5px solid #fff',
+                              boxShadow: '0 1px 2px rgba(0,0,0,0.08)',
+                            }}
+                          >
+                            {getInitials(a.name)}
+                          </Avatar>
+                          <Box sx={{ flex: 1, minWidth: 0 }}>
+                            <Typography
+                              sx={{
+                                fontSize: '0.75rem',
+                                fontWeight: 600,
+                                color: '#0f172a',
+                                whiteSpace: 'nowrap',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                              }}
+                            >
+                              {a.name}
+                            </Typography>
+                            <Typography sx={{ fontSize: '0.62rem', color: '#64748b' }}>
+                              {a.count} ticket{a.count === 1 ? '' : 's'}
+                            </Typography>
+                          </Box>
+                          {isActive && (
+                            <Box
+                              sx={{
+                                width: 8,
+                                height: 8,
+                                borderRadius: '50%',
+                                background: '#4f46e5',
+                              }}
+                            />
+                          )}
+                        </Box>
+                      );
+                    })}
+                  </Box>
+                </Popover>
               </Box>
 
-              {/* Epic Filter */}
+              {/* Status Filter */}
               <Button
                 size='small'
                 variant='outlined'
@@ -1091,7 +1419,11 @@ const SprintStatusMatrixPage = () => {
                       width: 8,
                       height: 8,
                       borderRadius: '50%',
-                      background: '#8b5cf6',
+                      background:
+                        statusFilter === 'All'
+                          ? '#6366f1'
+                          : (BOARD_COLUMNS.find((c) => c.key === statusFilter)?.accent ??
+                            '#6366f1'),
                     }}
                   />
                 }
@@ -1107,153 +1439,12 @@ const SprintStatusMatrixPage = () => {
                   '&:hover': { background: '#f1f5f9', borderColor: '#cbd5e1' },
                 }}
               >
-                {epicFilter}
+                {statusFilter === 'All' ? 'All Status' : statusFilter}
               </Button>
               <Menu
                 anchorEl={epicAnchor}
                 open={Boolean(epicAnchor)}
                 onClose={() => setEpicAnchor(null)}
-                PaperProps={{
-                  sx: {
-                    mt: 0.5,
-                    minWidth: 160,
-                    borderRadius: 2,
-                    boxShadow: '0 4px 16px rgba(0,0,0,0.1)',
-                  },
-                }}
-              >
-                {['All Epics', 'Mobile App', 'Backend', 'DevOps', 'Design System'].map((opt) => (
-                  <MenuItem
-                    key={opt}
-                    selected={epicFilter === opt}
-                    onClick={() => {
-                      setEpicFilter(opt);
-                      setEpicAnchor(null);
-                    }}
-                    sx={{ fontSize: '0.78rem', py: 0.75 }}
-                  >
-                    {opt}
-                  </MenuItem>
-                ))}
-              </Menu>
-
-              {/* Group By */}
-              <Button
-                size='small'
-                variant='outlined'
-                onClick={(e) => setGroupByAnchor(e.currentTarget)}
-                startIcon={<GroupWorkIcon sx={{ fontSize: 14 }} />}
-                sx={{
-                  textTransform: 'none',
-                  fontSize: '0.72rem',
-                  fontWeight: 600,
-                  color: '#475569',
-                  borderColor: '#e2e8f0',
-                  background: '#f8fafc',
-                  height: 32,
-                  px: 1.5,
-                  '&:hover': { background: '#f1f5f9', borderColor: '#cbd5e1' },
-                }}
-              >
-                GROUP BY · {groupBy}
-              </Button>
-              <Menu
-                anchorEl={groupByAnchor}
-                open={Boolean(groupByAnchor)}
-                onClose={() => setGroupByAnchor(null)}
-                PaperProps={{
-                  sx: {
-                    mt: 0.5,
-                    minWidth: 160,
-                    borderRadius: 2,
-                    boxShadow: '0 4px 16px rgba(0,0,0,0.1)',
-                  },
-                }}
-              >
-                {(['None', 'Assignee', 'Epic', 'Team'] as const).map((opt) => (
-                  <MenuItem
-                    key={opt}
-                    selected={groupBy === opt}
-                    onClick={() => {
-                      setGroupBy(opt);
-                      setGroupByAnchor(null);
-                    }}
-                    sx={{ fontSize: '0.78rem', py: 0.75 }}
-                  >
-                    {opt}
-                  </MenuItem>
-                ))}
-              </Menu>
-
-              {/* Insights */}
-              <Button
-                size='small'
-                variant='outlined'
-                startIcon={<InsightsIcon sx={{ fontSize: 14 }} />}
-                sx={{
-                  textTransform: 'none',
-                  fontSize: '0.72rem',
-                  fontWeight: 600,
-                  color: '#4f46e5',
-                  borderColor: 'rgba(79,70,229,0.3)',
-                  background: 'rgba(79,70,229,0.05)',
-                  height: 32,
-                  px: 1.5,
-                  '&:hover': { background: 'rgba(79,70,229,0.1)', borderColor: '#4f46e5' },
-                }}
-              >
-                Insights
-              </Button>
-
-              {/* Star (Favorite) */}
-              <Tooltip title={isFavorite ? 'Remove from favorites' : 'Add to favorites'} arrow>
-                <IconButton
-                  size='small'
-                  onClick={() => setIsFavorite((p) => !p)}
-                  sx={{
-                    color: isFavorite ? '#f59e0b' : '#94a3b8',
-                    background: isFavorite ? 'rgba(245,158,11,0.1)' : '#f1f5f9',
-                    border: '1px solid',
-                    borderColor: isFavorite ? 'rgba(245,158,11,0.3)' : '#e2e8f0',
-                    borderRadius: '8px',
-                    p: 0.5,
-                    transition: 'all 0.2s ease',
-                    '&:hover': {
-                      background: 'rgba(245,158,11,0.1)',
-                      color: '#f59e0b',
-                      transform: 'scale(1.05)',
-                    },
-                  }}
-                >
-                  {isFavorite ? (
-                    <StarIcon sx={{ fontSize: 16 }} />
-                  ) : (
-                    <StarBorderIcon sx={{ fontSize: 16 }} />
-                  )}
-                </IconButton>
-              </Tooltip>
-
-              {/* More Menu */}
-              <Tooltip title='More actions' arrow>
-                <IconButton
-                  size='small'
-                  onClick={(e) => setMoreAnchor(e.currentTarget)}
-                  sx={{
-                    color: '#94a3b8',
-                    background: '#f1f5f9',
-                    border: '1px solid #e2e8f0',
-                    borderRadius: '8px',
-                    p: 0.5,
-                    '&:hover': { background: '#e2e8f0', color: '#475569' },
-                  }}
-                >
-                  <MoreHorizIcon sx={{ fontSize: 16 }} />
-                </IconButton>
-              </Tooltip>
-              <Menu
-                anchorEl={moreAnchor}
-                open={Boolean(moreAnchor)}
-                onClose={() => setMoreAnchor(null)}
                 PaperProps={{
                   sx: {
                     mt: 0.5,
@@ -1263,84 +1454,468 @@ const SprintStatusMatrixPage = () => {
                   },
                 }}
               >
-                <MenuItem sx={{ fontSize: '0.78rem' }}>Configure board</MenuItem>
-                <MenuItem sx={{ fontSize: '0.78rem' }}>Share board</MenuItem>
-                <MenuItem sx={{ fontSize: '0.78rem' }}>Export data</MenuItem>
-                <Divider />
-                <MenuItem sx={{ fontSize: '0.78rem', color: '#ef4444' }}>Clear board</MenuItem>
+                <MenuItem
+                  selected={statusFilter === 'All'}
+                  onClick={() => {
+                    setStatusFilter('All');
+                    setEpicAnchor(null);
+                  }}
+                  sx={{ fontSize: '0.78rem', py: 0.75 }}
+                >
+                  <Box
+                    sx={{
+                      width: 8,
+                      height: 8,
+                      borderRadius: '50%',
+                      background: '#6366f1',
+                      mr: 1,
+                    }}
+                  />
+                  All Status
+                </MenuItem>
+                <Divider sx={{ my: 0.5 }} />
+                {BOARD_COLUMNS.map((col) => (
+                  <MenuItem
+                    key={col.key}
+                    selected={statusFilter === col.key}
+                    onClick={() => {
+                      setStatusFilter(col.key);
+                      setEpicAnchor(null);
+                    }}
+                    sx={{ fontSize: '0.78rem', py: 0.75 }}
+                  >
+                    <Box
+                      sx={{
+                        width: 8,
+                        height: 8,
+                        borderRadius: '50%',
+                        background: col.accent,
+                        mr: 1,
+                      }}
+                    />
+                    {col.label.toLowerCase().replace(/(^|\s)\S/g, (s) => s.toUpperCase())}
+                  </MenuItem>
+                ))}
               </Menu>
-            </Box>
-          </Box>
 
-          {/* Board Search Bar */}
-          <Box
-            sx={{
-              px: { xs: 2, sm: 3 },
-              py: 1.5,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 1.5,
-              background: '#fafbfc',
-              borderBottom: '1px solid',
-              borderColor: 'divider',
-              flexWrap: 'wrap',
-            }}
-          >
-            <TextField
-              placeholder='Search board...'
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              size='small'
-              sx={{
-                flex: 1,
-                minWidth: { xs: '100%', sm: 280 },
-                '& .MuiOutlinedInput-root': {
-                  height: 36,
-                  fontSize: '0.8rem',
-                  background: '#fff',
-                  borderRadius: 2,
-                  '& .MuiOutlinedInput-notchedOutline': {
-                    border: '1px solid #e2e8f0',
+              {/* Sprint Progress */}
+              <Tooltip title='Sprint progress' arrow>
+                <Button
+                  size='small'
+                  variant='outlined'
+                  onClick={(e) => setProgressAnchor(e.currentTarget)}
+                  startIcon={<TrendingUpIcon sx={{ fontSize: 14 }} />}
+                  sx={{
+                    textTransform: 'none',
+                    fontSize: '0.72rem',
+                    fontWeight: 700,
+                    color:
+                      sprintMetrics.percent >= sprintMetrics.expectedPercent
+                        ? '#059669'
+                        : '#dc2626',
+                    borderColor:
+                      sprintMetrics.percent >= sprintMetrics.expectedPercent
+                        ? 'rgba(5,150,105,0.3)'
+                        : 'rgba(220,38,38,0.3)',
+                    background:
+                      sprintMetrics.percent >= sprintMetrics.expectedPercent
+                        ? 'rgba(5,150,105,0.06)'
+                        : 'rgba(220,38,38,0.06)',
+                    height: 32,
+                    px: 1.5,
+                    '&:hover': {
+                      background:
+                        sprintMetrics.percent >= sprintMetrics.expectedPercent
+                          ? 'rgba(5,150,105,0.12)'
+                          : 'rgba(220,38,38,0.12)',
+                    },
+                  }}
+                >
+                  {sprintMetrics.percent}% Done
+                </Button>
+              </Tooltip>
+              <Popover
+                open={Boolean(progressAnchor)}
+                anchorEl={progressAnchor}
+                onClose={() => setProgressAnchor(null)}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                slotProps={{
+                  paper: {
+                    sx: {
+                      mt: 0.75,
+                      width: 300,
+                      borderRadius: 2,
+                      boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
+                      border: '1px solid #e2e8f0',
+                      overflow: 'hidden',
+                    },
                   },
-                  '&:hover .MuiOutlinedInput-notchedOutline': {
-                    border: '1px solid #cbd5e1',
-                  },
-                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                    border: '1px solid #4f46e5',
-                    borderWidth: 1,
-                  },
-                },
-                '& .MuiInputBase-input': {
-                  py: '8px',
-                  px: 1.25,
-                  '&::placeholder': { color: '#94a3b8', opacity: 1 },
-                },
-              }}
-              slotProps={{
-                input: {
-                  startAdornment: (
-                    <InputAdornment position='start'>
-                      <SearchIcon sx={{ color: '#94a3b8', fontSize: 18 }} />
-                    </InputAdornment>
-                  ),
-                },
-              }}
-            />
-            <Tooltip title='Filter board' arrow>
-              <IconButton
-                size='small'
-                sx={{
-                  color: '#64748b',
-                  background: '#fff',
-                  border: '1px solid #e2e8f0',
-                  borderRadius: '8px',
-                  p: 0.75,
-                  '&:hover': { background: '#f1f5f9' },
                 }}
               >
-                <FilterListIcon sx={{ fontSize: 16 }} />
-              </IconButton>
-            </Tooltip>
+                <Box
+                  sx={{
+                    px: 1.75,
+                    py: 1.5,
+                    background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+                    color: '#fff',
+                  }}
+                >
+                  <Typography sx={{ fontSize: '0.65rem', opacity: 0.85, fontWeight: 600 }}>
+                    SPRINT 24 · BEYOND GRAVITY
+                  </Typography>
+                  <Typography sx={{ fontSize: '1.1rem', fontWeight: 700, mt: 0.25 }}>
+                    {sprintMetrics.percent}% complete
+                  </Typography>
+                  <Typography sx={{ fontSize: '0.7rem', opacity: 0.9, mt: 0.25 }}>
+                    {sprintMetrics.daysRemaining} day
+                    {sprintMetrics.daysRemaining === 1 ? '' : 's'} remaining
+                  </Typography>
+                </Box>
+                <Box sx={{ px: 1.75, py: 1.5 }}>
+                  <Box sx={{ mb: 0.5, display: 'flex', justifyContent: 'space-between' }}>
+                    <Typography sx={{ fontSize: '0.65rem', color: '#64748b', fontWeight: 600 }}>
+                      Progress
+                    </Typography>
+                    <Typography sx={{ fontSize: '0.65rem', color: '#64748b', fontWeight: 600 }}>
+                      {sprintMetrics.done}/{sprintMetrics.total} tickets
+                    </Typography>
+                  </Box>
+                  <Box sx={{ position: 'relative', mb: 1.75 }}>
+                    <LinearProgress
+                      variant='determinate'
+                      value={sprintMetrics.percent}
+                      sx={{
+                        height: 8,
+                        borderRadius: 4,
+                        backgroundColor: '#f1f5f9',
+                        '& .MuiLinearProgress-bar': {
+                          borderRadius: 4,
+                          background: 'linear-gradient(90deg, #6366f1 0%, #8b5cf6 100%)',
+                        },
+                      }}
+                    />
+                    {/* Expected line marker */}
+                    <Box
+                      sx={{
+                        position: 'absolute',
+                        top: -2,
+                        bottom: -2,
+                        left: `${sprintMetrics.expectedPercent}%`,
+                        width: 2,
+                        background: '#dc2626',
+                        borderRadius: 1,
+                      }}
+                    />
+                  </Box>
+                  <Box
+                    sx={{
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(3, 1fr)',
+                      gap: 1,
+                      mb: 1.25,
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        p: 1,
+                        borderRadius: 1.5,
+                        background: 'rgba(16,185,129,0.08)',
+                        border: '1px solid rgba(16,185,129,0.2)',
+                        textAlign: 'center',
+                      }}
+                    >
+                      <CheckCircleIcon sx={{ fontSize: 14, color: '#059669' }} />
+                      <Typography sx={{ fontSize: '1rem', fontWeight: 700, color: '#059669' }}>
+                        {sprintMetrics.done}
+                      </Typography>
+                      <Typography sx={{ fontSize: '0.6rem', color: '#047857' }}>Done</Typography>
+                    </Box>
+                    <Box
+                      sx={{
+                        p: 1,
+                        borderRadius: 1.5,
+                        background: 'rgba(59,130,246,0.08)',
+                        border: '1px solid rgba(59,130,246,0.2)',
+                        textAlign: 'center',
+                      }}
+                    >
+                      <BoltIcon sx={{ fontSize: 14, color: '#2563eb' }} />
+                      <Typography sx={{ fontSize: '1rem', fontWeight: 700, color: '#2563eb' }}>
+                        {sprintMetrics.inProgress}
+                      </Typography>
+                      <Typography sx={{ fontSize: '0.6rem', color: '#1d4ed8' }}>Active</Typography>
+                    </Box>
+                    <Box
+                      sx={{
+                        p: 1,
+                        borderRadius: 1.5,
+                        background:
+                          sprintMetrics.blocked > 0
+                            ? 'rgba(239,68,68,0.08)'
+                            : 'rgba(100,116,139,0.06)',
+                        border: '1px solid',
+                        borderColor:
+                          sprintMetrics.blocked > 0
+                            ? 'rgba(239,68,68,0.2)'
+                            : 'rgba(100,116,139,0.2)',
+                        textAlign: 'center',
+                      }}
+                    >
+                      <FlagIcon
+                        sx={{
+                          fontSize: 14,
+                          color: sprintMetrics.blocked > 0 ? '#dc2626' : '#64748b',
+                        }}
+                      />
+                      <Typography
+                        sx={{
+                          fontSize: '1rem',
+                          fontWeight: 700,
+                          color: sprintMetrics.blocked > 0 ? '#dc2626' : '#64748b',
+                        }}
+                      >
+                        {sprintMetrics.blocked}
+                      </Typography>
+                      <Typography
+                        sx={{
+                          fontSize: '0.6rem',
+                          color: sprintMetrics.blocked > 0 ? '#b91c1c' : '#64748b',
+                        }}
+                      >
+                        Blocked
+                      </Typography>
+                    </Box>
+                  </Box>
+                  <Divider sx={{ my: 1 }} />
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Typography sx={{ fontSize: '0.7rem', color: '#64748b' }}>
+                      Story points
+                    </Typography>
+                    <Typography sx={{ fontSize: '0.72rem', fontWeight: 700, color: '#0f172a' }}>
+                      {sprintMetrics.donePoints} / {sprintMetrics.totalPoints} pts
+                    </Typography>
+                  </Box>
+                </Box>
+              </Popover>
+
+              {/* My Tickets */}
+              <Tooltip
+                title={
+                  myTicketsAssignee
+                    ? `Filtering by ${myTicketsAssignee} (click to change)`
+                    : 'Filter to my tickets'
+                }
+                arrow
+              >
+                <Button
+                  size='small'
+                  variant={myTicketsAssignee ? 'contained' : 'outlined'}
+                  onClick={(e) => setMyTicketsAnchor(e.currentTarget)}
+                  startIcon={
+                    myTicketsAssignee ? (
+                      <Avatar
+                        sx={{
+                          width: 18,
+                          height: 18,
+                          fontSize: '0.55rem',
+                          fontWeight: 700,
+                          background:
+                            TEAM_GRADIENTS[
+                              Math.abs(
+                                myTicketsAssignee
+                                  .split('')
+                                  .reduce((s, c) => s + c.charCodeAt(0), 0),
+                              ) % TEAM_GRADIENTS.length
+                            ],
+                          border: '1.5px solid #fff',
+                        }}
+                      >
+                        {getInitials(myTicketsAssignee)}
+                      </Avatar>
+                    ) : (
+                      <PersonIcon sx={{ fontSize: 14 }} />
+                    )
+                  }
+                  sx={{
+                    textTransform: 'none',
+                    fontSize: '0.72rem',
+                    fontWeight: 600,
+                    color: myTicketsAssignee ? '#fff' : '#475569',
+                    borderColor: '#e2e8f0',
+                    background: myTicketsAssignee ? '#4f46e5' : '#f8fafc',
+                    height: 32,
+                    px: 1.5,
+                    boxShadow: myTicketsAssignee ? '0 2px 6px rgba(79,70,229,0.3)' : 'none',
+                    '&:hover': {
+                      background: myTicketsAssignee ? '#4338ca' : '#f1f5f9',
+                      borderColor: myTicketsAssignee ? '#4338ca' : '#cbd5e1',
+                    },
+                  }}
+                >
+                  {myTicketsAssignee ? myTicketsAssignee.split(' ')[0] : 'My Tickets'}
+                </Button>
+              </Tooltip>
+              <Menu
+                anchorEl={myTicketsAnchor}
+                open={Boolean(myTicketsAnchor)}
+                onClose={() => setMyTicketsAnchor(null)}
+                slotProps={{
+                  paper: {
+                    sx: {
+                      mt: 0.5,
+                      minWidth: 220,
+                      maxHeight: 320,
+                      borderRadius: 2,
+                      boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
+                      border: '1px solid #e2e8f0',
+                    },
+                  },
+                }}
+              >
+                <Box
+                  sx={{
+                    px: 1.5,
+                    py: 1,
+                    borderBottom: '1px solid #e2e8f0',
+                    background: '#fafbfc',
+                  }}
+                >
+                  <Typography sx={{ fontSize: '0.7rem', fontWeight: 700, color: '#0f172a' }}>
+                    Show tickets for
+                  </Typography>
+                </Box>
+                <MenuItem
+                  selected={myTicketsAssignee === null}
+                  onClick={() => {
+                    setMyTicketsAssignee(null);
+                    setMyTicketsAnchor(null);
+                  }}
+                  sx={{ fontSize: '0.78rem', py: 0.85 }}
+                >
+                  <PersonIcon sx={{ fontSize: 14, mr: 1, color: '#64748b' }} />
+                  Everyone
+                </MenuItem>
+                <Divider sx={{ my: 0.5 }} />
+                {allAssignees.map((a) => (
+                  <MenuItem
+                    key={a.name}
+                    selected={myTicketsAssignee === a.name}
+                    onClick={() => {
+                      setMyTicketsAssignee(a.name);
+                      setMyTicketsAnchor(null);
+                    }}
+                    sx={{ fontSize: '0.78rem', py: 0.75 }}
+                  >
+                    <Avatar
+                      sx={{
+                        width: 22,
+                        height: 22,
+                        fontSize: '0.6rem',
+                        fontWeight: 700,
+                        background: a.gradient,
+                        mr: 1,
+                      }}
+                    >
+                      {getInitials(a.name)}
+                    </Avatar>
+                    <Box sx={{ flex: 1 }}>{a.name}</Box>
+                    <Typography sx={{ fontSize: '0.65rem', color: '#94a3b8', ml: 1 }}>
+                      {a.count}
+                    </Typography>
+                  </MenuItem>
+                ))}
+              </Menu>
+
+              {/* Sort */}
+              <Tooltip title='Sort tickets within columns' arrow>
+                <Button
+                  size='small'
+                  variant='outlined'
+                  onClick={(e) => setSortAnchor(e.currentTarget)}
+                  startIcon={<SortIcon sx={{ fontSize: 14 }} />}
+                  sx={{
+                    textTransform: 'none',
+                    fontSize: '0.72rem',
+                    fontWeight: 600,
+                    color: sortBy === 'Default' ? '#475569' : '#4f46e5',
+                    borderColor: sortBy === 'Default' ? '#e2e8f0' : 'rgba(79,70,229,0.3)',
+                    background: sortBy === 'Default' ? '#f8fafc' : 'rgba(79,70,229,0.05)',
+                    height: 32,
+                    px: 1.5,
+                    '&:hover': {
+                      background: sortBy === 'Default' ? '#f1f5f9' : 'rgba(79,70,229,0.1)',
+                    },
+                  }}
+                >
+                  {sortBy === 'Default' ? 'Sort' : sortBy}
+                </Button>
+              </Tooltip>
+              <Menu
+                anchorEl={sortAnchor}
+                open={Boolean(sortAnchor)}
+                onClose={() => setSortAnchor(null)}
+                slotProps={{
+                  paper: {
+                    sx: {
+                      mt: 0.5,
+                      minWidth: 180,
+                      borderRadius: 2,
+                      boxShadow: '0 4px 16px rgba(0,0,0,0.1)',
+                    },
+                  },
+                }}
+              >
+                {(['Default', 'Story Points', 'Issue Type', 'Issue No'] as const).map((opt) => (
+                  <MenuItem
+                    key={opt}
+                    selected={sortBy === opt}
+                    onClick={() => {
+                      setSortBy(opt);
+                      setSortAnchor(null);
+                    }}
+                    sx={{ fontSize: '0.78rem', py: 0.75 }}
+                  >
+                    {opt}
+                  </MenuItem>
+                ))}
+              </Menu>
+
+              {/* Density */}
+              <Tooltip
+                title={
+                  density === 'Comfortable'
+                    ? 'Switch to compact view'
+                    : 'Switch to comfortable view'
+                }
+                arrow
+              >
+                <IconButton
+                  size='small'
+                  onClick={() =>
+                    setDensity((d) => (d === 'Comfortable' ? 'Compact' : 'Comfortable'))
+                  }
+                  sx={{
+                    color: density === 'Compact' ? '#4f46e5' : '#94a3b8',
+                    background: density === 'Compact' ? 'rgba(79,70,229,0.08)' : '#f1f5f9',
+                    border: '1px solid',
+                    borderColor: density === 'Compact' ? 'rgba(79,70,229,0.3)' : '#e2e8f0',
+                    borderRadius: '8px',
+                    p: 0.75,
+                    transition: 'all 0.15s ease',
+                    '&:hover': {
+                      background: density === 'Compact' ? 'rgba(79,70,229,0.12)' : '#e2e8f0',
+                    },
+                  }}
+                >
+                  {density === 'Comfortable' ? (
+                    <ViewAgendaIcon sx={{ fontSize: 16 }} />
+                  ) : (
+                    <ViewStreamIcon sx={{ fontSize: 16 }} />
+                  )}
+                </IconButton>
+              </Tooltip>
+            </Box>
           </Box>
 
           {/* ── Kanban Board Columns ── */}
@@ -1476,7 +2051,7 @@ const SprintStatusMatrixPage = () => {
                         p: 1,
                         display: 'flex',
                         flexDirection: 'column',
-                        gap: 1,
+                        gap: density === 'Compact' ? 0.5 : 1,
                         flex: 1,
                         minHeight: 240,
                         position: 'relative',
@@ -1577,7 +2152,7 @@ const SprintStatusMatrixPage = () => {
                               );
                             }}
                             sx={{
-                              p: 1.25,
+                              p: density === 'Compact' ? 0.85 : 1.25,
                               background: '#fff',
                               border: '1px solid',
                               borderColor: 'divider',
@@ -1708,8 +2283,23 @@ const SprintStatusMatrixPage = () => {
                                 </Typography>
                               </Box>
 
-                              <Tooltip title={ticket.assignee} arrow>
+                              <Tooltip
+                                title={
+                                  search.toLowerCase() === ticket.assignee.toLowerCase()
+                                    ? `Clear filter`
+                                    : `Filter by ${ticket.assignee}`
+                                }
+                                arrow
+                              >
                                 <Avatar
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setSearch((prev) =>
+                                      prev.toLowerCase() === ticket.assignee.toLowerCase()
+                                        ? ''
+                                        : ticket.assignee,
+                                    );
+                                  }}
                                   sx={{
                                     width: 22,
                                     height: 22,
@@ -1718,6 +2308,14 @@ const SprintStatusMatrixPage = () => {
                                     background: assigneeGradient,
                                     border: '1.5px solid #fff',
                                     boxShadow: '0 1px 2px rgba(0,0,0,0.08)',
+                                    cursor: 'pointer',
+                                    outline:
+                                      search.toLowerCase() === ticket.assignee.toLowerCase()
+                                        ? '2px solid #4f46e5'
+                                        : 'none',
+                                    outlineOffset: '1px',
+                                    transition: 'outline-color 0.15s ease, transform 0.15s ease',
+                                    '&:hover': { transform: 'scale(1.08)' },
                                   }}
                                 >
                                   {getInitials(ticket.assignee)}

@@ -88,7 +88,7 @@ export class ConfigurationsController {
   create = async (req: Request, res: Response): Promise<void> => {
     const entity = this.parseEntity(req, res);
     if (!entity) return;
-    const { name, key, description, color, iconKey, sortOrder, isActive, createdBy } = req.body;
+    const { name, key, description, color, iconKey, managerName, leadName, squadId, sortOrder, isActive, createdBy } = req.body;
 
     if (!name?.trim()) {
       res.status(400).json({ message: 'Name is required' });
@@ -106,6 +106,11 @@ export class ConfigurationsController {
         ...((entity === 'squad' || entity === 'team') && iconKey !== undefined
           ? { iconKey: iconKey?.trim() || null }
           : {}),
+        managerName: managerName?.trim() || null,
+        leadName: leadName?.trim() || null,
+        ...(entity === 'team'
+          ? { squadId: typeof squadId === 'number' ? squadId : null }
+          : {}),
         sortOrder: typeof sortOrder === 'number' ? sortOrder : 0,
         isActive: isActive ?? true,
         createdBy: createdBy ?? null,
@@ -119,7 +124,7 @@ export class ConfigurationsController {
     const entity = this.parseEntity(req, res);
     if (!entity) return;
     const id = parseInt(req.params.id, 10);
-    const { name, key, description, color, iconKey, sortOrder, isActive, updatedBy } = req.body;
+    const { name, key, description, color, iconKey, managerName, leadName, squadId, sortOrder, isActive, updatedBy } = req.body;
 
     const db = await this.db();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -138,6 +143,11 @@ export class ConfigurationsController {
     if (color !== undefined) data.color = color;
     if ((entity === 'squad' || entity === 'team') && iconKey !== undefined) {
       data.iconKey = iconKey?.trim() || null;
+    }
+    if (managerName !== undefined) data.managerName = managerName?.trim() || null;
+    if (leadName !== undefined) data.leadName = leadName?.trim() || null;
+    if (entity === 'team' && squadId !== undefined) {
+      data.squadId = typeof squadId === 'number' ? squadId : null;
     }
     if (sortOrder !== undefined) data.sortOrder = sortOrder;
     if (isActive !== undefined) data.isActive = isActive;

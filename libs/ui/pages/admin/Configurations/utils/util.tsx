@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Box, Column, Typography, Chip, Tooltip, IconButton } from '@sprintpulse/component';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -38,7 +38,6 @@ import MemoryIcon from '@mui/icons-material/Memory';
 import CloudIcon from '@mui/icons-material/Cloud';
 import RocketIcon from '@mui/icons-material/Rocket';
 import SpeedIcon from '@mui/icons-material/Speed';
-import VisibilityIcon from '@mui/icons-material/Visibility';
 import TrackChangesIcon from '@mui/icons-material/TrackChanges';
 import {
   useCreateFixVersionMutation,
@@ -76,6 +75,7 @@ import {
   useUpdateSquadMutation,
   useUpdateStatusMutation,
   useUpdateTeamMutation,
+  useGetAllUsersMutation,
   ConfigurationItem,
   ConfigEntityKey,
 } from '@sprintpulse/services';
@@ -90,6 +90,9 @@ export interface ConfigFormState {
   description: string;
   color: string;
   iconKey: string;
+  managerName: string;
+  leadName: string;
+  squadId: number | null;
   isActive: boolean;
 }
 
@@ -99,6 +102,9 @@ export const BLANK_FORM: ConfigFormState = {
   description: '',
   color: '#6366f1',
   iconKey: '',
+  managerName: '',
+  leadName: '',
+  squadId: null,
   isActive: true,
 };
 
@@ -294,6 +300,37 @@ export const useUtils = () => {
   const [togglePriority] = useTogglePriorityMutation();
   const [deletePriority] = useDeletePriorityMutation();
 
+  // ── Users (for "Last Modified By" column) ─────────────────────────────────
+  const [triggerGetAllUsers] = useGetAllUsersMutation();
+  const [users, setUsers] = useState<
+    Array<{ id: number; firstName?: string; lastName?: string; email?: string }>
+  >([]);
+  useEffect(() => {
+    let cancelled = false;
+    triggerGetAllUsers()
+      .unwrap()
+      .then((list: any) => {
+        if (cancelled) return;
+        setUsers(Array.isArray(list) ? list : []);
+      })
+      .catch(() => {
+        /* surfaced via RTK Query */
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [triggerGetAllUsers]);
+
+  const userNameById = useMemo(() => {
+    const map = new Map<number, string>();
+    users.forEach((u) => {
+      if (typeof u.id !== 'number') return;
+      const name = [u.firstName, u.lastName].filter(Boolean).join(' ').trim();
+      map.set(u.id, name || u.email || `User #${u.id}`);
+    });
+    return map;
+  }, [users]);
+
   // ── Data per active entity ────────────────────────────────────────────────
   const data: ConfigurationItem[] = useMemo(() => {
     switch (activeEntity) {
@@ -343,6 +380,9 @@ export const useUtils = () => {
       description: item.description,
       color: item.color,
       iconKey: (item as any).iconKey ?? '',
+      managerName: item.managerName ?? '',
+      leadName: item.leadName ?? '',
+      squadId: item.squadId ?? null,
       isActive: item.isActive,
     });
     setDialogOpen(true);
@@ -363,12 +403,19 @@ export const useUtils = () => {
       color: form.color,
       isActive: form.isActive,
     };
-    // iconKey is only persisted for Squad and Team (column exists there)
-    const iconKeyPayload =
+    // iconKey, managerName, leadName are only persisted for Squad and Team
+    // (those are the entities that semantically own a manager/lead).
+    // squadId is only persisted for Team.
+    const teamExtras = activeEntity === 'team' ? { squadId: form.squadId } : {};
+    const entityExtras =
       activeEntity === 'squad' || activeEntity === 'team'
-        ? { iconKey: form.iconKey?.trim() || null }
+        ? {
+            iconKey: form.iconKey?.trim() || null,
+            managerName: form.managerName.trim() || null,
+            leadName: form.leadName.trim() || null,
+          }
         : {};
-    const payload = { ...basePayload, ...iconKeyPayload };
+    const payload = { ...basePayload, ...entityExtras, ...teamExtras };
     try {
       switch (activeEntity) {
         case 'squad':
@@ -488,39 +535,157 @@ export const useUtils = () => {
   };
 
   // ── Table columns for current entity ──────────────────────────────────────
+  const showManagerLead = activeEntity === 'squad' || activeEntity === 'team';
+  const showSquadColumn = activeEntity === 'team';
+
+  // Squad name lookup for the Teams → Squad column
+  const squadNameById = useMemo(() => {
+    const map = new Map<number, { name: string; color: string; iconKey: string | null }>();
+    squads.forEach((s) => {
+      map.set(s.id, {
+        name: s.name,
+        color: s.color,
+        iconKey: (s as any).iconKey ?? null,
+      });
+    });
+    return map;
+  }, [squads]);
+
   const columns: Column<ConfigurationItem>[] = useMemo(
     () => [
       {
         id: 'name',
         label: 'Name',
-        minWidth: 200,
+        minWidth: 220,
         sortable: true,
         align: 'left',
-        format: (v, row) => (
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.25 }}>
-            <Box
-              sx={{
-                width: 14,
-                height: 14,
-                borderRadius: '50%',
-                background: row.color,
-                boxShadow: `0 0 0 2px ${row.color}22, 0 2px 6px ${row.color}55`,
-                flexShrink: 0,
-              }}
-            />
-            <Box>
-              <Typography sx={{ fontWeight: 700, fontSize: '0.88rem', color: '#1e293b' }}>
-                {String(v)}
-              </Typography>
-              <Typography
-                sx={{ fontSize: '0.7rem', color: '#94a3b8', fontFamily: 'monospace' }}
-              >
-                {row.key}
-              </Typography>
+        format: (v, row) => {
+          const Icon =
+            (showManagerLead && getIconComponent((row as any).iconKey)) ||
+            (showManagerLead &&
+              (activeEntity === 'squad' ? DEFAULT_SQUAD_ICON : DEFAULT_TEAM_ICON));
+          return (
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.25 }}>
+              {Icon ? (
+                <Box
+                  sx={{
+                    width: 30,
+                    height: 30,
+                    borderRadius: 2,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    background: `linear-gradient(135deg, ${row.color}22 0%, ${row.color}11 100%)`,
+                    color: row.color,
+                    border: `1px solid ${row.color}33`,
+                    boxShadow: `0 2px 6px ${row.color}33`,
+                    flexShrink: 0,
+                  }}
+                >
+                  <Icon sx={{ fontSize: 17 }} />
+                </Box>
+              ) : (
+                <Box
+                  sx={{
+                    width: 14,
+                    height: 14,
+                    borderRadius: '50%',
+                    background: row.color,
+                    boxShadow: `0 0 0 2px ${row.color}22, 0 2px 6px ${row.color}55`,
+                    flexShrink: 0,
+                  }}
+                />
+              )}
+              <Box>
+                <Typography sx={{ fontWeight: 700, fontSize: '0.88rem', color: '#1e293b' }}>
+                  {String(v)}
+                </Typography>
+              </Box>
             </Box>
-          </Box>
-        ),
+          );
+        },
       },
+      ...(showSquadColumn
+        ? [
+            {
+              id: 'squad',
+              label: 'Squad',
+              minWidth: 180,
+              sortable: true,
+              align: 'left' as const,
+              format: (_v: unknown, row: ConfigurationItem) => {
+                const squadId = (row as any).squadId as number | null | undefined;
+                if (!squadId) {
+                  return (
+                    <Typography sx={{ fontSize: '0.82rem', color: '#94a3b8', fontStyle: 'italic' }}>
+                      Unassigned
+                    </Typography>
+                  );
+                }
+                const squad = squadNameById.get(squadId);
+                if (!squad) {
+                  return (
+                    <Typography sx={{ fontSize: '0.82rem', color: '#ef4444' }}>
+                      Squad #{squadId} (missing)
+                    </Typography>
+                  );
+                }
+                const SquadIcon = getIconComponent(squad.iconKey) || DEFAULT_SQUAD_ICON;
+                return (
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Box
+                      sx={{
+                        width: 26,
+                        height: 26,
+                        borderRadius: 1.5,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        background: `linear-gradient(135deg, ${squad.color}22 0%, ${squad.color}11 100%)`,
+                        color: squad.color,
+                        border: `1px solid ${squad.color}33`,
+                        flexShrink: 0,
+                      }}
+                    >
+                      <SquadIcon sx={{ fontSize: 15 }} />
+                    </Box>
+                    <Typography sx={{ fontSize: '0.82rem', color: '#1e293b', fontWeight: 600 }}>
+                      {squad.name}
+                    </Typography>
+                  </Box>
+                );
+              },
+            },
+          ]
+        : []),
+      ...(showManagerLead
+        ? [
+            {
+              id: 'managerName',
+              label: 'Manager',
+              minWidth: 150,
+              sortable: true,
+              align: 'left' as const,
+              format: (v: unknown) => (
+                <Typography sx={{ fontSize: '0.82rem', color: '#1e293b', fontWeight: 600 }}>
+                  {v ? String(v) : '—'}
+                </Typography>
+              ),
+            },
+            {
+              id: 'leadName',
+              label: 'Lead',
+              minWidth: 150,
+              sortable: true,
+              align: 'left' as const,
+              format: (v: unknown) => (
+                <Typography sx={{ fontSize: '0.82rem', color: '#475569' }}>
+                  {v ? String(v) : '—'}
+                </Typography>
+              ),
+            },
+          ]
+        : []),
       {
         id: 'description',
         label: 'Description',
@@ -531,26 +696,6 @@ export const useUtils = () => {
           <Typography sx={{ fontSize: '0.82rem', color: '#475569', lineHeight: 1.45 }}>
             {v ? String(v) : '—'}
           </Typography>
-        ),
-      },
-      {
-        id: 'sortOrder',
-        label: 'Order',
-        minWidth: 80,
-        sortable: true,
-        align: 'center',
-        format: (v) => (
-          <Chip
-            size='small'
-            label={String(v)}
-            sx={{
-              height: 22,
-              fontSize: '0.72rem',
-              fontWeight: 700,
-              background: 'rgba(99,102,241,0.1)',
-              color: '#4338ca',
-            }}
-          />
         ),
       },
       {
@@ -580,18 +725,39 @@ export const useUtils = () => {
       {
         id: 'updatedAt',
         label: 'Last Modified',
-        minWidth: 120,
+        minWidth: 130,
         sortable: true,
-        align: 'center',
-        format: (v) => (
-          <Typography sx={{ fontSize: '0.8rem', color: '#64748b' }}>
-            {new Date(String(v)).toLocaleDateString('en-GB', {
-              day: '2-digit',
-              month: 'short',
-              year: 'numeric',
-            })}
-          </Typography>
-        ),
+        align: 'left',
+        format: (v) => {
+          const date = v ? new Date(String(v)) : null;
+          const dateLabel = date
+            ? date.toLocaleDateString('en-GB', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric',
+              })
+            : '—';
+          return (
+            <Typography sx={{ fontSize: '0.82rem', color: '#1e293b', fontWeight: 600 }}>
+              {dateLabel}
+            </Typography>
+          );
+        },
+      },
+      {
+        id: 'updatedBy',
+        label: 'Last Modified By',
+        minWidth: 160,
+        sortable: true,
+        align: 'left',
+        format: (_v, row) => {
+          const { updatedBy } = row as ConfigurationItem & { updatedBy?: number | null };
+          const author =
+            typeof updatedBy === 'number'
+              ? (userNameById.get(updatedBy) ?? `User #${updatedBy}`)
+              : '—';
+          return <Typography sx={{ fontSize: '0.82rem', color: '#475569' }}>{author}</Typography>;
+        },
       },
       ...(isAdmin
         ? [
@@ -634,7 +800,7 @@ export const useUtils = () => {
         : []),
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [classes, isAdmin, activeEntity],
+    [classes, isAdmin, activeEntity, userNameById, squadNameById],
   );
 
   return {
@@ -666,6 +832,7 @@ export const useUtils = () => {
     handleSave,
     handleDelete,
     handleToggle,
+    squads,
     entityTabs: ENTITY_TABS,
     colorSwatches: COLOR_SWATCHES,
     iconRegistry: ICON_REGISTRY,

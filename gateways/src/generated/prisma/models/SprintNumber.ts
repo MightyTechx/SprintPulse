@@ -46,6 +46,8 @@ export type SprintNumberMinAggregateOutputType = {
   key: string | null
   description: string | null
   color: string | null
+  managerName: string | null
+  leadName: string | null
   sortOrder: number | null
   isActive: boolean | null
   createdBy: number | null
@@ -60,6 +62,8 @@ export type SprintNumberMaxAggregateOutputType = {
   key: string | null
   description: string | null
   color: string | null
+  managerName: string | null
+  leadName: string | null
   sortOrder: number | null
   isActive: boolean | null
   createdBy: number | null
@@ -74,6 +78,8 @@ export type SprintNumberCountAggregateOutputType = {
   key: number
   description: number
   color: number
+  managerName: number
+  leadName: number
   sortOrder: number
   isActive: number
   createdBy: number
@@ -104,6 +110,8 @@ export type SprintNumberMinAggregateInputType = {
   key?: true
   description?: true
   color?: true
+  managerName?: true
+  leadName?: true
   sortOrder?: true
   isActive?: true
   createdBy?: true
@@ -118,6 +126,8 @@ export type SprintNumberMaxAggregateInputType = {
   key?: true
   description?: true
   color?: true
+  managerName?: true
+  leadName?: true
   sortOrder?: true
   isActive?: true
   createdBy?: true
@@ -132,6 +142,8 @@ export type SprintNumberCountAggregateInputType = {
   key?: true
   description?: true
   color?: true
+  managerName?: true
+  leadName?: true
   sortOrder?: true
   isActive?: true
   createdBy?: true
@@ -233,6 +245,8 @@ export type SprintNumberGroupByOutputType = {
   key: string
   description: string
   color: string
+  managerName: string | null
+  leadName: string | null
   sortOrder: number
   isActive: boolean
   createdBy: number | null
@@ -270,6 +284,8 @@ export type SprintNumberWhereInput = {
   key?: Prisma.StringFilter<"SprintNumber"> | string
   description?: Prisma.StringFilter<"SprintNumber"> | string
   color?: Prisma.StringFilter<"SprintNumber"> | string
+  managerName?: Prisma.StringNullableFilter<"SprintNumber"> | string | null
+  leadName?: Prisma.StringNullableFilter<"SprintNumber"> | string | null
   sortOrder?: Prisma.IntFilter<"SprintNumber"> | number
   isActive?: Prisma.BoolFilter<"SprintNumber"> | boolean
   createdBy?: Prisma.IntNullableFilter<"SprintNumber"> | number | null
@@ -284,6 +300,8 @@ export type SprintNumberOrderByWithRelationInput = {
   key?: Prisma.SortOrder
   description?: Prisma.SortOrder
   color?: Prisma.SortOrder
+  managerName?: Prisma.SortOrderInput | Prisma.SortOrder
+  leadName?: Prisma.SortOrderInput | Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdBy?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -301,6 +319,8 @@ export type SprintNumberWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringFilter<"SprintNumber"> | string
   description?: Prisma.StringFilter<"SprintNumber"> | string
   color?: Prisma.StringFilter<"SprintNumber"> | string
+  managerName?: Prisma.StringNullableFilter<"SprintNumber"> | string | null
+  leadName?: Prisma.StringNullableFilter<"SprintNumber"> | string | null
   sortOrder?: Prisma.IntFilter<"SprintNumber"> | number
   isActive?: Prisma.BoolFilter<"SprintNumber"> | boolean
   createdBy?: Prisma.IntNullableFilter<"SprintNumber"> | number | null
@@ -315,6 +335,8 @@ export type SprintNumberOrderByWithAggregationInput = {
   key?: Prisma.SortOrder
   description?: Prisma.SortOrder
   color?: Prisma.SortOrder
+  managerName?: Prisma.SortOrderInput | Prisma.SortOrder
+  leadName?: Prisma.SortOrderInput | Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdBy?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -337,6 +359,8 @@ export type SprintNumberScalarWhereWithAggregatesInput = {
   key?: Prisma.StringWithAggregatesFilter<"SprintNumber"> | string
   description?: Prisma.StringWithAggregatesFilter<"SprintNumber"> | string
   color?: Prisma.StringWithAggregatesFilter<"SprintNumber"> | string
+  managerName?: Prisma.StringNullableWithAggregatesFilter<"SprintNumber"> | string | null
+  leadName?: Prisma.StringNullableWithAggregatesFilter<"SprintNumber"> | string | null
   sortOrder?: Prisma.IntWithAggregatesFilter<"SprintNumber"> | number
   isActive?: Prisma.BoolWithAggregatesFilter<"SprintNumber"> | boolean
   createdBy?: Prisma.IntNullableWithAggregatesFilter<"SprintNumber"> | number | null
@@ -350,6 +374,8 @@ export type SprintNumberCreateInput = {
   key: string
   description?: string
   color?: string
+  managerName?: string | null
+  leadName?: string | null
   sortOrder?: number
   isActive?: boolean
   createdBy?: number | null
@@ -364,6 +390,8 @@ export type SprintNumberUncheckedCreateInput = {
   key: string
   description?: string
   color?: string
+  managerName?: string | null
+  leadName?: string | null
   sortOrder?: number
   isActive?: boolean
   createdBy?: number | null
@@ -377,6 +405,8 @@ export type SprintNumberUpdateInput = {
   key?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  managerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -391,6 +421,8 @@ export type SprintNumberUncheckedUpdateInput = {
   key?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  managerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -405,6 +437,8 @@ export type SprintNumberCreateManyInput = {
   key: string
   description?: string
   color?: string
+  managerName?: string | null
+  leadName?: string | null
   sortOrder?: number
   isActive?: boolean
   createdBy?: number | null
@@ -418,6 +452,8 @@ export type SprintNumberUpdateManyMutationInput = {
   key?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  managerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -432,6 +468,8 @@ export type SprintNumberUncheckedUpdateManyInput = {
   key?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  managerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -446,6 +484,8 @@ export type SprintNumberCountOrderByAggregateInput = {
   key?: Prisma.SortOrder
   description?: Prisma.SortOrder
   color?: Prisma.SortOrder
+  managerName?: Prisma.SortOrder
+  leadName?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
@@ -467,6 +507,8 @@ export type SprintNumberMaxOrderByAggregateInput = {
   key?: Prisma.SortOrder
   description?: Prisma.SortOrder
   color?: Prisma.SortOrder
+  managerName?: Prisma.SortOrder
+  leadName?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
@@ -481,6 +523,8 @@ export type SprintNumberMinOrderByAggregateInput = {
   key?: Prisma.SortOrder
   description?: Prisma.SortOrder
   color?: Prisma.SortOrder
+  managerName?: Prisma.SortOrder
+  leadName?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
@@ -504,6 +548,8 @@ export type SprintNumberSelect<ExtArgs extends runtime.Types.Extensions.Internal
   key?: boolean
   description?: boolean
   color?: boolean
+  managerName?: boolean
+  leadName?: boolean
   sortOrder?: boolean
   isActive?: boolean
   createdBy?: boolean
@@ -518,6 +564,8 @@ export type SprintNumberSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   key?: boolean
   description?: boolean
   color?: boolean
+  managerName?: boolean
+  leadName?: boolean
   sortOrder?: boolean
   isActive?: boolean
   createdBy?: boolean
@@ -532,6 +580,8 @@ export type SprintNumberSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   key?: boolean
   description?: boolean
   color?: boolean
+  managerName?: boolean
+  leadName?: boolean
   sortOrder?: boolean
   isActive?: boolean
   createdBy?: boolean
@@ -546,6 +596,8 @@ export type SprintNumberSelectScalar = {
   key?: boolean
   description?: boolean
   color?: boolean
+  managerName?: boolean
+  leadName?: boolean
   sortOrder?: boolean
   isActive?: boolean
   createdBy?: boolean
@@ -554,7 +606,7 @@ export type SprintNumberSelectScalar = {
   updatedAt?: boolean
 }
 
-export type SprintNumberOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "key" | "description" | "color" | "sortOrder" | "isActive" | "createdBy" | "updatedBy" | "createdAt" | "updatedAt", ExtArgs["result"]["sprintNumber"]>
+export type SprintNumberOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "key" | "description" | "color" | "managerName" | "leadName" | "sortOrder" | "isActive" | "createdBy" | "updatedBy" | "createdAt" | "updatedAt", ExtArgs["result"]["sprintNumber"]>
 
 export type $SprintNumberPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "SprintNumber"
@@ -565,6 +617,8 @@ export type $SprintNumberPayload<ExtArgs extends runtime.Types.Extensions.Intern
     key: string
     description: string
     color: string
+    managerName: string | null
+    leadName: string | null
     sortOrder: number
     isActive: boolean
     createdBy: number | null
@@ -999,6 +1053,8 @@ export interface SprintNumberFieldRefs {
   readonly key: Prisma.FieldRef<"SprintNumber", 'String'>
   readonly description: Prisma.FieldRef<"SprintNumber", 'String'>
   readonly color: Prisma.FieldRef<"SprintNumber", 'String'>
+  readonly managerName: Prisma.FieldRef<"SprintNumber", 'String'>
+  readonly leadName: Prisma.FieldRef<"SprintNumber", 'String'>
   readonly sortOrder: Prisma.FieldRef<"SprintNumber", 'Int'>
   readonly isActive: Prisma.FieldRef<"SprintNumber", 'Boolean'>
   readonly createdBy: Prisma.FieldRef<"SprintNumber", 'Int'>

@@ -18,6 +18,9 @@ export interface ConfigurationItem {
   description: string;
   color: string;
   iconKey?: string | null;
+  managerName?: string | null;
+  leadName?: string | null;
+  squadId?: number | null;
   sortOrder: number;
   isActive: boolean;
   createdBy: number | null;
@@ -41,6 +44,9 @@ export interface CreateConfigurationPayload {
   description?: string;
   color?: string;
   iconKey?: string | null;
+  managerName?: string | null;
+  leadName?: string | null;
+  squadId?: number | null;
   sortOrder?: number;
   isActive?: boolean;
   createdBy?: number;
@@ -53,6 +59,9 @@ export interface UpdateConfigurationPayload {
   description?: string;
   color?: string;
   iconKey?: string | null;
+  managerName?: string | null;
+  leadName?: string | null;
+  squadId?: number | null;
   sortOrder?: number;
   isActive?: boolean;
   updatedBy?: number;

@@ -46,6 +46,8 @@ export type IssueTypeMinAggregateOutputType = {
   key: string | null
   description: string | null
   color: string | null
+  managerName: string | null
+  leadName: string | null
   sortOrder: number | null
   isActive: boolean | null
   createdBy: number | null
@@ -60,6 +62,8 @@ export type IssueTypeMaxAggregateOutputType = {
   key: string | null
   description: string | null
   color: string | null
+  managerName: string | null
+  leadName: string | null
   sortOrder: number | null
   isActive: boolean | null
   createdBy: number | null
@@ -74,6 +78,8 @@ export type IssueTypeCountAggregateOutputType = {
   key: number
   description: number
   color: number
+  managerName: number
+  leadName: number
   sortOrder: number
   isActive: number
   createdBy: number
@@ -104,6 +110,8 @@ export type IssueTypeMinAggregateInputType = {
   key?: true
   description?: true
   color?: true
+  managerName?: true
+  leadName?: true
   sortOrder?: true
   isActive?: true
   createdBy?: true
@@ -118,6 +126,8 @@ export type IssueTypeMaxAggregateInputType = {
   key?: true
   description?: true
   color?: true
+  managerName?: true
+  leadName?: true
   sortOrder?: true
   isActive?: true
   createdBy?: true
@@ -132,6 +142,8 @@ export type IssueTypeCountAggregateInputType = {
   key?: true
   description?: true
   color?: true
+  managerName?: true
+  leadName?: true
   sortOrder?: true
   isActive?: true
   createdBy?: true
@@ -233,6 +245,8 @@ export type IssueTypeGroupByOutputType = {
   key: string
   description: string
   color: string
+  managerName: string | null
+  leadName: string | null
   sortOrder: number
   isActive: boolean
   createdBy: number | null
@@ -270,6 +284,8 @@ export type IssueTypeWhereInput = {
   key?: Prisma.StringFilter<"IssueType"> | string
   description?: Prisma.StringFilter<"IssueType"> | string
   color?: Prisma.StringFilter<"IssueType"> | string
+  managerName?: Prisma.StringNullableFilter<"IssueType"> | string | null
+  leadName?: Prisma.StringNullableFilter<"IssueType"> | string | null
   sortOrder?: Prisma.IntFilter<"IssueType"> | number
   isActive?: Prisma.BoolFilter<"IssueType"> | boolean
   createdBy?: Prisma.IntNullableFilter<"IssueType"> | number | null
@@ -284,6 +300,8 @@ export type IssueTypeOrderByWithRelationInput = {
   key?: Prisma.SortOrder
   description?: Prisma.SortOrder
   color?: Prisma.SortOrder
+  managerName?: Prisma.SortOrderInput | Prisma.SortOrder
+  leadName?: Prisma.SortOrderInput | Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdBy?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -301,6 +319,8 @@ export type IssueTypeWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringFilter<"IssueType"> | string
   description?: Prisma.StringFilter<"IssueType"> | string
   color?: Prisma.StringFilter<"IssueType"> | string
+  managerName?: Prisma.StringNullableFilter<"IssueType"> | string | null
+  leadName?: Prisma.StringNullableFilter<"IssueType"> | string | null
   sortOrder?: Prisma.IntFilter<"IssueType"> | number
   isActive?: Prisma.BoolFilter<"IssueType"> | boolean
   createdBy?: Prisma.IntNullableFilter<"IssueType"> | number | null
@@ -315,6 +335,8 @@ export type IssueTypeOrderByWithAggregationInput = {
   key?: Prisma.SortOrder
   description?: Prisma.SortOrder
   color?: Prisma.SortOrder
+  managerName?: Prisma.SortOrderInput | Prisma.SortOrder
+  leadName?: Prisma.SortOrderInput | Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdBy?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -337,6 +359,8 @@ export type IssueTypeScalarWhereWithAggregatesInput = {
   key?: Prisma.StringWithAggregatesFilter<"IssueType"> | string
   description?: Prisma.StringWithAggregatesFilter<"IssueType"> | string
   color?: Prisma.StringWithAggregatesFilter<"IssueType"> | string
+  managerName?: Prisma.StringNullableWithAggregatesFilter<"IssueType"> | string | null
+  leadName?: Prisma.StringNullableWithAggregatesFilter<"IssueType"> | string | null
   sortOrder?: Prisma.IntWithAggregatesFilter<"IssueType"> | number
   isActive?: Prisma.BoolWithAggregatesFilter<"IssueType"> | boolean
   createdBy?: Prisma.IntNullableWithAggregatesFilter<"IssueType"> | number | null
@@ -350,6 +374,8 @@ export type IssueTypeCreateInput = {
   key: string
   description?: string
   color?: string
+  managerName?: string | null
+  leadName?: string | null
   sortOrder?: number
   isActive?: boolean
   createdBy?: number | null
@@ -364,6 +390,8 @@ export type IssueTypeUncheckedCreateInput = {
   key: string
   description?: string
   color?: string
+  managerName?: string | null
+  leadName?: string | null
   sortOrder?: number
   isActive?: boolean
   createdBy?: number | null
@@ -377,6 +405,8 @@ export type IssueTypeUpdateInput = {
   key?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  managerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -391,6 +421,8 @@ export type IssueTypeUncheckedUpdateInput = {
   key?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  managerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -405,6 +437,8 @@ export type IssueTypeCreateManyInput = {
   key: string
   description?: string
   color?: string
+  managerName?: string | null
+  leadName?: string | null
   sortOrder?: number
   isActive?: boolean
   createdBy?: number | null
@@ -418,6 +452,8 @@ export type IssueTypeUpdateManyMutationInput = {
   key?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  managerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -432,6 +468,8 @@ export type IssueTypeUncheckedUpdateManyInput = {
   key?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
+  managerName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  leadName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sortOrder?: Prisma.IntFieldUpdateOperationsInput | number
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -446,6 +484,8 @@ export type IssueTypeCountOrderByAggregateInput = {
   key?: Prisma.SortOrder
   description?: Prisma.SortOrder
   color?: Prisma.SortOrder
+  managerName?: Prisma.SortOrder
+  leadName?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
@@ -467,6 +507,8 @@ export type IssueTypeMaxOrderByAggregateInput = {
   key?: Prisma.SortOrder
   description?: Prisma.SortOrder
   color?: Prisma.SortOrder
+  managerName?: Prisma.SortOrder
+  leadName?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
@@ -481,6 +523,8 @@ export type IssueTypeMinOrderByAggregateInput = {
   key?: Prisma.SortOrder
   description?: Prisma.SortOrder
   color?: Prisma.SortOrder
+  managerName?: Prisma.SortOrder
+  leadName?: Prisma.SortOrder
   sortOrder?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
@@ -504,6 +548,8 @@ export type IssueTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   key?: boolean
   description?: boolean
   color?: boolean
+  managerName?: boolean
+  leadName?: boolean
   sortOrder?: boolean
   isActive?: boolean
   createdBy?: boolean
@@ -518,6 +564,8 @@ export type IssueTypeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   key?: boolean
   description?: boolean
   color?: boolean
+  managerName?: boolean
+  leadName?: boolean
   sortOrder?: boolean
   isActive?: boolean
   createdBy?: boolean
@@ -532,6 +580,8 @@ export type IssueTypeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   key?: boolean
   description?: boolean
   color?: boolean
+  managerName?: boolean
+  leadName?: boolean
   sortOrder?: boolean
   isActive?: boolean
   createdBy?: boolean
@@ -546,6 +596,8 @@ export type IssueTypeSelectScalar = {
   key?: boolean
   description?: boolean
   color?: boolean
+  managerName?: boolean
+  leadName?: boolean
   sortOrder?: boolean
   isActive?: boolean
   createdBy?: boolean
@@ -554,7 +606,7 @@ export type IssueTypeSelectScalar = {
   updatedAt?: boolean
 }
 
-export type IssueTypeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "key" | "description" | "color" | "sortOrder" | "isActive" | "createdBy" | "updatedBy" | "createdAt" | "updatedAt", ExtArgs["result"]["issueType"]>
+export type IssueTypeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "key" | "description" | "color" | "managerName" | "leadName" | "sortOrder" | "isActive" | "createdBy" | "updatedBy" | "createdAt" | "updatedAt", ExtArgs["result"]["issueType"]>
 
 export type $IssueTypePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "IssueType"
@@ -565,6 +617,8 @@ export type $IssueTypePayload<ExtArgs extends runtime.Types.Extensions.InternalA
     key: string
     description: string
     color: string
+    managerName: string | null
+    leadName: string | null
     sortOrder: number
     isActive: boolean
     createdBy: number | null
@@ -999,6 +1053,8 @@ export interface IssueTypeFieldRefs {
   readonly key: Prisma.FieldRef<"IssueType", 'String'>
   readonly description: Prisma.FieldRef<"IssueType", 'String'>
   readonly color: Prisma.FieldRef<"IssueType", 'String'>
+  readonly managerName: Prisma.FieldRef<"IssueType", 'String'>
+  readonly leadName: Prisma.FieldRef<"IssueType", 'String'>
   readonly sortOrder: Prisma.FieldRef<"IssueType", 'Int'>
   readonly isActive: Prisma.FieldRef<"IssueType", 'Boolean'>
   readonly createdBy: Prisma.FieldRef<"IssueType", 'Int'>
